@@ -1,0 +1,48 @@
+.page-shell-header {
+  margin-bottom: 16px;
+}
+
+.page-shell-header--nav-only {
+  margin-bottom: 12px;
+  margin-top: -4px;
+}
+
+.page-shell-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #023e8a;
+  margin: 0 0 10px;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.page-shell-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.page-shell-nav-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 0.5px solid rgba(2, 62, 138, 0.2);
+  background: rgba(255, 255, 255, 0.75);
+  color: #023e8a;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.page-shell-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 119, 182, 0.45);
+}
+
+[data-device='mobile'] .page-shell-header--nav-only .page-shell-nav {
+  padding: 0 4px;
+}

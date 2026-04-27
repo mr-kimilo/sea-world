@@ -1,0 +1,169 @@
+/* Apple-style sidebar (web / desktop) */
+
+.web-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  align-self: stretch;
+  padding: 20px 14px 24px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-right: 0.5px solid rgba(60, 60, 67, 0.12);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.web-sidebar-brand {
+  margin-bottom: 28px;
+  padding: 0 8px;
+}
+
+.web-sidebar-brand-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 12px;
+  padding: 8px 6px;
+  margin: -8px -6px;
+  transition: background 0.15s ease;
+}
+
+.web-sidebar-brand-link:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.web-sidebar-logo {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.web-sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  text-align: left;
+}
+
+.web-sidebar-app-name {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+}
+
+.web-sidebar-tagline {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(60, 60, 67, 0.6);
+  line-height: 1.35;
+}
+
+.web-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.web-sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: rgba(60, 60, 67, 0.85);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.web-sidebar-link:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1d1d1f;
+}
+
+.web-sidebar-link.is-active {
+  background: rgba(0, 122, 255, 0.12);
+  color: #007aff;
+}
+
+.web-sidebar-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.web-sidebar-glyph {
+  width: 22px;
+  height: 22px;
+}
+
+.web-sidebar-link.is-active .web-sidebar-glyph {
+  width: 22px;
+  height: 22px;
+}
+
+.web-sidebar-link-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.web-sidebar-spacer {
+  flex: 1;
+  min-height: 16px;
+}
+
+.web-sidebar-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 8px 0;
+  margin-top: 10px;
+  border-top: 0.5px solid rgba(60, 60, 67, 0.1);
+}
+
+.web-sidebar-actions .language-switcher {
+  width: 100%;
+  justify-content: center;
+  border-radius: 10px;
+  border-color: rgba(60, 60, 67, 0.2);
+  color: #007aff;
+}
+
+.web-sidebar-actions .language-switcher:hover {
+  border-color: #007aff;
+}
+
+.web-sidebar-logout {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 0.5px solid rgba(60, 60, 67, 0.15);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.web-sidebar-logout:hover {
+  background: rgba(255, 59, 48, 0.08);
+  border-color: rgba(255, 59, 48, 0.35);
+  color: #d70015;
+}

@@ -1,0 +1,127 @@
+{
+  "title": "商城",
+  "pageMenuTitle": "商城",
+  "pageNav": {
+    "browse": "选购",
+    "content": "列表"
+  },
+  "backToHome": "🏠 首页",
+  "buyFor": "给{{name}}买点什么",
+  "selectChild": "请选择孩子",
+  "items": "商品列表",
+  "orders": "我的订单",
+  "pendingOrders": "待确认",
+  "completedOrders": "已完成",
+  "loading": "加载中...",
+  "loadMore": "查看更多",
+  "remaining": "剩余",
+  "noItems": "暂无可购买的商品",
+  "noPendingOrders": "暂无待确认订单",
+  "noCompletedOrders": "暂无已完成订单",
+  "currentChild": "当前孩子",
+  "availableScore": "可用积分",
+  "totalScore": "总积分",
+  "item": {
+    "name": "商品名称",
+    "description": "商品描述",
+    "price": "所需积分",
+    "rarity": "稀有度",
+    "buy": "立即购买",
+    "outOfStock": "已下架",
+    "notAllowed": "该商品不可购买"
+  },
+  "order": {
+    "id": "订单号",
+    "item": "商品",
+    "cost": "花费积分",
+    "status": "订单状态",
+    "purchasedAt": "下单时间",
+    "completedAt": "完成时间",
+    "confirm": "确认消费",
+    "cancel": "取消订单",
+    "pending": "待确认",
+    "completed": "已完成",
+    "cancelled": "已取消"
+  },
+  "buyDialog": {
+    "title": "确认购买",
+    "message": "确定要购买 {{itemName}} 吗？",
+    "hint": "将暂扣 {{price}} 积分，确认消费后真实扣除。",
+    "confirm": "确认购买",
+    "cancel": "取消"
+  },
+  "confirmDialog": {
+    "title": "确认消费",
+    "message": "确认已消费 {{itemName}} 吗？",
+    "hint": "确认后将真实扣除 {{price}} 积分。",
+    "confirm": "确认消费",
+    "cancel": "取消"
+  },
+  "cancelDialog": {
+    "title": "取消订单",
+    "message": "确定要取消订单吗？",
+    "hint": "取消后将返还 {{price}} 积分。",
+    "confirm": "确认取消",
+    "cancel": "取消"
+  },
+  "messages": {
+    "buySuccess": "购买成功，积分已暂扣",
+    "confirmSuccess": "消费确认成功",
+    "cancelSuccess": "订单已取消，积分已返还",
+    "loadError": "加载失败",
+    "buyError": "购买失败",
+    "confirmError": "确认失败",
+    "cancelError": "取消失败",
+    "selectChildFirst": "请先选择孩子"
+  },
+  "admin": {
+    "title": "商品管理",
+    "create": "新增商品",
+    "edit": "编辑商品",
+    "delete": "删除商品",
+    "image": "图片",
+    "actions": "操作",
+    "form": {
+      "name": "商品名称",
+      "namePlaceholder": "请输入商品名称",
+      "description": "商品描述",
+      "descriptionPlaceholder": "请输入商品描述",
+      "imageUrl": "商品图片URL",
+      "imageUrlPlaceholder": "请输入图片URL",
+      "price": "所需积分",
+      "pricePlaceholder": "请输入所需积分",
+      "rarity": "稀有度",
+      "rarityOptions": {
+        "common": "普通",
+        "rare": "稀有",
+        "epic": "史诗",
+        "legendary": "传说"
+      },
+      "sortOrder": "排序",
+      "sortOrderPlaceholder": "数字越小越靠前",
+      "isActive": "是否启用",
+      "allowedChildren": "可购买的孩子",
+      "allowedChildrenHint": "不选择表示所有孩子都可购买",
+      "submit": "保存",
+      "cancel": "取消"
+    },
+    "deleteConfirm": {
+      "title": "确认删除",
+      "message": "确定要删除商品 {{name}} 吗？",
+      "confirm": "确认删除",
+      "cancel": "取消"
+    },
+    "noProducts": "还没有商品，点击上方「新增商品」开始添加吧",
+    "messages": {
+      "success": "操作成功",
+      "error": "操作失败",
+      "createSuccess": "商品创建成功",
+      "updateSuccess": "商品更新成功",
+      "deleteSuccess": "商品删除成功",
+      "createError": "创建失败",
+      "updateError": "更新失败",
+      "deleteError": "删除失败",
+      "loadError": "加载商品详情失败"
+    }
+  }
+}

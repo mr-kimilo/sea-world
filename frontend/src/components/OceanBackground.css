@@ -1,0 +1,142 @@
+/* Shared with Login: underwater layer (fish, seaweed, bubbles) */
+
+.ocean-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ocean-bg--fixed {
+  position: fixed;
+  z-index: 0;
+}
+
+.seaweed {
+  position: absolute;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(180deg, #52b788 0%, #40916c 100%);
+  border-radius: 10px 10px 0 0;
+  transform-origin: bottom center;
+  animation: ocean-sway 3s ease-in-out infinite alternate;
+}
+.seaweed-1 {
+  left: 8%;
+  height: 120px;
+  animation-duration: 3.2s;
+}
+.seaweed-2 {
+  left: 18%;
+  height: 90px;
+  animation-duration: 2.8s;
+  animation-delay: 0.5s;
+}
+.seaweed-3 {
+  left: 88%;
+  height: 110px;
+  animation-duration: 3.5s;
+  animation-delay: 1s;
+}
+
+@keyframes ocean-sway {
+  from {
+    transform: rotate(-12deg);
+  }
+  to {
+    transform: rotate(12deg);
+  }
+}
+
+.fish {
+  position: absolute;
+  font-size: 28px;
+  animation: ocean-swim linear infinite;
+  opacity: 0.85;
+}
+.fish-1 {
+  top: 25%;
+  animation-duration: 18s;
+  animation-delay: 0s;
+}
+.fish-2 {
+  top: 50%;
+  animation-duration: 22s;
+  animation-delay: 5s;
+  font-size: 22px;
+}
+.fish-3 {
+  top: 38%;
+  animation-duration: 15s;
+  animation-delay: 10s;
+  font-size: 20px;
+}
+
+@keyframes ocean-swim {
+  0% {
+    left: -60px;
+    /* Fish emoji faces left by default; flip when moving right */
+    transform: scaleX(-1);
+  }
+  49% {
+    left: calc(100vw + 60px);
+    transform: scaleX(-1);
+  }
+  50% {
+    left: calc(100vw + 60px);
+    /* Turn around to swim back left */
+    transform: scaleX(1);
+  }
+  99% {
+    left: -60px;
+    transform: scaleX(1);
+  }
+  100% {
+    left: -60px;
+    transform: scaleX(-1);
+  }
+}
+
+.bubble {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: ocean-rise linear infinite;
+}
+.bubble-1 {
+  width: 10px;
+  height: 10px;
+  animation-duration: 6s;
+}
+.bubble-2 {
+  width: 16px;
+  height: 16px;
+  animation-duration: 9s;
+}
+.bubble-3 {
+  width: 8px;
+  height: 8px;
+  animation-duration: 7s;
+}
+.bubble-4 {
+  width: 22px;
+  height: 22px;
+  animation-duration: 11s;
+}
+
+@keyframes ocean-rise {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-110vh) scale(1);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Family Management",
+  "myFamily": "My Family",
+  "selectChild": "Select Child",
+  "noChildren": "No children yet",
+  "addChild": "Add Child",
+  "editChild": "Edit Child",
+  "deleteChild": "Delete Child",
+  "deleteConfirm": "Are you sure you want to delete this child?",
+  "child": {
+    "name": "Name",
+    "namePlaceholder": "Enter child's name",
+    "nickname": "Nickname",
+    "nicknamePlaceholder": "Enter nickname (optional)",
+    "birthDate": "Birth Date",
+    "totalScore": "Total Score",
+    "availableScore": "Available Score"
+  },
+  "errors": {
+    "loadFailed": "Failed to load family information",
+    "addFailed": "Failed to add child",
+    "updateFailed": "Failed to update child information",
+    "deleteFailed": "Failed to delete child"
+  },
+  "success": {
+    "added": "Child added successfully",
+    "updated": "Child information updated",
+    "deleted": "Child deleted"
+  }
+}

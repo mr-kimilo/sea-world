@@ -1,0 +1,33 @@
+{
+  "appName": "海底世界",
+  "loading": "加载中...",
+  "submit": "提交",
+  "cancel": "取消",
+  "confirm": "确认",
+  "back": "返回",
+  "home": "首页",
+  "next": "下一步",
+  "save": "保存",
+  "saving": "保存中...",
+  "delete": "删除",
+  "edit": "编辑",
+  "close": "关闭",
+  "search": "搜索",
+  "logout": "退出",
+  "switchToEnglish": "English",
+  "switchToChinese": "中文",
+  "pageSectionNavAria": "本页小节导航",
+  "success": "成功",
+  "error": "错误",
+  "or": "或",
+  "more": "更多",
+  "less": "收起",
+  "dialog": {
+    "confirm": "确认",
+    "cancel": "取消"
+  },
+  "errors": {
+    "unknown": "未知错误，请稍后重试",
+    "networkError": "网络错误，请检查网络连接"
+  }
+}

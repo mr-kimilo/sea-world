@@ -1,0 +1,33 @@
+{
+  "title": "个人中心",
+  "pageMenuTitle": "个人中心",
+  "pageNav": {
+    "family": "家庭",
+    "children": "孩子",
+    "categories": "维度"
+  },
+  "familyInfo": "家庭信息",
+  "familyName": "家庭名称",
+  "familyNamePlaceholder": "请输入家庭名称",
+  "familyNameRequired": "家庭名称不能为空",
+  "familyNameUpdated": "家庭名称更新成功",
+  "childrenList": "孩子列表",
+  "noChildren": "暂无孩子",
+  "childUpdated": "孩子信息更新成功",
+  "updateFailed": "更新失败，请重试",
+  "customCategories": "自定义积分维度",
+  "addCategory": "添加维度",
+  "categoryName": "维度名称",
+  "categoryIcon": "图标",
+  "categoryNamePlaceholder": "例如：运动、阅读、乐器等",
+  "categoryNameRequired": "维度名称不能为空",
+  "categoryCreated": "维度创建成功",
+  "createCategoryFailed": "创建失败，请重试",
+  "categoryDeleted": "维度删除成功",
+  "deleteCategoryFailed": "删除失败，请重试",
+  "deleteCategoryTitle": "确认删除",
+  "deleteCategoryConfirm": "确定要删除维度 \"{{name}}\" 吗？",
+  "deleteCategoryWithScoresConfirm": "维度 \"{{name}}\" 有 {{count}} 条积分记录。删除维度将同时删除这些积分记录，是否继续？",
+  "noCustomCategories": "暂无自定义维度，点击上方按钮添加",
+  "scoreCount": "{{count}} 条积分"
+}

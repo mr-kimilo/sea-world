@@ -1,0 +1,31 @@
+{
+  "welcomeBack": "欢迎回来，{{name}}！",
+  "slogan": "陪着孩子一起成长",
+  "role": "角色：{{role}}",
+  "roles": {
+    "parent": "家长",
+    "child": "孩子",
+    "admin": "管理员"
+  },
+  "nav": {
+    "home": "首页",
+    "history": "积分历史",
+    "shop": "商城",
+    "collection": "我的收藏",
+    "profile": "个人中心"
+  },
+  "tabBarAria": "主导航",
+  "sidebarShellAria": "应用侧边栏",
+  "sidebarNavAria": "页面导航",
+  "sidebarActionsAria": "侧边栏操作",
+  "pageMenuTitle": "首页",
+  "pageNav": {
+    "welcome": "欢迎",
+    "children": "孩子",
+    "score": "积分"
+  },
+  "tabs": {
+    "addScore": "记录积分",
+    "history": "积分历史"
+  }
+}

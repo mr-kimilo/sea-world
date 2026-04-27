@@ -1,0 +1,57 @@
+{
+  "title": "Score Management",
+  "addScore": "Add Score",
+  "history": "Score History",
+  "summary": "Score Summary",
+  "categories": {
+    "intelligence": "🧠 Intelligence",
+    "physical": "💪 Physical",
+    "moral": "❤️ Moral",
+    "hygiene": "🧼 Hygiene",
+    "handcraft": "🔨 Handcraft",
+    "custom": "✨ Custom"
+  },
+  "form": {
+    "category": "Category",
+    "categoryPlaceholder": "Select category",
+    "score": "Score",
+    "scorePlaceholder": "Enter score (-10 ~ +10)",
+    "reason": "Reason",
+    "reasonPlaceholder": "Enter reason for this score",
+    "submit": "Record"
+  },
+  "filters": {
+    "all": "All",
+    "period": "Period",
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "year": "This Year"
+  },
+  "noRecords": "No score records yet",
+  "loadMore": "Load More",
+  "noMore": "No more records",
+  "errors": {
+    "addFailed": "Failed to add score",
+    "loadFailed": "Failed to load score history",
+    "invalidScore": "Score must be between -10 and +10",
+    "dailyLimitExceeded": "Daily limit exceeded for this category"
+  },
+  "success": {
+    "added": "Score recorded successfully",
+    "addedOffline": "Score saved offline and will sync when you are back online"
+  },
+  "offlineBadge": "Offline",
+  "increase": "Increase score",
+  "decrease": "Decrease score",
+  "rulerLaneHint": "Scroll or drag the orange strip above to choose a score; the ruler below shows ticks.",
+  "quickReasons": [
+    "Completed homework",
+    "Helped with chores",
+    "Slept and woke on time",
+    "Did exercise",
+    "Read a book",
+    "Tidied their room",
+    "Was kind and polite"
+  ]
+}

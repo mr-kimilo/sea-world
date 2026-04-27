@@ -1,0 +1,75 @@
+# ============================================================
+# Java / Maven (backend)
+# ============================================================
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven wrapper jar (committing the properties file is OK)
+.mvn/wrapper/maven-wrapper.jar
+
+# ============================================================
+# Sensitive configuration — local overrides with real secrets
+# Convention: create application-*-local.yml for local overrides
+# NEVER commit files containing real passwords / tokens / keys
+# ============================================================
+backend/src/main/resources/application*.yml
+backend/src/main/resources/application*.yaml
+!backend/src/main/resources/application-dev-local.yml.example
+!backend/src/main/resources/application-prod-local.yml.example
+
+# ============================================================
+# Node / npm (frontend)
+# ============================================================
+node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+*.tsbuildinfo
+
+# ============================================================
+# IDE & editors
+# ============================================================
+.idea/
+*.iml
+.vscode/settings.json
+.vscode/launch.json
+.vscode/*.code-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ============================================================
+# OS generated
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ============================================================
+# Logs & temp
+# ============================================================
+*.log
+logs/
+*.tmp
+*.temp
+docs/
+server-setup/
+deploy.md
+
+# nginx only keeps development config in version control
+nginx/*.conf
+!nginx/nginx-dev.conf
+
+# backend config templates only
+!backend/src/main/resources/application-dev-local.yml.example
+!backend/src/main/resources/application-prod-local.yml.example

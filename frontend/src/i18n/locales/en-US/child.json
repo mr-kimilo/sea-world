@@ -1,0 +1,19 @@
+{
+  "addChild": {
+    "title": "Add Child",
+    "nameLabel": "Name",
+    "namePlaceholder": "Enter child's name",
+    "nameRequired": "Name is required",
+    "nicknameLabel": "Nickname",
+    "nicknamePlaceholder": "Enter nickname (optional)",
+    "birthDateLabel": "Birth Date",
+    "birthDateFuture": "Birth date cannot be in the future",
+    "birthDateTooOld": "Child must be under 12 years old",
+    "avatarLabel": "Choose Avatar",
+    "submitButton": "Save",
+    "cancelButton": "Cancel",
+    "successMessage": "Child added successfully!",
+    "errorMessage": "Failed to add child, please try again",
+    "loadingMessage": "Saving..."
+  }
+}

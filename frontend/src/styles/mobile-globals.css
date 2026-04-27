@@ -1,0 +1,62 @@
+/* ============================================================
+   mobile-globals.css — Global CSS variables & resets for mobile
+   Applied only when [data-device="mobile"] is set on <html>
+   (set by useDeviceType hook)
+   ============================================================ */
+
+/* ── Mobile CSS custom properties ── */
+[data-device="mobile"] {
+  --mob-header-height: 56px;
+  /* Legacy flat bar height; floating tab bar uses --mob-tabbar-block for page padding */
+  --mob-tabbar-height: 56px;
+  /* Space reserved above home indicator: floating pill + margins + safe area */
+  --mob-tabbar-block: calc(88px + env(safe-area-inset-bottom, 0px));
+  --mob-header-bg: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+  --mob-tabbar-bg: linear-gradient(0deg, #023e8a 0%, #0077b6 100%);
+  --mob-content-bg: #eaf6fb;
+  --mob-card-bg: #ffffff;
+  --mob-card-radius: 16px;
+  --mob-spacing: 16px;
+  --mob-header-text: #ffffff;
+  --mob-shadow-down: 0 2px 16px rgba(0, 119, 182, 0.4);
+  --mob-shadow-up: 0 -2px 16px rgba(0, 119, 182, 0.35);
+  --mob-primary: #0077b6;
+  --mob-primary-dark: #005f8d;
+  /* Apple-like nav tokens (iOS system blue tint) */
+  --nav-glass-bg: rgba(255, 255, 255, 0.82);
+  --nav-glass-border: rgba(60, 60, 67, 0.12);
+  --nav-tab-active-bg: rgba(0, 122, 255, 0.14);
+  --nav-tab-active-color: #007aff;
+  --nav-tab-muted: rgba(60, 60, 67, 0.55);
+}
+
+/* ── Prevent horizontal scroll on mobile ── */
+[data-device="mobile"] body {
+  overflow-x: hidden;
+}
+
+/* ── Remove default tap highlight on all interactive elements ── */
+[data-device="mobile"] button,
+[data-device="mobile"] a,
+[data-device="mobile"] input,
+[data-device="mobile"] select,
+[data-device="mobile"] textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Improve touch scroll on iOS ── */
+[data-device="mobile"] * {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Larger touch targets ── */
+[data-device="mobile"] button:not(.mobile-tab) {
+  min-height: 40px;
+}
+
+/* ── Universal mobile card style ── */
+[data-device="mobile"] .section-card {
+  margin-bottom: 12px;
+  border-radius: var(--mob-card-radius);
+  overflow: hidden;
+}

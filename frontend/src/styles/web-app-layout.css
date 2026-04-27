@@ -1,0 +1,68 @@
+/* ============================================================
+   Web app shell — full-width + X-style centered column (ui.md)
+   Active when [data-device="web"] (see useDeviceType)
+   ============================================================ */
+
+[data-device='web'] #root {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-inline: 0;
+  text-align: start;
+}
+
+.app-layout-web {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  align-items: stretch;
+  background: transparent;
+}
+
+.app-layout-web-inner {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 20px 24px;
+  gap: 0;
+  align-items: stretch;
+  min-width: 0;
+  min-height: 0;
+}
+
+.app-layout-web-inner .web-sidebar {
+  min-height: calc(100dvh - 40px);
+  margin: 0;
+  border-radius: 20px 0 0 20px;
+  border-right: none;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.08),
+    inset -1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+.app-layout-web-inner .app-layout-web-main {
+  border-radius: 0 20px 20px 0;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-left: none;
+  padding: 20px 24px 28px;
+}
+
+.app-layout-web-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}

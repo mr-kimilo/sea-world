@@ -1,0 +1,588 @@
+# Shell 脚本最佳实践 (Bash)
+
+## 项目规范
+
+本项目**仅使用 Bash 脚本**，不生成 PowerShell 脚本（除非特殊需求）。
+
+**原因**：
+- ✅ 服务器是 Ubuntu 环境，Bash 是标准
+- ✅ Windows 开发者使用 Git Bash 运行（已内置）
+- ✅ 避免维护两套脚本
+- ✅ 避免 PowerShell 编码问题（UTF-8 BOM、乱码）
+
+---
+
+## 1. 脚本模板
+
+### 基础脚本模板
+
+```bash
+#!/usr/bin/env bash
+#
+# 脚本名称：example-script.sh
+# 用途：简短描述脚本功能
+# 使用方法：./example-script.sh [参数]
+#
+
+set -euo pipefail  # 严格模式：遇错即停、未定义变量报错、管道错误传播
+
+# 颜色定义
+readonly RED='\033[0;31m'
+readonly GREEN='\033[0;32m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m' # No Color
+
+# 辅助函数
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1" >&2
+}
+
+log_section() {
+    echo -e "\n${BLUE}=== $1 ===${NC}\n"
+}
+
+# 主逻辑
+main() {
+    log_section "脚本开始"
+    
+    # 你的代码...
+    
+    log_info "完成"
+}
+
+# 执行主函数
+main "$@"
+```
+
+### 检查类脚本模板（带统计）
+
+```bash
+#!/usr/bin/env bash
+#
+# 脚本名称：code-check.sh
+# 用途：代码质量检查
+#
+
+set -euo pipefail
+
+# 颜色定义
+readonly GREEN='\033[0;32m'
+readonly RED='\033[0;31m'
+readonly YELLOW='\033[1;33m'
+readonly BLUE='\033[0;34m'
+readonly NC='\033[0m'
+
+# 统计变量
+ERRORS=0
+WARNINGS=0
+CHECKS=0
+
+# 检查函数
+check_pass() {
+    echo -e "  ${GREEN}✓${NC} $1"
+    ((CHECKS++))
+}
+
+check_fail() {
+    echo -e "  ${RED}✗${NC} $1"
+    ((ERRORS++))
+    ((CHECKS++))
+}
+
+check_warn() {
+    echo -e "  ${YELLOW}⚠${NC} $1"
+    ((WARNINGS++))
+    ((CHECKS++))
+}
+
+section() {
+    echo -e "\n${BLUE}━━━ $1 ━━━${NC}\n"
+}
+
+# 主逻辑
+main() {
+    section "开始检查"
+    
+    # 示例检查
+    if [[ -f ".gitignore" ]]; then
+        check_pass ".gitignore 存在"
+    else
+        check_fail ".gitignore 不存在"
+    fi
+    
+    # 总结
+    echo -e "\n${BLUE}━━━ 检查完成 ━━━${NC}\n"
+    echo "总计: $CHECKS 项检查"
+    
+    if [[ $ERRORS -gt 0 ]]; then
+        echo -e "${RED}✗ 发现 $ERRORS 个错误${NC}"
+    fi
+    
+    if [[ $WARNINGS -gt 0 ]]; then
+        echo -e "${YELLOW}⚠ 发现 $WARNINGS 个警告${NC}"
+    fi
+    
+    if [[ $ERRORS -eq 0 && $WARNINGS -eq 0 ]]; then
+        echo -e "${GREEN}✓ 所有检查通过！${NC}"
+        exit 0
+    else
+        [[ $ERRORS -gt 0 ]] && exit 1 || exit 0
+    fi
+}
+
+main "$@"
+```
+
+---
+
+## 2. 核心规范
+
+### 2.1 Shebang 必须使用 `#!/usr/bin/env bash`
+
+✅ **正确**:
+```bash
+#!/usr/bin/env bash
+```
+
+❌ **错误**:
+```bash
+#!/bin/bash           # 路径可能不同（macOS 是 /usr/local/bin/bash）
+#!/bin/sh             # 功能受限（POSIX shell，不支持数组等）
+```
+
+### 2.2 严格模式 `set -euo pipefail`
+
+```bash
+set -euo pipefail
+```
+
+- `set -e`: 任何命令返回非零退出码时立即退出
+- `set -u`: 使用未定义变量时报错（防止 `$TYPO` 变成空字符串）
+- `set -o pipefail`: 管道中任何命令失败则整个管道失败
+
+**注意**：严格模式下需要谨慎处理条件判断：
+
+```bash
+# ❌ 这会因为 grep 没找到而退出
+grep "pattern" file.txt
+
+# ✅ 正确处理
+if grep -q "pattern" file.txt; then
+    echo "找到"
+else
+    echo "未找到"
+fi
+
+# ✅ 或者临时关闭 -e
+set +e
+grep "pattern" file.txt
+result=$?
+set -e
+```
+
+### 2.3 文件编码必须是 UTF-8（无 BOM）
+
+- ✅ UTF-8 (No BOM)
+- ❌ UTF-8 with BOM（会导致 shebang 失效）
+- ❌ GBK/GB2312（会乱码）
+
+**VS Code 设置**（推荐全局配置）：
+```json
+{
+    "files.encoding": "utf8",
+    "files.eol": "\n"
+}
+```
+
+### 2.4 行尾必须是 LF (`\n`)
+
+- ✅ LF (Unix)
+- ❌ CRLF (Windows) - 会导致 `\r` 报错
+
+**Git 配置**（防止自动转换）：
+```bash
+# 全局配置
+git config --global core.autocrlf false
+
+# 项目 .gitattributes
+*.sh text eol=lf
+```
+
+### 2.5 文件权限必须可执行
+
+```bash
+# 创建脚本后立即添加执行权限
+chmod +x script.sh
+
+# 检查权限
+ls -l script.sh
+# -rwxr-xr-x  表示可执行
+```
+
+### 2.6 变量命名规范
+
+```bash
+# 全局常量：大写 + readonly
+readonly DB_HOST="localhost"
+readonly MAX_RETRY=3
+
+# 局部变量/函数内变量：小写 + 下划线
+local user_name="admin"
+log_file="/var/log/app.log"
+
+# 环境变量：大写（从外部传入）
+echo "PATH: $PATH"
+echo "DB_PASSWORD: ${DB_PASSWORD:-default}"
+```
+
+### 2.7 引用规则
+
+```bash
+# ✅ 总是使用双引号（除非有特殊原因）
+echo "$variable"
+cp "$source" "$destination"
+
+# ❌ 不加引号会导致空格分割、通配符展开
+cp $source $destination  # 如果路径有空格会失败
+
+# 特殊：数组和命令替换
+files=( *.txt )
+current_date=$(date +%Y-%m-%d)
+```
+
+---
+
+## 3. 常见模式
+
+### 3.1 检查文件/目录是否存在
+
+```bash
+if [[ -f "file.txt" ]]; then
+    echo "文件存在"
+fi
+
+if [[ -d "directory" ]]; then
+    echo "目录存在"
+fi
+
+if [[ ! -e "path" ]]; then
+    echo "路径不存在（文件或目录都不存在）"
+fi
+```
+
+### 3.2 检查命令是否存在
+
+```bash
+if command -v git &>/dev/null; then
+    echo "Git 已安装"
+else
+    echo "Git 未安装"
+    exit 1
+fi
+```
+
+### 3.3 获取脚本所在目录
+
+```bash
+# 获取脚本所在目录（支持软链接）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# 切换到项目根目录
+cd "$SCRIPT_DIR/.." || exit 1
+```
+
+### 3.4 安全的临时文件
+
+```bash
+# 创建临时文件
+temp_file=$(mktemp)
+trap 'rm -f "$temp_file"' EXIT  # 脚本退出时自动删除
+
+echo "数据" > "$temp_file"
+# 使用临时文件...
+```
+
+### 3.5 读取配置文件
+
+```bash
+# 读取 .env 文件
+if [[ -f ".env" ]]; then
+    # 安全加载（过滤注释和空行）
+    while IFS='=' read -r key value; do
+        # 跳过注释和空行
+        [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+        
+        # 去除引号
+        value="${value%\"}"
+        value="${value#\"}"
+        
+        # 导出变量
+        export "$key=$value"
+    done < .env
+fi
+```
+
+### 3.6 并行执行（后台任务）
+
+```bash
+# 启动后台任务
+task1 &
+task2 &
+task3 &
+
+# 等待所有后台任务完成
+wait
+
+echo "所有任务完成"
+```
+
+### 3.7 重试逻辑
+
+```bash
+retry() {
+    local max_attempts=3
+    local timeout=2
+    local attempt=1
+    local command="$*"
+    
+    until eval "$command"; do
+        if [[ $attempt -ge $max_attempts ]]; then
+            log_error "命令失败（尝试 $attempt 次）: $command"
+            return 1
+        fi
+        
+        log_warn "命令失败，$timeout 秒后重试... ($attempt/$max_attempts)"
+        sleep $timeout
+        ((attempt++))
+    done
+    
+    return 0
+}
+
+# 使用
+retry curl -s https://api.example.com/health
+```
+
+---
+
+## 4. 避免的常见错误
+
+### 4.1 ❌ 使用 `cd` 不检查结果
+
+```bash
+# ❌ 错误
+cd /some/path
+rm -rf *  # 如果 cd 失败，会删除当前目录所有文件！
+
+# ✅ 正确
+cd /some/path || exit 1
+rm -rf *
+
+# ✅ 更好（子 shell 中执行）
+(cd /some/path && rm -rf *)
+```
+
+### 4.2 ❌ 使用 `ls` 解析文件名
+
+```bash
+# ❌ 错误（无法处理空格、换行符）
+for file in $(ls *.txt); do
+    echo "$file"
+done
+
+# ✅ 正确（使用通配符）
+for file in *.txt; do
+    [[ -e "$file" ]] || continue  # 处理无匹配文件的情况
+    echo "$file"
+done
+
+# ✅ 正确（使用 find）
+find . -name "*.txt" -print0 | while IFS= read -r -d '' file; do
+    echo "$file"
+done
+```
+
+### 4.3 ❌ 不检查命令是否存在
+
+```bash
+# ❌ 错误
+mvn clean install  # 如果没装 Maven 会直接报错
+
+# ✅ 正确
+if ! command -v mvn &>/dev/null; then
+    log_error "Maven 未安装"
+    exit 1
+fi
+
+mvn clean install
+```
+
+### 4.4 ❌ 硬编码路径
+
+```bash
+# ❌ 错误
+cd /home/user/project
+./run.sh
+
+# ✅ 正确（相对于脚本位置）
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR" || exit 1
+./run.sh
+```
+
+### 4.5 ❌ 不处理错误
+
+```bash
+# ❌ 错误
+result=$(curl -s https://api.example.com)
+echo "$result" | jq .data  # 如果 curl 失败，jq 会报错
+
+# ✅ 正确
+if ! result=$(curl -s https://api.example.com); then
+    log_error "API 请求失败"
+    exit 1
+fi
+
+echo "$result" | jq .data || {
+    log_error "JSON 解析失败"
+    exit 1
+}
+```
+
+---
+
+## 5. 项目集成
+
+### 5.1 脚本命名规范
+
+```
+项目根目录/
+├── 12-factor-check.sh       # 检查类脚本
+├── start-backend.sh         # 启动类脚本
+├── deploy.sh                # 部署类脚本
+└── scripts/                 # 辅助脚本目录
+    ├── setup-db.sh
+    └── backup.sh
+```
+
+### 5.2 README.md 中的使用说明
+
+```markdown
+## 运行脚本
+
+### Windows (Git Bash)
+```bash
+# 首次运行需要添加执行权限
+chmod +x *.sh
+
+# 运行脚本
+./start-backend.sh
+```
+
+### Linux/macOS
+```bash
+# 添加执行权限
+chmod +x *.sh
+
+# 运行脚本
+./start-backend.sh
+```
+```
+
+### 5.3 Git 配置（.gitattributes）
+
+```gitattributes
+# 确保 shell 脚本使用 LF 行尾
+*.sh text eol=lf
+
+# 确保 .env 文件使用 LF
+.env* text eol=lf
+```
+
+---
+
+## 6. 调试技巧
+
+### 6.1 启用调试模式
+
+```bash
+# 在脚本开头添加（打印每条执行的命令）
+set -x
+
+# 或者运行时启用
+bash -x script.sh
+```
+
+### 6.2 检查语法错误
+
+```bash
+# 不执行，只检查语法
+bash -n script.sh
+
+# 使用 shellcheck（推荐安装）
+shellcheck script.sh
+```
+
+### 6.3 逐步调试
+
+```bash
+# 在关键位置添加调试信息
+echo "DEBUG: variable=$variable" >&2
+echo "DEBUG: 到达检查点 1" >&2
+```
+
+---
+
+## 7. Copilot 集成规则
+
+当 Copilot 生成脚本时，必须遵循以下规则：
+
+1. **仅生成 Bash 脚本**（`.sh` 文件），不生成 PowerShell 脚本
+2. **必须包含**：
+   - Shebang: `#!/usr/bin/env bash`
+   - 严格模式: `set -euo pipefail`
+   - 脚本说明注释
+3. **必须使用**：
+   - 颜色辅助函数（`log_info`, `log_error` 等）
+   - 双引号包裹变量
+   - 错误检查（`|| exit 1`）
+4. **文件属性**：
+   - 编码: UTF-8 (No BOM)
+   - 行尾: LF
+   - 权限: 755 (可执行)
+5. **生成后提醒用户**：
+   ```bash
+   chmod +x script.sh
+   ```
+
+---
+
+## 8. 快速检查清单
+
+创建脚本后，检查以下项：
+
+- [ ] ✅ Shebang 是 `#!/usr/bin/env bash`
+- [ ] ✅ 包含 `set -euo pipefail`
+- [ ] ✅ 所有变量用双引号包裹 `"$var"`
+- [ ] ✅ `cd` 命令后有 `|| exit 1`
+- [ ] ✅ 使用 `command -v` 检查依赖
+- [ ] ✅ 文件编码是 UTF-8 (No BOM)
+- [ ] ✅ 行尾是 LF (Unix)
+- [ ] ✅ 文件有执行权限 `chmod +x`
+- [ ] ✅ 运行 `bash -n script.sh` 无语法错误
+- [ ] ✅ 运行 `shellcheck script.sh` 无警告（如果已安装）
+
+---
+
+## 示例：完整的检查脚本
+
+参考项目中的 `12-factor-check.sh` 和 `backend/code-review-check.sh`。

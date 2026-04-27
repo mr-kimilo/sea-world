@@ -1,0 +1,127 @@
+{
+  "title": "Shop",
+  "pageMenuTitle": "Shop",
+  "pageNav": {
+    "browse": "Browse",
+    "content": "Catalog"
+  },
+  "backToHome": "🏠 Home",
+  "buyFor": "What to buy for {{name}}",
+  "selectChild": "Select a child",
+  "items": "Items",
+  "orders": "My Orders",
+  "pendingOrders": "Pending",
+  "completedOrders": "Completed",
+  "loading": "Loading...",
+  "loadMore": "Load More",
+  "remaining": "remaining",
+  "noItems": "No items available",
+  "noPendingOrders": "No pending orders",
+  "noCompletedOrders": "No completed orders",
+  "currentChild": "Current Child",
+  "availableScore": "Available Points",
+  "totalScore": "Total Points",
+  "item": {
+    "name": "Name",
+    "description": "Description",
+    "price": "Price (Points)",
+    "rarity": "Rarity",
+    "buy": "Buy Now",
+    "outOfStock": "Out of Stock",
+    "notAllowed": "Not Available"
+  },
+  "order": {
+    "id": "Order ID",
+    "item": "Item",
+    "cost": "Cost",
+    "status": "Status",
+    "purchasedAt": "Ordered At",
+    "completedAt": "Completed At",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "buyDialog": {
+    "title": "Confirm Purchase",
+    "message": "Are you sure you want to buy {{itemName}}?",
+    "hint": "{{price}} points will be reserved. Confirm consumption to deduct.",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "confirmDialog": {
+    "title": "Confirm Consumption",
+    "message": "Have you consumed {{itemName}}?",
+    "hint": "{{price}} points will be deducted.",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "cancelDialog": {
+    "title": "Cancel Order",
+    "message": "Are you sure you want to cancel this order?",
+    "hint": "{{price}} points will be refunded.",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "messages": {
+    "buySuccess": "Purchase successful, points reserved",
+    "confirmSuccess": "Consumption confirmed",
+    "cancelSuccess": "Order cancelled, points refunded",
+    "loadError": "Load failed",
+    "buyError": "Purchase failed",
+    "confirmError": "Confirm failed",
+    "cancelError": "Cancel failed",
+    "selectChildFirst": "Please select a child first"
+  },
+  "admin": {
+    "title": "Product Management",
+    "create": "Create Product",
+    "edit": "Edit Product",
+    "delete": "Delete Product",
+    "image": "Image",
+    "actions": "Actions",
+    "form": {
+      "name": "Product Name",
+      "namePlaceholder": "Enter product name",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "imageUrl": "Image URL",
+      "imageUrlPlaceholder": "Enter image URL",
+      "price": "Price (Points)",
+      "pricePlaceholder": "Enter price",
+      "rarity": "Rarity",
+      "rarityOptions": {
+        "common": "Common",
+        "rare": "Rare",
+        "epic": "Epic",
+        "legendary": "Legendary"
+      },
+      "sortOrder": "Sort Order",
+      "sortOrderPlaceholder": "Lower number appears first",
+      "isActive": "Active",
+      "allowedChildren": "Allowed Children",
+      "allowedChildrenHint": "Empty = available for all children",
+      "submit": "Save",
+      "cancel": "Cancel"
+    },
+    "deleteConfirm": {
+      "title": "Confirm Delete",
+      "message": "Are you sure you want to delete {{name}}?",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "noProducts": "No products yet. Click \"Create Product\" to get started.",
+    "messages": {
+      "success": "Success",
+      "error": "Error",
+      "createSuccess": "Product created",
+      "updateSuccess": "Product updated",
+      "deleteSuccess": "Product deleted",
+      "createError": "Create failed",
+      "updateError": "Update failed",
+      "deleteError": "Delete failed",
+      "loadError": "Failed to load product details"
+    }
+  }
+}

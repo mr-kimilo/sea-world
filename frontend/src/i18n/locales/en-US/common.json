@@ -1,0 +1,33 @@
+{
+  "appName": "Sea World",
+  "loading": "Loading...",
+  "submit": "Submit",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "back": "Back",
+  "home": "Home",
+  "next": "Next",
+  "save": "Save",
+  "saving": "Saving...",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "search": "Search",
+  "logout": "Logout",
+  "switchToEnglish": "English",
+  "switchToChinese": "中文",
+  "pageSectionNavAria": "In-page section navigation",
+  "success": "Success",
+  "error": "Error",
+  "or": "or",
+  "more": "More",
+  "less": "Less",
+  "dialog": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "unknown": "Unknown error, please try again later",
+    "networkError": "Network error, please check your connection"
+  }
+}

@@ -1,0 +1,53 @@
+# 本地生产环境配置模板（用于模拟生产部署）
+# 使用方法:
+#   1. 复制此文件为 application-prod-local.yml
+#   2. 填入真实的密码和密钥
+#   3. 启动: java -jar xxx.jar --spring.profiles.active=prod-local
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/seaworld
+    username: your_db_username  # 修改为你的数据库用户名
+    password: change_me_strong_password  # 修改为你的数据库密码
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: false  # 生产环境不显示 SQL
+    hibernate:
+      ddl-auto: validate  # 生产环境只验证，不自动创建表
+
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: your_email@qq.com  # 修改为你的 QQ 邮箱
+    password: your_qq_auth_code_here  # 修改为你的 QQ 邮箱授权码
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  jwt:
+    secret: change_me_base64_secret_at_least_64_chars  # 修改为你的 JWT 密钥（至少 64 字符 Base64）
+  frontend-url: http://localhost  # 通过 Nginx 访问
+  cors:
+    allowed-origins: "http://localhost"  # 只允许通过 Nginx 访问
+  security:
+    max-daily-registrations: 50
+    max-register-per-ip-per-hour: 3
+  email:
+    from: your_email@qq.com  # 修改为你的 QQ 邮箱
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    root: INFO
+    com.seaworld: INFO

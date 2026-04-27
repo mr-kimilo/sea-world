@@ -1,0 +1,268 @@
+/* ============================================================
+   Shop.mobile.css — Mobile-specific styles for the Shop page
+   Applies only when [data-device="mobile"] is set on <html>
+   Web styles live in Shop.css (unchanged)
+   ============================================================ */
+
+/* ── Page container ── */
+[data-device="mobile"] .shop-page {
+  min-height: 100svh;
+  background: var(--mob-content-bg, #eaf6fb);
+  /* Ensure content starts below the fixed header */
+  padding-top: calc(var(--mob-header-height, 56px) + 12px);
+}
+
+/* ── Fixed header: align with Home header style ── */
+[data-device="mobile"] .shop-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--mob-header-height, 56px);
+  background: var(--mob-header-bg);
+  box-shadow: var(--mob-shadow-down);
+  z-index: 200;
+  padding: 0 16px;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: nowrap;
+  border-radius: 0;
+  border: none;
+}
+
+/* Header internals use Home's class names on mobile */
+[data-device='mobile'] .shop-header .header-left {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+[data-device='mobile'] .shop-header .header-right {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+
+[data-device='mobile'] .shop-header .header-left h1 {
+  font-size: 17px;
+  color: white;
+  font-weight: 700;
+  margin: 0;
+  white-space: nowrap;
+}
+
+[data-device='mobile'] .shop-header .header-slogan {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+[data-device='mobile'] .shop-header .logout-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+[data-device='mobile'] .shop-header .logout-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+  color: white;
+}
+
+/* ── below-tabs-child-selector is hidden on mobile (moved to content) ── */
+[data-device="mobile"] .below-tabs-child-selector {
+  display: none;
+}
+
+/* Old header content (back/title/tabs) removed on mobile */
+[data-device='mobile'] .shop-header-left,
+[data-device='mobile'] .shop-header-right,
+[data-device='mobile'] .shop-header-tabs,
+[data-device='mobile'] .btn-back {
+  display: none !important;
+}
+
+/* ── buy-for banner on mobile ── */
+[data-device="mobile"] .shop-buy-for-banner {
+  position: fixed;
+  top: var(--mob-header-height, 56px);
+  left: 0;
+  right: 0;
+  z-index: 190;
+  padding: 6px 16px;
+  font-size: 14px;
+}
+
+/* ── ChildSelector shown inside content on mobile ── */
+[data-device="mobile"] .mobile-child-selector-section {
+  background: white;
+  border-radius: var(--mob-card-radius, 16px);
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Mobile child selector: fixed area + horizontal swipe cards */
+[data-device="mobile"] .mobile-child-selector-section .child-selector {
+  margin: 0;
+}
+
+[data-device="mobile"] .mobile-child-selector-section .child-selector--carousel .child-selector-grid {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: flex-start;
+  padding: 6px 12px 10px;
+  scroll-padding-left: 12px;
+  scroll-padding-right: 12px;
+  gap: 10px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-device="mobile"] .mobile-child-selector-section .child-selector--carousel .child-card {
+  flex: 0 0 210px;
+  min-width: 210px;
+  max-width: 210px;
+  scroll-snap-align: start;
+}
+
+[data-device="mobile"] .mobile-child-selector-section .child-selector--carousel .child-avatar {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 6px;
+}
+
+[data-device="mobile"] .mobile-child-selector-section .child-selector--carousel .child-avatar-emoji {
+  font-size: 22px;
+}
+
+[data-device="mobile"] .mobile-child-selector-section .child-selector--carousel .child-score {
+  display: none;
+}
+
+/* ── Tabs bar: sticky below header + buy-for banner ── */
+[data-device="mobile"] .shop-tabs {
+  position: sticky;
+  top: calc(var(--mob-header-height, 56px) + 32px); /* header + banner */
+  z-index: 150;
+  background: white;
+  padding: 0 8px;
+  gap: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+[data-device="mobile"] .tab-button {
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  gap: 4px;
+}
+
+[data-device="mobile"] .tab-icon {
+  font-size: 0.95rem;
+}
+
+/* ── Content area with padding for fixed elements ── */
+[data-device="mobile"] .shop-content {
+  padding-top: 0;
+  padding-bottom: calc(var(--mob-tabbar-block, 88px) + 8px);
+  padding-left: var(--mob-spacing, 16px);
+  padding-right: var(--mob-spacing, 16px);
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Mobile tabs: sticky below header ── */
+[data-device='mobile'] .shop-mobile-tabs {
+  position: relative;
+  top: auto;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 4px 2px;
+  margin: 0;
+}
+
+[data-device='mobile'] .shop-mobile-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+[data-device='mobile'] .shop-mobile-tabs .tab-button {
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.82);
+  border: 0.5px solid rgba(60, 60, 67, 0.12);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+}
+
+[data-device='mobile'] .shop-mobile-tabs .tab-button.active {
+  background: rgba(0, 122, 255, 0.14);
+  border-color: rgba(0, 122, 255, 0.25);
+  color: #007aff;
+}
+
+/* ── Shop items grid: 2 per row on mobile ── */
+[data-device="mobile"] .items-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+[data-device="mobile"] .shop-item-card {
+  border-radius: 14px;
+  padding: 14px 10px;
+}
+
+[data-device="mobile"] .item-emoji {
+  font-size: 36px;
+}
+
+[data-device="mobile"] .item-name {
+  font-size: 14px;
+}
+
+[data-device="mobile"] .item-price {
+  font-size: 13px;
+}
+
+[data-device="mobile"] .btn-buy {
+  padding: 9px 12px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+/* ── Orders list: full width cards ── */
+[data-device="mobile"] .orders-list {
+  gap: 10px;
+}
+
+[data-device="mobile"] .order-card {
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+/* ── Product manager: stacked layout ── */
+[data-device="mobile"] .product-manager {
+  border-radius: var(--mob-card-radius, 16px);
+}
+
+/* ── Empty / loading states ── */
+[data-device="mobile"] .items-empty,
+[data-device="mobile"] .orders-empty {
+  padding: 40px 20px;
+  border-radius: var(--mob-card-radius, 16px);
+}

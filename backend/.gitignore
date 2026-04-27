@@ -1,0 +1,29 @@
+# ============================================================
+# Maven build output
+# ============================================================
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven wrapper jar
+.mvn/wrapper/maven-wrapper.jar
+
+# ============================================================
+# Sensitive / local configuration overrides
+# NEVER commit files containing real passwords / tokens / keys
+# Use application-*-local.yml (activate with --spring.profiles.active=dev-local or prod-local)
+# ============================================================
+src/main/resources/application-local.yml
+src/main/resources/application-prod-local.yml
+
+# ============================================================
+# Logs & temp
+# ============================================================
+*.log
+logs/
+*.tmp
+*.temp
+*-local.yml
+*-local.yaml

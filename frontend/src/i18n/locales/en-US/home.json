@@ -1,0 +1,31 @@
+{
+  "welcomeBack": "Welcome back, {{name}}!",
+  "slogan": "Growing together with your children",
+  "role": "Role: {{role}}",
+  "roles": {
+    "parent": "Parent",
+    "child": "Child",
+    "admin": "Admin"
+  },
+  "nav": {
+    "home": "Home",
+    "history": "Score History",
+    "shop": "Shop",
+    "collection": "My Collection",
+    "profile": "Profile"
+  },
+  "tabBarAria": "Main tab navigation",
+  "sidebarShellAria": "App sidebar",
+  "sidebarNavAria": "Page navigation",
+  "sidebarActionsAria": "Sidebar actions",
+  "pageMenuTitle": "Home",
+  "pageNav": {
+    "welcome": "Welcome",
+    "children": "Children",
+    "score": "Score"
+  },
+  "tabs": {
+    "addScore": "Add Score",
+    "history": "Score History"
+  }
+}

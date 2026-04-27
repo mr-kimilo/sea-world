@@ -1,0 +1,179 @@
+---
+description: "Sea World project index: stack, layers, security, shell — mirror of .github/copilot-instructions.md"
+alwaysApply: true
+---
+
+> **Source of truth**: `.github/copilot-instructions.md` (edit there, then re-run this script.)
+
+# Project Guidelines — 海底世界 (Sea World)
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Java 21 + Spring Boot 3.2.5 + PostgreSQL + Flyway + JWT |
+| Frontend | React + TypeScript + Vite + React Router + Zustand + Axios |
+| Build | Maven (backend), npm (frontend) |
+
+## Detailed Instructions
+
+细粒度规范放在 `.github/instructions/` 下，Copilot 会根据当前文件类型自动加载：
+
+| 文件 | 适用范围 | 内容 |
+|------|---------|------|
+| [12-factor-app.instructions.md](.github/instructions/12-factor-app.instructions.md) | **所有文件** | 12-Factor App 原则：配置管理、无状态设计、日志、构建部署 |
+| [java-naming.instructions.md](.github/instructions/java-naming.instructions.md) | `backend/**/*.java` | 命名规范（包/类/方法/字段/DTO） |
+| [java-exception-handling.instructions.md](.github/instructions/java-exception-handling.instructions.md) | `backend/**/*.java` | 全局异常处理、BusinessException、ApiResponse |
+| [java-multithreading.instructions.md](.github/instructions/java-multithreading.instructions.md) | `backend/**/*.java` | 异步、线程池、CompletableFuture、事务边界 |
+| [java-stream-lambda.instructions.md](.github/instructions/java-stream-lambda.instructions.md) | `backend/**/*.java` | Stream 链式调用、Lambda、Optional |
+| [java-dto-mapping.instructions.md](.github/instructions/java-dto-mapping.instructions.md) | `backend/**/*.java` | DTO ↔ Entity 映射，禁止 BeanUtils |
+| [frontend-conventions.instructions.md](.github/instructions/frontend-conventions.instructions.md) | `frontend/src/**/*.{ts,tsx}` | React 组件、Zustand、Axios、路由鉴权 |
+| [frontend-fluid-layout.instructions.md](.github/instructions/frontend-fluid-layout.instructions.md) | `frontend/src/**/*.{css,ts,tsx}` | 流式布局：1024 断点、防溢出、页面骨架与组件级约定 |
+| [frontend-i18n.instructions.md](.github/instructions/frontend-i18n.instructions.md) | `frontend/src/**/*.{ts,tsx}` | 国际化(i18n)：禁止硬编码字符串，双语支持 |
+| [frontend-component-modularity.instructions.md](.github/instructions/frontend-component-modularity.instructions.md) | `frontend/src/**/*.{ts,tsx}` | 组件模块化：单一职责、容器vs展示组件、拆分策略 |
+| [frontend-dialog.instructions.md](.github/instructions/frontend-dialog.instructions.md) | `frontend/src/**/*.{ts,tsx}` | 对话框规范：禁用原生对话框，使用 useConfirm hook |
+
+## Backend Package Structure
+
+```
+com.seaworld
+├── controller/    # REST 端点，只做参数校验和调用 Service
+├── service/       # 业务逻辑，事务边界在此层
+├── repository/    # Spring Data JPA 接口
+├── entity/        # 数据库实体，仅含持久化注解
+├── dto/           # 请求/响应对象，用于 Controller 层
+├── security/      # JWT、认证过滤器
+├── config/        # Spring 配置类、@ConfigurationProperties
+├── exception/     # 自定义异常 + 全局异常处理器
+└── util/          # ErrorMessages / ResponseMessages 枚举等
+```
+
+## 分层开发规则
+
+| 层 | 做什么 | 不做什么 |
+|----|--------|---------|
+| Controller | `@Validated` + `@Valid` 校验入参；调用 Service；用 `ResponseMessages` 枚举构造成功响应 | 不写业务逻辑；不捕获异常 |
+| Service | 业务逻辑 + 事务边界；用 `ErrorMessages` 枚举抛出语义化异常 | 不返回 `ResponseEntity`；不做 HTTP 相关操作 |
+| Repository | Spring Data JPA 接口 | 不写业务逻辑 |
+| GlobalExceptionHandler | 统一拦截异常，转为 `ApiResponse` | — |
+
+## 消息管理规则
+
+- **禁止**在 Java 代码中硬编码消息字符串
+- 异常消息 → `util/ErrorMessages` 枚举（支持 `format()` 参占位符）
+- 成功响应消息 → `util/ResponseMessages` 枚举
+- 邮件/通知模板 → `application.yml` + `@ConfigurationProperties`
+
+## 12-Factor App 核心原则
+
+> 详见 [12-factor-app.instructions.md](.github/instructions/12-factor-app.instructions.md)
+
+### 配置管理 (Config) ⭐
+- **所有敏感信息**必须使用环境变量（密码、密钥、Token、API Key）
+- yml 配置文件只包含**占位符**：`${VAR_NAME:default_value}`
+- `.env` 和 `application-local.yml` 必须在 `.gitignore` 中
+- 不同环境使用**相同代码**，只有配置值不同
+
+### 无状态进程 (Processes)
+- 不使用服务器端 Session（使用 JWT 无状态认证）
+- 不在内存中存储用户状态（除缓存）
+- 应用必须支持水平扩展（多实例运行）
+
+### 后端服务 (Backing Services)
+- 数据库、邮件、缓存等通过 URL 配置连接
+- 可以不修改代码切换服务提供商
+- 不硬编码服务地址
+
+### 日志管理 (Logs)
+- 日志输出到 stdout/stderr（不直接管理文件）
+- 使用 SLF4J + Logback（禁止 `System.out.println`）
+- 不在日志中打印敏感信息
+
+## Security Rules (All Layers)
+
+- 密码 bcrypt 加密（cost factor 10）
+- JWT access + refresh 双 Token
+- 所有输入必须校验：
+  - Controller 类上加 `@Validated`
+  - `@RequestBody` 参数加 `@Valid`
+  - `@RequestParam` 参数加 `@NotBlank` / `@Email` / `@PositiveOrZero` / `@Min` / `@Max` 等
+- **不要在日志中打印密码、token 等敏感信息**
+- SQL 全部使用参数化查询（JPA 默认保证）
+
+## Git 忽略规则
+
+根目录 `.gitignore` 覆盖所有子项目，以下类型文件**禁止提交**：
+
+| 类别 | 模式 | 原因 |
+|------|------|------|
+| 编译产物 | `backend/target/`, `*.class`, `*.jar` | 构建输出，不属于源码 |
+| 本地配置覆盖 | `application-local.yml`, `application-secret.yml` | 可能含真实密码 / Token |
+| 环境变量文件 | `.env`, `.env.local`, `.env.*.local` | 含真实密钥，绝不提交 |
+| 前端构建产物 | `node_modules/`, `frontend/dist/` | 构建输出 |
+| IDE 配置 | `.idea/`, `.vscode/settings.json` | 个人本地配置 |
+| 操作系统文件 | `.DS_Store`, `Thumbs.db` | 系统生成，无意义 |
+| 日志与临时文件 | `*.log`, `logs/`, `*.tmp` | 运行时产物 |
+
+**本地环境覆盖约定**：需要覆盖 dev 配置（如本地数据库地址）时，创建 `application-local.yml` 并激活 `local` profile，该文件已被 `.gitignore` 保护，不会被提交。
+
+## Shell 脚本规范
+
+本项目**仅使用 Bash 脚本**（`.sh` 文件），不生成 PowerShell 脚本。
+
+### 原因
+- ✅ 服务器是 Ubuntu 环境，Bash 是标准
+- ✅ Windows 开发者使用 Git Bash 运行（已内置）
+- ✅ 避免维护两套脚本
+- ✅ 避免 PowerShell 编码问题（UTF-8 BOM、乱码）
+
+### 脚本创建规范
+
+生成 Shell 脚本时，必须遵循以下规范：
+
+| 规范项 | 要求 | 示例 |
+|--------|------|------|
+| Shebang | `#!/usr/bin/env bash` | ✅ `#!/usr/bin/env bash` |
+| 严格模式 | `set -euo pipefail` | 遇错即停、未定义变量报错 |
+| 文件编码 | UTF-8 (No BOM) | VS Code: `files.encoding: utf8` |
+| 行尾符 | LF (`\n`) | `.gitattributes`: `*.sh text eol=lf` |
+| 文件权限 | 755 (可执行) | 创建后提醒用户 `chmod +x script.sh` |
+| 变量引用 | 总是使用双引号 | `"$variable"` 而非 `$variable` |
+| 错误检查 | `cd` 后加 `\|\| exit 1` | `cd "$dir" \|\| exit 1` |
+
+### 脚本模板
+
+```bash
+#!/usr/bin/env bash
+#
+# 脚本名称：example.sh
+# 用途：简短描述
+# 使用方法：./example.sh [参数]
+#
+
+set -euo pipefail
+
+# 颜色定义
+readonly GREEN='\033[0;32m'
+readonly RED='\033[0;31m'
+readonly NC='\033[0m'
+
+# 辅助函数
+log_info() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1" >&2
+}
+
+# 主逻辑
+main() {
+    log_info "脚本开始"
+    # 你的代码...
+}
+
+main "$@"
+```
+
+详细最佳实践：[.github/skills/shell-script-best-practices.md](.github/skills/shell-script-best-practices.md)
+

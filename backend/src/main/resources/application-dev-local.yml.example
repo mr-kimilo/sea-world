@@ -1,0 +1,42 @@
+# 开发环境本地配置模板（用于覆盖 application-dev.yml）
+# 使用方法:
+#   1. 复制此文件为 application-dev-local.yml
+#   2. 填入真实的密码和密钥
+#   3. 启动: mvn spring-boot:run -Dspring-boot.run.profiles=dev,dev-local
+#      或: java -jar xxx.jar --spring.profiles.active=dev,dev-local
+
+spring:
+  datasource:
+    # 如果你的本地数据库配置与 application-dev.yml 不同，在此覆盖
+    url: jdbc:postgresql://localhost:5432/seaworld
+    username: postgres  # 修改为你的本地数据库用户名
+    password: postgres  # 修改为你的本地数据库密码
+    driver-class-name: org.postgresql.Driver
+
+  # 如果要使用真实邮件服务器（非 MailHog），在此配置
+  # mail:
+  #   host: smtp.qq.com
+  #   port: 587
+  #   username: your_email@qq.com
+  #   password: your_qq_auth_code_here
+  #   properties:
+  #     mail:
+  #       smtp:
+  #         auth: true
+  #         starttls:
+  #           enable: true
+
+app:
+  jwt:
+    # 开发环境可以使用简单密钥，或生成一个固定的密钥
+    secret: dev_jwt_secret_for_local_testing_only_not_for_production_use
+  
+  # 如果前端运行在不同端口，在此覆盖
+  # frontend-url: http://localhost:5173
+  # cors:
+  #   allowed-origins: "http://localhost:5173"
+
+# 如果需要更详细的日志
+# logging:
+#   level:
+#     com.seaworld: DEBUG

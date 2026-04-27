@@ -1,0 +1,33 @@
+{
+  "title": "Profile",
+  "pageMenuTitle": "Profile",
+  "pageNav": {
+    "family": "Family",
+    "children": "Children",
+    "categories": "Categories"
+  },
+  "familyInfo": "Family Information",
+  "familyName": "Family Name",
+  "familyNamePlaceholder": "Enter family name",
+  "familyNameRequired": "Family name is required",
+  "familyNameUpdated": "Family name updated successfully",
+  "childrenList": "Children",
+  "noChildren": "No children yet",
+  "childUpdated": "Child information updated successfully",
+  "updateFailed": "Update failed, please try again",
+  "customCategories": "Custom Score Categories",
+  "addCategory": "Add Category",
+  "categoryName": "Category Name",
+  "categoryIcon": "Icon",
+  "categoryNamePlaceholder": "e.g. Sports, Reading, Music...",
+  "categoryNameRequired": "Category name is required",
+  "categoryCreated": "Category created successfully",
+  "createCategoryFailed": "Failed to create category, please try again",
+  "categoryDeleted": "Category deleted successfully",
+  "deleteCategoryFailed": "Failed to delete category, please try again",
+  "deleteCategoryTitle": "Confirm Deletion",
+  "deleteCategoryConfirm": "Are you sure you want to delete category \"{{name}}\"?",
+  "deleteCategoryWithScoresConfirm": "Category \"{{name}}\" has {{count}} score records. Deleting the category will also delete these scores. Continue?",
+  "noCustomCategories": "No custom categories yet. Click the button above to add one.",
+  "scoreCount": "{{count}} scores"
+}

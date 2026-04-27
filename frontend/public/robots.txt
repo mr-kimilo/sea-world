@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow private pages
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://seaworld.app/sitemap.xml

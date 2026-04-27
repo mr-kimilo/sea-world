@@ -1,0 +1,30 @@
+{
+  "title": "家庭管理",
+  "myFamily": "我的家庭",
+  "selectChild": "选择孩子",
+  "noChildren": "暂无孩子信息",
+  "addChild": "添加孩子",
+  "editChild": "编辑孩子",
+  "deleteChild": "删除孩子",
+  "deleteConfirm": "确定要删除该孩子吗？",
+  "child": {
+    "name": "姓名",
+    "namePlaceholder": "请输入孩子姓名",
+    "nickname": "昵称",
+    "nicknamePlaceholder": "请输入昵称（可选）",
+    "birthDate": "出生日期",
+    "totalScore": "总积分",
+    "availableScore": "可用积分"
+  },
+  "errors": {
+    "loadFailed": "加载家庭信息失败",
+    "addFailed": "添加孩子失败",
+    "updateFailed": "更新孩子信息失败",
+    "deleteFailed": "删除孩子失败"
+  },
+  "success": {
+    "added": "孩子添加成功",
+    "updated": "孩子信息已更新",
+    "deleted": "孩子已删除"
+  }
+}

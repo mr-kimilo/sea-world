@@ -1,0 +1,46 @@
+# 行尾规范
+# ============
+
+# 自动检测文本文件并规范化行尾
+* text=auto
+
+# Shell 脚本必须使用 LF (Unix)
+*.sh text eol=lf
+
+# 环境变量文件使用 LF
+.env* text eol=lf
+
+# Java/Kotlin 源代码
+*.java text eol=lf
+*.kt text eol=lf
+*.gradle text eol=lf
+
+# 配置文件
+*.yml text eol=lf
+*.yaml text eol=lf
+*.properties text eol=lf
+*.xml text eol=lf
+
+# 前端代码
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+
+# 文档
+*.md text eol=lf
+
+# 二进制文件
+*.jar binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

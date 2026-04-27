@@ -1,0 +1,57 @@
+{
+  "title": "积分管理",
+  "addScore": "记录积分",
+  "history": "积分历史",
+  "summary": "积分汇总",
+  "categories": {
+    "intelligence": "🧠 智力",
+    "physical": "💪 体能",
+    "moral": "❤️ 品德",
+    "hygiene": "🧼 卫生",
+    "handcraft": "🔨 手工",
+    "custom": "✨ 自定义"
+  },
+  "form": {
+    "category": "维度",
+    "categoryPlaceholder": "请选择维度",
+    "score": "分数",
+    "scorePlaceholder": "请输入分数（-10 ~ +10）",
+    "reason": "原因",
+    "reasonPlaceholder": "请输入记分原因",
+    "submit": "记录"
+  },
+  "filters": {
+    "all": "全部",
+    "period": "时间范围",
+    "today": "今天",
+    "week": "本周",
+    "month": "本月",
+    "year": "今年"
+  },
+  "noRecords": "暂无积分记录",
+  "loadMore": "加载更多",
+  "noMore": "没有更多了",
+  "errors": {
+    "addFailed": "记录积分失败",
+    "loadFailed": "加载积分历史失败",
+    "invalidScore": "分数必须在 -10 到 +10 之间",
+    "dailyLimitExceeded": "今日该维度积分已达上限"
+  },
+  "success": {
+    "added": "积分记录成功",
+    "addedOffline": "积分已记录（离线保存，联网后将同步）"
+  },
+  "offlineBadge": "离线模式",
+  "increase": "增加分数",
+  "decrease": "减少分数",
+  "rulerLaneHint": "在上方橙色滑动区左右滑动或点击选择分数；下方为刻度尺。",
+  "quickReasons": [
+    "认真完成作业",
+    "主动帮忙做家务",
+    "按时睡觉起床",
+    "锻炼身体",
+    "阅读课外书",
+    "整理自己的房间",
+    "待人友好有礼貌"
+  ]
+}

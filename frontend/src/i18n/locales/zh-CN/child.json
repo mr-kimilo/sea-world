@@ -1,0 +1,19 @@
+{
+  "addChild": {
+    "title": "添加孩子",
+    "nameLabel": "姓名",
+    "namePlaceholder": "请输入孩子的姓名",
+    "nameRequired": "姓名不能为空",
+    "nicknameLabel": "昵称",
+    "nicknamePlaceholder": "请输入昵称（可选）",
+    "birthDateLabel": "生日",
+    "birthDateFuture": "生日不能是未来的日期",
+    "birthDateTooOld": "孩子年龄不能超过12岁",
+    "avatarLabel": "选择头像",
+    "submitButton": "保存",
+    "cancelButton": "取消",
+    "successMessage": "孩子添加成功！",
+    "errorMessage": "添加孩子失败，请重试",
+    "loadingMessage": "保存中..."
+  }
+}

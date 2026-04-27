@@ -1,0 +1,84 @@
+---
+description: "Use when writing Java stream pipelines, lambda expressions, Optional handling, or functional-style code in the backend."
+applyTo: "backend/**/*.java"
+---
+
+# Java Lambda & Stream
+
+## Lambda 格式
+
+```java
+// ✅ 单行省略花括号
+list.forEach(item -> process(item));
+
+// ✅ 多行加花括号
+list.forEach(item -> {
+    validate(item);
+    process(item);
+});
+
+// ✅ 优先方法引用
+.map(Child::getName)       // 而非 .map(c -> c.getName())
+.filter(Child::isActive)   // 而非 .filter(c -> c.isActive())
+```
+
+## Stream 链式调用
+
+每个操作占一行，便于阅读和断点调试：
+
+```java
+// ✅
+List<String> names = children.stream()
+    .filter(c -> c.getAvailableScore() > 0)
+    .map(Child::getName)
+    .sorted()
+    .toList();
+
+// ❌ 一行到底，难以调试
+List<String> names = children.stream().filter(c -> c.getAvailableScore() > 0).map(Child::getName).sorted().toList();
+```
+
+## Optional 使用
+
+```java
+// ✅ 用 orElseThrow / map / flatMap
+User user = userRepository.findByEmail(email)
+    .orElseThrow(() -> new BusinessException("用户不存在"));
+
+String nickname = Optional.ofNullable(child.getNickname())
+    .map(String::trim)
+    .orElse(child.getName());
+
+// ❌ isPresent() + get() 反模式
+Optional<User> opt = userRepository.findByEmail(email);
+if (opt.isPresent()) {
+    User user = opt.get();
+}
+```
+
+## 批量转换
+
+```java
+// ✅ Stream + 方法引用，转换为 DTO 列表
+List<ChildResponse> responses = children.stream()
+    .map(ChildResponse::from)
+    .toList();
+
+// ✅ 聚合计算
+int totalScore = records.stream()
+    .mapToInt(ScoreRecord::getScore)
+    .sum();
+
+// ✅ 分组统计
+Map<ScoreCategory, Integer> byCategory = records.stream()
+    .collect(Collectors.groupingBy(
+        ScoreRecord::getCategory,
+        Collectors.summingInt(ScoreRecord::getScore)
+    ));
+```
+
+## 注意事项
+
+- Stream 只能消费一次，不要复用同一个 Stream 对象
+- 避免在 Stream 内部进行数据库查询（N+1 问题），先批量查询再 Stream 处理
+- 复杂逻辑提取为私有方法而非写在 lambda 里

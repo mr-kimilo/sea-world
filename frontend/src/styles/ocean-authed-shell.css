@@ -1,0 +1,48 @@
+/* Authenticated routes: ocean background + stacked content above */
+
+.app-authed-root {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  /* ui.md #5: blue gradient like looking up to the sun */
+  background: linear-gradient(
+    180deg,
+    #012a4a 0%,
+    #013a63 22%,
+    #2a6f97 52%,
+    #61a5c2 72%,
+    #a9d6e5 88%,
+    rgba(255, 255, 255, 0.28) 100%
+  );
+}
+
+.app-authed-root > .ocean-bg--fixed {
+  z-index: 0;
+}
+
+.app-authed-root > .app-layout-web {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-authed-stack {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.app-authed-stack > *:first-child {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
