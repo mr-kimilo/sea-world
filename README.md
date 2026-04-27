@@ -19,6 +19,29 @@
 - `QUICK_START.md`：快速启动和本地开发指南
 - `backend/CONFIG_GUIDE.md`：后端配置与版本控制策略
 - `nginx/README.md`：Nginx 配置与管理说明
+- `.github/skills/git-security-check.md`：Git 安全检查机制
+
+## 🔒 Git 安全机制
+
+本项目已配置 Git pre-commit 钩子，在每次提交前自动检测敏感信息：
+
+- ✅ **自动检测**：密码、密钥、Token 等敏感数据
+- 🚫 **提交拦截**：发现敏感信息时阻止提交并给出修复建议
+- 📋 **白名单支持**：支持配置例外文件和模式
+
+**使用方法**：
+```bash
+# 正常提交（会自动触发安全检查）
+git add .
+git commit -m "提交信息"
+
+# 紧急情况跳过检查
+git commit --no-verify -m "紧急提交"
+```
+
+**自定义配置**：
+- `.git/hooks/sensitive-patterns.txt`：敏感信息检测模式
+- `.git/hooks/sensitive-whitelist.txt`：白名单文件模式
 
 ## 项目结构
 
