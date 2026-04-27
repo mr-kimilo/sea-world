@@ -34,9 +34,9 @@ frontend/*.local
 # ============================================================
 .idea/
 *.iml
-.vscode/settings.json
-.vscode/launch.json
-.vscode/*.code-workspace
+.cursor/
+.github/
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
