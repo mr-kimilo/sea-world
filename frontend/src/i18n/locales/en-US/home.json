@@ -12,7 +12,10 @@
     "history": "Score History",
     "shop": "Shop",
     "collection": "My Collection",
-    "profile": "Profile"
+    "profile": "Profile",
+    "shopAdmin": "Shop Admin",
+    "orders": "Orders",
+    "scoreMaintenance": "Score Maintenance"
   },
   "tabBarAria": "Main tab navigation",
   "sidebarShellAria": "App sidebar",

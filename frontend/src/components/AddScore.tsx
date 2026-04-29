@@ -172,7 +172,15 @@ export default function AddScore({ onScoreAdded }: AddScoreProps) {
 
     try {
       if (!isOnline) {
-        addPendingScore(currentFamily.id, selectedChild.id, form);
+        addPendingScore({
+          familyId: currentFamily.id,
+          childId: selectedChild.id,
+          score: form.score,
+          category: form.category,
+          customCategoryId: form.customCategoryId,
+          reason: form.reason,
+          rawVoiceText: form.rawVoiceText,
+        });
         const newTotal = selectedChild.totalScore + form.score;
         const newAvailable = selectedChild.availableScore + form.score;
         updateChildScore(selectedChild.id, newTotal, newAvailable);

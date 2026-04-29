@@ -82,11 +82,11 @@
 
 [data-device="mobile"] .products-table tr {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   background: white;
   border-radius: 14px;
-  padding: 12px;
+  padding: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
@@ -120,30 +120,24 @@
 }
 
 /* Info cells (name, desc, price) grouped via flex layout */
-[data-device="mobile"] .products-table td:nth-child(2),
+[data-device="mobile"] .products-table td:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
 [data-device="mobile"] .products-table td:nth-child(3),
 [data-device="mobile"] .products-table td:nth-child(4) {
-  flex: 1;
+  display: none;
 }
 
 [data-device="mobile"] .products-table td:nth-child(2) {
-  font-weight: 600;
+  font-weight: 800;
   font-size: 14px;
-  color: #222;
-}
-
-[data-device="mobile"] .products-table td:nth-child(3) {
-  font-size: 12px;
-  color: #888;
+  color: #1d1d1f;
 }
 
 /* Sort order cell: hide on mobile */
 [data-device="mobile"] .products-table td:nth-child(5) {
-  display: none;
-}
-
-/* Hide image cell on mobile too (match web) */
-[data-device="mobile"] .products-table td:nth-child(1) {
   display: none;
 }
 
@@ -159,7 +153,7 @@
 
 [data-device="mobile"] .table-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 6px;
 }
 

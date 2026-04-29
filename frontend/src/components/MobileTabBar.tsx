@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MAIN_NAV_ROUTES, NavRouteIcon } from './nav/NavRouteIcons';
+import { MAIN_NAV_ROUTES } from './nav/NavRoutes';
+import { NavRouteIcon } from './nav/NavRouteIcons';
 import './MobileTabBar.css';
 
 export default function MobileTabBar() {
@@ -24,11 +25,11 @@ export default function MobileTabBar() {
               className={`mobile-tab${isActive ? ' active' : ''}`}
               onClick={() => navigate(tab.path)}
               aria-current={isActive ? 'page' : undefined}
+              aria-label={t(tab.labelKey)}
             >
               <span className="mobile-tab-icon" aria-hidden="true">
                 <NavRouteIcon name={tab.icon} className="mobile-tab-glyph" />
               </span>
-              <span className="mobile-tab-label">{t(tab.labelKey)}</span>
             </button>
           );
         })}

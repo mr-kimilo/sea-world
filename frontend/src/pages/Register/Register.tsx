@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { authApi } from '../../api/auth';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import OceanBackground from '../../components/OceanBackground';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
 import '../Login/Login.css';
 import '../Login/Login.mobile.css';
 
@@ -35,8 +39,17 @@ export default function Register() {
       } else {
         setError(res.data.message || t('auth:errors.registerFailed'));
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('auth:errors.registerFailed'));
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const maybeData = err.response?.data;
+        const message =
+          typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+            ? String((maybeData as { message?: unknown }).message ?? '')
+            : '';
+        setError(message || t('auth:errors.registerFailed'));
+      } else {
+        setError(t('auth:errors.registerFailed'));
+      }
     } finally {
       setLoading(false);
     }
@@ -59,8 +72,8 @@ export default function Register() {
           {success && <div className="auth-success">{success}</div>}
 
           <div className="form-group">
-            <label htmlFor="email">{t('auth:register.emailLabel')}</label>
-            <input
+            <Label htmlFor="email">{t('auth:register.emailLabel')}</Label>
+            <Input
               id="email"
               type="email"
               placeholder={t('auth:register.emailPlaceholder')}
@@ -71,8 +84,8 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">{t('auth:register.passwordLabel')}</label>
-            <input
+            <Label htmlFor="password">{t('auth:register.passwordLabel')}</Label>
+            <Input
               id="password"
               type="password"
               placeholder={t('auth:register.passwordPlaceholder')}
@@ -85,8 +98,8 @@ export default function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">{t('auth:register.confirmPasswordLabel')}</label>
-            <input
+            <Label htmlFor="confirmPassword">{t('auth:register.confirmPasswordLabel')}</Label>
+            <Input
               id="confirmPassword"
               type="password"
               placeholder={t('auth:register.confirmPasswordPlaceholder')}
@@ -96,9 +109,9 @@ export default function Register() {
             />
           </div>
 
-          <button type="submit" className="auth-button" disabled={loading}>
+          <Button type="submit" className="auth-button" disabled={loading}>
             {loading ? t('auth:register.loading') : t('auth:register.submit')}
-          </button>
+          </Button>
         </form>
 
         <div className="auth-footer">

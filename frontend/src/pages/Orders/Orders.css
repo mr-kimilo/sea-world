@@ -1,0 +1,39 @@
+.orders-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.orders-child-selector {
+  margin-bottom: 12px;
+}
+
+.orders-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.orders-filter-label {
+  font-weight: 700;
+  color: rgba(60, 60, 67, 0.85);
+  font-size: 14px;
+}
+
+.orders-filter-select {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 0.5px solid rgba(60, 60, 67, 0.2);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 10px 12px;
+  font-weight: 650;
+  color: rgba(60, 60, 67, 0.95);
+}
+
+.orders-content {
+  flex: 1;
+  min-height: 0;
+}
+

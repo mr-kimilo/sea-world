@@ -89,6 +89,7 @@
 }
 
 [data-device="mobile"] .mobile-tab-label {
+  display: none;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.02em;

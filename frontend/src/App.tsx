@@ -14,6 +14,9 @@ import Home from './pages/Home/Home';
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import Shop from './pages/Shop/Shop';
 import Profile from './pages/Profile/Profile';
+import Orders from './pages/Orders/Orders';
+import ShopAdmin from './pages/ShopAdmin/ShopAdmin';
+import ScoreMaintenance from './pages/ScoreMaintenance/ScoreMaintenance';
 import './styles/mobile-globals.css';
 
 /**
@@ -102,6 +105,36 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <Profile />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Orders />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/shop-admin"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ShopAdmin />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/score-maintenance"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ScoreMaintenance />
               </ProtectedLayout>
             </ProtectedRoute>
           }

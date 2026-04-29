@@ -1,0 +1,18 @@
+.score-maintenance-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.score-maintenance-content {
+  padding: 16px 20px 24px;
+}
+
+.score-maintenance-section .section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+

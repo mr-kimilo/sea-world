@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { getPendingOrders, confirmOrder, cancelOrder, Order } from '../../../api/shop';
 import { Child } from '../../../types';
 import { useConfirm } from '../../../hooks/useConfirm';
 import { useFamilyStore } from '../../../store/familyStore';
+import { Button } from '../../../components/ui/button';
 
 interface PendingOrdersProps {
   selectedChild: Child | null;
@@ -67,11 +69,16 @@ export default function PendingOrders({ selectedChild, onOrderChanged }: Pending
       });
       loadOrders();
       onOrderChanged?.();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to confirm order:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('admin.messages.error'),
-        message: t('messages.confirmError') + ': ' + (error.response?.data?.message || error.message),
+        message: t('messages.confirmError') + ': ' + (message || t('common:error')),
         type: 'danger',
         confirmText: t('common:confirm')
       });
@@ -108,11 +115,16 @@ export default function PendingOrders({ selectedChild, onOrderChanged }: Pending
       });
       loadOrders();
       onOrderChanged?.();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to cancel order:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('admin.messages.error'),
-        message: t('messages.cancelError') + ': ' + (error.response?.data?.message || error.message),
+        message: t('messages.cancelError') + ': ' + (message || t('common:error')),
         type: 'danger',
         confirmText: t('common:confirm')
       });
@@ -171,27 +183,38 @@ export default function PendingOrders({ selectedChild, onOrderChanged }: Pending
             </div>
           </div>
           <div className="order-actions">
-            <button 
+            <Button
               className="btn-action btn-confirm"
               onClick={() => handleConfirm(order)}
+              type="button"
+              size="sm"
             >
               ✅ {t('order.confirm')}
-            </button>
-            <button 
+            </Button>
+            <Button
               className="btn-action btn-cancel"
               onClick={() => handleCancel(order)}
+              type="button"
+              variant="outline"
+              size="sm"
             >
               ❌ {t('order.cancel')}
-            </button>
+            </Button>
           </div>
         </div>
       ))}
       </div>
       {hasMore && (
         <div className="load-more-container">
-          <button className="btn-load-more" onClick={() => setDisplayCount(prev => prev + 10)}>
+          <Button
+            className="btn-load-more"
+            onClick={() => setDisplayCount((prev) => prev + 10)}
+            type="button"
+            variant="outline"
+            size="sm"
+          >
             {t('loadMore')} ({orders.length - displayCount} {t('remaining')})
-          </button>
+          </Button>
         </div>
       )}
       {ConfirmDialogComponent}

@@ -2,7 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 import LanguageSwitcher from './LanguageSwitcher';
-import { MAIN_NAV_ROUTES, NavRouteIcon } from './nav/NavRouteIcons';
+import { getSidebarRoutes, type AppUserRole } from './nav/NavRoutes';
+import { NavRouteIcon } from './nav/NavRouteIcons';
 import './WebSidebar.css';
 
 function navLinkClassName({ isActive }: { isActive: boolean }) {
@@ -12,7 +13,8 @@ function navLinkClassName({ isActive }: { isActive: boolean }) {
 export default function WebSidebar() {
   const { t } = useTranslation(['home', 'common']);
   const navigate = useNavigate();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
+  const routes = getSidebarRoutes(user?.role as AppUserRole | undefined);
 
   const handleLogout = () => {
     logout();
@@ -34,11 +36,11 @@ export default function WebSidebar() {
       </div>
 
       <nav className="web-sidebar-nav" aria-label={t('home:sidebarNavAria')}>
-        {MAIN_NAV_ROUTES.map((route) => (
+        {routes.map((route) => (
           <NavLink
             key={route.path}
             to={route.path}
-            end={route.path === '/'}
+            end={false}
             className={navLinkClassName}
           >
             <span className="web-sidebar-link-icon" aria-hidden="true">

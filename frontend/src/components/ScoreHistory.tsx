@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { scoreApi, type ScoreResponse } from '../api/score';
 import { customCategoryApi, type CustomCategoryResponse } from '../api/customCategory';
 import { useFamilyStore } from '../store/familyStore';
@@ -34,7 +35,7 @@ export default function ScoreHistory({ refreshTrigger }: ScoreHistoryProps) {
     setError('');
 
     try {
-      const params: any = {
+      const params: Record<string, string | number> = {
         page: pageNum,
         size: 10,
       };
@@ -63,8 +64,17 @@ export default function ScoreHistory({ refreshTrigger }: ScoreHistoryProps) {
       } else {
         setError(res.data.message || t('score:errors.loadFailed'));
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('score:errors.loadFailed'));
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const maybeData = err.response?.data;
+        const message =
+          typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+            ? String((maybeData as { message?: unknown }).message ?? '')
+            : '';
+        setError(message || t('score:errors.loadFailed'));
+      } else {
+        setError(t('score:errors.loadFailed'));
+      }
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -86,11 +96,13 @@ export default function ScoreHistory({ refreshTrigger }: ScoreHistoryProps) {
   }, [currentFamily?.id]);
 
   useEffect(() => {
+    if (!currentFamily || !selectedChild) return;
+
     setRecords([]);
     setPage(0);
     setHasMore(true);
     loadHistory(0, true);
-  }, [selectedChild, category, period, refreshTrigger]);
+  }, [currentFamily?.id, selectedChild?.id, category, period, refreshTrigger, loadHistory]);
 
   const handleLoadMore = () => {
     if (hasMore && !loading) {

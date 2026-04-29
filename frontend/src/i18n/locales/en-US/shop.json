@@ -35,6 +35,7 @@
     "item": "Item",
     "cost": "Cost",
     "status": "Status",
+    "all": "All",
     "purchasedAt": "Ordered At",
     "completedAt": "Completed At",
     "confirm": "Confirm",
@@ -81,6 +82,13 @@
     "delete": "Delete Product",
     "image": "Image",
     "actions": "Actions",
+    "table": {
+      "name": "Product",
+      "description": "Description",
+      "price": "Points",
+      "status": "Status",
+      "actions": "Actions"
+    },
     "form": {
       "name": "Product Name",
       "namePlaceholder": "Enter product name",

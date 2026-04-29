@@ -12,7 +12,10 @@
     "history": "积分历史",
     "shop": "商城",
     "collection": "我的收藏",
-    "profile": "个人中心"
+    "profile": "个人中心",
+    "shopAdmin": "商城维护",
+    "orders": "消费记录",
+    "scoreMaintenance": "积分维护"
   },
   "tabBarAria": "主导航",
   "sidebarShellAria": "应用侧边栏",

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { familyApi, type ChildResponse } from '../api/family';
 import { useFamilyStore } from '../store/familyStore';
 import { getAvatarById } from '../constants/avatars';
@@ -53,8 +54,17 @@ export default function ChildSelector({ layout = 'grid' }: ChildSelectorProps) {
       } else {
         setError(res.data.message || t('family:errors.loadFailed'));
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('family:errors.loadFailed'));
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        const maybeData = err.response?.data;
+        const message =
+          typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+            ? String((maybeData as { message?: unknown }).message ?? '')
+            : '';
+        setError(message || t('family:errors.loadFailed'));
+      } else {
+        setError(t('family:errors.loadFailed'));
+      }
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
+import axios from 'axios';
 import { useOfflineStore } from '../store/offlineStore';
 import { useFamilyStore } from '../store/familyStore';
 import { scoreApi } from '../api/score';
@@ -9,7 +10,49 @@ import { scoreApi } from '../api/score';
  */
 export function useOfflineSync() {
   const { pendingScores, removePendingScore, setOnlineStatus, isOnline } = useOfflineStore();
-  const { updateChildScore } = useFamilyStore();
+  useFamilyStore();
+
+  const syncPendingScores = useCallback(async () => {
+    if (pendingScores.length === 0) return;
+
+    console.log(`[OfflineSync] Syncing ${pendingScores.length} pending scores...`);
+
+    for (const pending of pendingScores) {
+      try {
+        const res = await scoreApi.addScore(pending.familyId, pending.childId, {
+          score: pending.score,
+          category: pending.category,
+          reason: pending.reason,
+          rawVoiceText: pending.rawVoiceText,
+        });
+
+        if (res.data.success && res.data.data) {
+          console.log(`[OfflineSync] Synced score: ${pending.id}`);
+
+          // 同步成功，从待同步列表中移除
+          removePendingScore(pending.id);
+        } else {
+          console.error(`[OfflineSync] Failed to sync score ${pending.id}:`, res.data.message);
+        }
+      } catch (err: unknown) {
+        if (axios.isAxiosError(err)) {
+          console.error(`[OfflineSync] Error syncing score ${pending.id}:`, err.response?.data ?? err);
+        } else {
+          console.error(`[OfflineSync] Error syncing score ${pending.id}:`, err);
+        }
+
+        // 如果是网络错误，停止同步等待下次在线
+        if (!navigator.onLine) {
+          console.log('[OfflineSync] Network offline, stopping sync');
+          break;
+        }
+      }
+    }
+
+    if (pendingScores.length === 0) {
+      console.log('[OfflineSync] All scores synced successfully');
+    }
+  }, [pendingScores, removePendingScore]);
 
   useEffect(() => {
     // 监听网络状态变化
@@ -39,45 +82,7 @@ export function useOfflineSync() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
-
-  const syncPendingScores = async () => {
-    if (pendingScores.length === 0) return;
-
-    console.log(`[OfflineSync] Syncing ${pendingScores.length} pending scores...`);
-
-    for (const pending of pendingScores) {
-      try {
-        const res = await scoreApi.addScore(pending.familyId, pending.childId, {
-          score: pending.score,
-          category: pending.category,
-          reason: pending.reason,
-          rawVoiceText: pending.rawVoiceText,
-        });
-
-        if (res.data.success && res.data.data) {
-          console.log(`[OfflineSync] Synced score: ${pending.id}`);
-          
-          // 同步成功，从待同步列表中移除
-          removePendingScore(pending.id);
-        } else {
-          console.error(`[OfflineSync] Failed to sync score ${pending.id}:`, res.data.message);
-        }
-      } catch (err: any) {
-        console.error(`[OfflineSync] Error syncing score ${pending.id}:`, err);
-        
-        // 如果是网络错误，停止同步等待下次在线
-        if (!navigator.onLine) {
-          console.log('[OfflineSync] Network offline, stopping sync');
-          break;
-        }
-      }
-    }
-
-    if (pendingScores.length === 0) {
-      console.log('[OfflineSync] All scores synced successfully');
-    }
-  };
+  }, [pendingScores.length, setOnlineStatus, syncPendingScores]);
 
   return {
     isOnline,

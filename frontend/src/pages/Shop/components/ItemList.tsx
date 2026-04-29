@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { getAvailableItems, createOrder, ShopItem } from '../../../api/shop';
 import { Child } from '../../../types';
 import { useConfirm } from '../../../hooks/useConfirm';
 import { useFamilyStore } from '../../../store/familyStore';
+import { Button } from '../../../components/ui/button';
 
 interface ItemListProps {
   selectedChild: Child | null;
@@ -104,16 +106,23 @@ export default function ItemList({ selectedChild, onOrderCreated }: ItemListProp
       });
       loadItems();
       onOrderCreated?.();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ [ItemList] 购买失败:', error);
-      console.error('❌ [ItemList] 错误详情:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
+      if (axios.isAxiosError(error)) {
+        console.error('❌ [ItemList] 错误详情:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status,
+        });
+      }
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('admin.messages.error'),
-        message: t('messages.buyError') + ': ' + (error.response?.data?.message || error.message),
+        message: t('messages.buyError') + ': ' + (message || t('common:error')),
         type: 'danger',
         confirmText: t('common:confirm')
       });
@@ -169,21 +178,29 @@ export default function ItemList({ selectedChild, onOrderCreated }: ItemListProp
               </span>
             </div>
           </div>
-          <button 
+          <Button
             className="btn-buy"
             onClick={() => handleBuy(item)}
             disabled={!selectedChild}
+            type="button"
+            size="sm"
           >
             {selectedChild ? t('item.buy') : t('messages.selectChildFirst')}
-          </button>
+          </Button>
         </div>
       ))}
       </div>
       {hasMore && (
         <div className="load-more-container">
-          <button className="btn-load-more" onClick={() => setDisplayCount(prev => prev + 10)}>
+          <Button
+            className="btn-load-more"
+            onClick={() => setDisplayCount((prev) => prev + 10)}
+            type="button"
+            variant="outline"
+            size="sm"
+          >
             {t('loadMore')} ({items.length - displayCount} {t('remaining')})
-          </button>
+          </Button>
         </div>
       )}
       {ConfirmDialogComponent}

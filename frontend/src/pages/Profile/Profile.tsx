@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { useFamilyStore } from '../../store/familyStore';
 import { useAuthStore } from '../../store/authStore';
-import { familyApi, type ChildRequest } from '../../api/family';
+import { familyApi, type ChildRequest, type ChildResponse } from '../../api/family';
 import { customCategoryApi, type CustomCategoryResponse } from '../../api/customCategory';
 import { useConfirm } from '../../hooks/useConfirm';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import { useDeviceType } from '../../hooks/useDeviceType';
+import MobileSidebar from '../../components/MobileSidebar';
+import { Button } from '../../components/ui/button';
 import './Profile.css';
 import './Profile.mobile.css';
 
@@ -37,6 +40,7 @@ export default function Profile() {
   const [newCategoryIcon, setNewCategoryIcon] = useState('⭐');
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // 任务32：预定义图标列表
   const iconOptions = [
@@ -62,11 +66,11 @@ export default function Profile() {
 
     setIsLoadingCategories(true);
     try {
-      const res = await customCategoryApi.getCategories(currentFamily.id);
+      const res = await customCategoryApi.getCategories();
       if (res.data.success && res.data.data) {
         setCustomCategories(res.data.data);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to load custom categories:', error);
     } finally {
       setIsLoadingCategories(false);
@@ -96,11 +100,16 @@ export default function Profile() {
           confirmText: t('common:confirm'),
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to update family name:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('common:error'),
-        message: error.response?.data?.message || t('profile:updateFailed'),
+        message: message || t('profile:updateFailed'),
         type: 'danger',
         confirmText: t('common:confirm'),
       });
@@ -109,7 +118,7 @@ export default function Profile() {
     }
   };
 
-  const handleEditChild = (child: any) => {
+  const handleEditChild = (child: ChildResponse) => {
     setEditingChildId(child.id);
     setEditingChildData({
       name: child.name,
@@ -150,11 +159,16 @@ export default function Profile() {
       }
 
       setEditingChildId(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to update child:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('common:error'),
-        message: error.response?.data?.message || t('profile:updateFailed'),
+        message: message || t('profile:updateFailed'),
         type: 'danger',
         confirmText: t('common:confirm'),
       });
@@ -205,11 +219,16 @@ export default function Profile() {
         setNewCategoryName('');
         setNewCategoryIcon('⭐');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to create category:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('common:error'),
-        message: error.response?.data?.message || t('profile:createCategoryFailed'),
+        message: message || t('profile:createCategoryFailed'),
         type: 'danger',
         confirmText: t('common:confirm'),
       });
@@ -250,11 +269,16 @@ export default function Profile() {
 
       // 刷新列表
       loadCustomCategories();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to delete category:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('common:error'),
-        message: error.response?.data?.message || t('profile:deleteCategoryFailed'),
+        message: message || t('profile:deleteCategoryFailed'),
         type: 'danger',
         confirmText: t('common:confirm'),
       });
@@ -274,16 +298,29 @@ export default function Profile() {
       {/* Header - 与首页一致 */}
       <header className="profile-header">
         <div className="header-left">
+          {isMobile && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="mob-menu-btn"
+              onClick={() => setSidebarOpen(true)}
+              aria-label={t('common:menu')}
+            >
+              <span aria-hidden="true">≡</span>
+            </Button>
+          )}
           <h1>🐠 {t('common:appName')}</h1>
           <p className="header-slogan">{t('home:slogan')}</p>
         </div>
         <div className="header-right">
           <LanguageSwitcher />
-          <button onClick={handleLogout} className="logout-btn">
+          <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
             {t('common:logout')}
-          </button>
+          </Button>
         </div>
       </header>
+      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       {/* Mobile: remove in-page section nav (keep it simple like Home) */}
 

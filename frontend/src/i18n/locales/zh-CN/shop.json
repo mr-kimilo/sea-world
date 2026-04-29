@@ -35,6 +35,7 @@
     "item": "商品",
     "cost": "花费积分",
     "status": "订单状态",
+    "all": "全部",
     "purchasedAt": "下单时间",
     "completedAt": "完成时间",
     "confirm": "确认消费",
@@ -81,6 +82,13 @@
     "delete": "删除商品",
     "image": "图片",
     "actions": "操作",
+    "table": {
+      "name": "商品",
+      "description": "说明",
+      "price": "积分",
+      "status": "状态",
+      "actions": "操作"
+    },
     "form": {
       "name": "商品名称",
       "namePlaceholder": "请输入商品名称",

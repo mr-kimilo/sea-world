@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { useFamilyStore } from '../store/familyStore';
 import { useConfirm } from '../hooks/useConfirm';
 import { useDeviceType } from '../hooks/useDeviceType';
@@ -129,11 +130,16 @@ export default function ProductManager() {
         confirmText: t('common:confirm')
       });
       loadProducts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to delete product:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('admin.messages.error'),
-        message: t('admin.messages.deleteError') + ': ' + (error.response?.data?.message || error.message),
+        message: t('admin.messages.deleteError') + ': ' + (message || t('common:error')),
         type: 'danger',
         confirmText: t('common:confirm')
       });
@@ -184,12 +190,17 @@ export default function ProductManager() {
       }
       setShowForm(false);
       loadProducts();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Failed to save product:', error);
+      const maybeData = axios.isAxiosError(error) ? error.response?.data : null;
+      const message =
+        typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+          ? String((maybeData as { message?: unknown }).message ?? '')
+          : '';
       await confirm({
         title: t('admin.messages.error'),
         message: (editingProduct ? t('admin.messages.updateError') : t('admin.messages.createError')) +
-          ': ' + (error.response?.data?.message || error.message),
+          ': ' + (message || t('common:error')),
         type: 'danger',
         confirmText: t('common:confirm')
       });
@@ -237,12 +248,12 @@ export default function ProductManager() {
               <thead>
                 <tr>
                   <th>{t('admin.image')}</th>
-                  <th>{t('admin.form.name')}</th>
-                  <th>{t('admin.form.description')}</th>
-                  <th>{t('admin.form.price')}</th>
+                  <th>{t('admin.table.name')}</th>
+                  <th>{t('admin.table.description')}</th>
+                  <th>{t('admin.table.price')}</th>
                   <th>{t('admin.form.sortOrder')}</th>
-                  <th>{t('admin.form.isActive')}</th>
-                  <th>{t('admin.actions')}</th>
+                  <th>{t('admin.table.status')}</th>
+                  <th>{t('admin.table.actions')}</th>
                 </tr>
               </thead>
               <tbody>

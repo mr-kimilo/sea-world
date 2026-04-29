@@ -7,9 +7,12 @@ import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import ProductManager from '../../components/ProductManager';
+import MobileSidebar from '../../components/MobileSidebar';
 import ItemList from './components/ItemList';
 import PendingOrders from './components/PendingOrders';
 import CompletedOrders from './components/CompletedOrders';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 import './Shop.css';
 import './Shop.mobile.css';
 
@@ -23,6 +26,7 @@ export default function Shop() {
   const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState<TabType>('items');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleDataChanged = () => {
     setRefreshKey(prev => prev + 1);
@@ -39,14 +43,24 @@ export default function Shop() {
         {isMobile ? (
           <>
             <div className="header-left">
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="mob-menu-btn"
+                onClick={() => setSidebarOpen(true)}
+                aria-label={t('common:menu')}
+              >
+                <span aria-hidden="true">≡</span>
+              </Button>
               <h1>🐠 {t('common:appName')}</h1>
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
             <div className="header-right">
               <LanguageSwitcher />
-              <button type="button" className="logout-btn" onClick={handleLogout}>
+              <Button type="button" className="logout-btn" onClick={handleLogout} variant="ghost">
                 {t('common:logout')}
-              </button>
+              </Button>
             </div>
           </>
         ) : (
@@ -101,13 +115,14 @@ export default function Shop() {
 
             <div className="shop-header-right">
               <LanguageSwitcher />
-              <button className="shop-logout-btn" onClick={handleLogout} type="button">
+              <Button className="shop-logout-btn" onClick={handleLogout} type="button" variant="ghost">
                 {t('common:logout')}
-              </button>
+              </Button>
             </div>
           </>
         )}
       </header>
+      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       {/* On web: show ChildSelector below tabs */}
       {!isMobile && (
@@ -117,9 +132,9 @@ export default function Shop() {
       )}
 
       {isMobile && (
-        <div className="mobile-child-selector-section">
+        <Card className="mobile-child-selector-section">
           <ChildSelector layout="carousel" />
-        </div>
+        </Card>
       )}
 
       <div className="shop-content">

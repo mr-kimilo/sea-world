@@ -15,8 +15,9 @@
   --mob-tabbar-bg: linear-gradient(0deg, #023e8a 0%, #0077b6 100%);
   --mob-content-bg: #eaf6fb;
   --mob-card-bg: #ffffff;
-  --mob-card-radius: 16px;
-  --mob-spacing: 16px;
+  --mob-card-radius: 18px;
+  --mob-spacing: 18px;
+  --mob-section-gap: 14px;
   --mob-header-text: #ffffff;
   --mob-shadow-down: 0 2px 16px rgba(0, 119, 182, 0.4);
   --mob-shadow-up: 0 -2px 16px rgba(0, 119, 182, 0.35);

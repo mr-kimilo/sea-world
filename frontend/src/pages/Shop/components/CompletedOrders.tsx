@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getCompletedOrders, Order } from '../../../api/shop';
 import { Child } from '../../../types';
+import { useConfirm } from '../../../hooks/useConfirm';
+import { Button } from '../../../components/ui/button';
 
 interface CompletedOrdersProps {
   selectedChild: Child | null;
@@ -9,6 +11,7 @@ interface CompletedOrdersProps {
 
 export default function CompletedOrders({ selectedChild }: CompletedOrdersProps) {
   const { t } = useTranslation('shop');
+  const { confirm, ConfirmDialogComponent } = useConfirm();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [displayCount, setDisplayCount] = useState(10);
@@ -21,7 +24,12 @@ export default function CompletedOrders({ selectedChild }: CompletedOrdersProps)
       setOrders(data);
     } catch (error) {
       console.error('Failed to load completed orders:', error);
-      alert(t('messages.loadError'));
+      await confirm({
+        title: t('admin.messages.error'),
+        message: t('messages.loadError'),
+        type: 'danger',
+        confirmText: t('common:confirm'),
+      });
     } finally {
       setLoading(false);
     }
@@ -83,11 +91,18 @@ export default function CompletedOrders({ selectedChild }: CompletedOrdersProps)
       </div>
       {hasMore && (
         <div className="load-more-container">
-          <button className="btn-load-more" onClick={() => setDisplayCount(prev => prev + 10)}>
+          <Button
+            className="btn-load-more"
+            onClick={() => setDisplayCount((prev) => prev + 10)}
+            type="button"
+            variant="outline"
+            size="sm"
+          >
             {t('loadMore')} ({orders.length - displayCount} {t('remaining')})
-          </button>
+          </Button>
         </div>
       )}
+      {ConfirmDialogComponent}
     </>
   );
 }

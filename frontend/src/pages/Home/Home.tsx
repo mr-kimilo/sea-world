@@ -10,7 +10,10 @@ import ScoreHistory from '../../components/ScoreHistory';
 import AddChild from '../../components/AddChild';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
+import MobileSidebar from '../../components/MobileSidebar';
 import { useDeviceType } from '../../hooks/useDeviceType';
+import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 import './Home.css';
 import './Home.mobile.css';
 
@@ -26,6 +29,7 @@ export default function Home() {
   const [showAddChild, setShowAddChild] = useState(false);
   const [isFamilyLoading, setIsFamilyLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<HomeTab>('addScore');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // 加载家庭信息
@@ -87,16 +91,29 @@ export default function Home() {
     <div className="home-container">
       <header className="home-header">
         <div className="header-left">
+          {isMobile && (
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="mob-menu-btn"
+              onClick={() => setSidebarOpen(true)}
+              aria-label={t('common:menu')}
+            >
+              <span aria-hidden="true">≡</span>
+            </Button>
+          )}
           <h1>🐠 {t('common:appName')}</h1>
           <p className="header-slogan">{t('home:slogan')}</p>
         </div>
         <div className="header-right">
           <LanguageSwitcher />
-          <button onClick={handleLogout} className="logout-btn">
+          <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
             {t('common:logout')}
-          </button>
+          </Button>
         </div>
       </header>
+      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       <main className="home-content">
         {/* Mobile: remove in-page section nav per ui.md task #11 */}
@@ -107,21 +124,23 @@ export default function Home() {
             sections={homePageSections}
           />
         )}
-        <div className="welcome-card" id="page-home-welcome">
+        <Card className="welcome-card" id="page-home-welcome">
           <h2>{t('home:welcomeBack', { name: user?.nickname || user?.email })}</h2>
-        </div>
+        </Card>
 
         {/* 选择孩子 */}
         <div className="child-section" id="page-home-children">
           <div className="section-header">
             {user?.role === 'parent' && (
-              <button
+              <Button
                 className="btn-add-child"
                 onClick={() => setShowAddChild(true)}
                 disabled={isFamilyLoading || !currentFamily}
+                type="button"
+                size="sm"
               >
                 + {t('family:addChild')}
-              </button>
+              </Button>
             )}
           </div>
           <ChildSelector />
@@ -158,9 +177,9 @@ export default function Home() {
 
         {/* 孩子只看历史 */}
         {user?.role !== 'parent' && (
-          <div className="section-card" id="page-home-history">
+          <Card className="section-card" id="page-home-history">
             <ScoreHistory refreshTrigger={refreshTrigger} />
-          </div>
+          </Card>
         )}
 
         {/* 快捷导航 (mobile removed — bottom tabbar already exists) */}

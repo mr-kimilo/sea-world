@@ -1,13 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { ScoreCategory } from '../types';
 
 export interface PendingScore {
   id: string; // 本地临时ID
   childId: string;
   familyId: string;
   score: number;
-  category: string;
+  category: ScoreCategory;
+  customCategoryId?: string;
   reason: string;
+  rawVoiceText?: string;
   createdAt: string; // ISO时间戳
 }
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { familyApi, type ChildRequest } from '../api/family';
 import { useFamilyStore } from '../store/familyStore';
 import './AddChild.css';
@@ -142,13 +143,19 @@ export default function AddChild({ onClose, onSuccess }: AddChildProps) {
 
       showToast('success', t('child:addChild.successMessage'));
       setTimeout(onSuccess, 1200);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('[AddChild] Submit failed:', error);
-      console.error('[AddChild] Error response:', error.response?.data);
-      showToast(
-        'error',
-        error.response?.data?.message || t('child:addChild.errorMessage')
-      );
+      if (axios.isAxiosError(error)) {
+        console.error('[AddChild] Error response:', error.response?.data);
+        const maybeData = error.response?.data;
+        const message =
+          typeof maybeData === 'object' && maybeData !== null && 'message' in maybeData
+            ? String((maybeData as { message?: unknown }).message ?? '')
+            : '';
+        showToast('error', message || t('child:addChild.errorMessage'));
+      } else {
+        showToast('error', t('child:addChild.errorMessage'));
+      }
     } finally {
       setIsSubmitting(false);
       console.log('[AddChild] Submit finished, isSubmitting reset to false');
