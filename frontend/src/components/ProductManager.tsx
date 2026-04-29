@@ -247,13 +247,11 @@ export default function ProductManager() {
             <table>
               <thead>
                 <tr>
-                  <th>{t('admin.image')}</th>
-                  <th>{t('admin.table.name')}</th>
+                  <th>{t('admin.table.product')}</th>
                   <th>{t('admin.table.description')}</th>
-                  <th>{t('admin.table.price')}</th>
-                  <th>{t('admin.form.sortOrder')}</th>
-                  <th>{t('admin.table.status')}</th>
-                  <th>{t('admin.table.actions')}</th>
+                  <th>{t('admin.table.points')}</th>
+                  <th>{t('admin.table.enabled')}</th>
+                  <th>{t('admin.table.edit')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -264,14 +262,14 @@ export default function ProductManager() {
                   onClick={() => openMobileActions(product)}
                 >
                   <td>
-                    {product.imageUrl ? (
-                      <img src={product.imageUrl} alt={product.name} className="table-image" />
-                    ) : (
-                      <div className="no-image">📦</div>
-                    )}
-                  </td>
-                  <td>
-                    <div className="product-name">{product.name}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {product.imageUrl ? (
+                        <img src={product.imageUrl} alt={product.name} className="table-image" />
+                      ) : (
+                        <div className="no-image" aria-hidden="true">📦</div>
+                      )}
+                      <div className="product-name">{product.name}</div>
+                    </div>
                   </td>
                   <td>
                     <div className="product-description">
@@ -281,7 +279,6 @@ export default function ProductManager() {
                   <td>
                     <span className="price-badge">⭐ {product.price}</span>
                   </td>
-                  <td>{product.sortOrder}</td>
                   <td>
                     <span className={`status-badge ${product.isActive ? 'active' : 'inactive'}`}>
                       {product.isActive ? '✅' : '❌'}

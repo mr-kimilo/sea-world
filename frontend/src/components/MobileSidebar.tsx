@@ -53,6 +53,7 @@ export default function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             <NavLink
               key={route.path}
               to={route.path}
+              end={route.path === '/'}
               className={({ isActive }) => `mobile-sidebar-link${isActive ? ' is-active' : ''}`}
               onClick={onClose}
             >

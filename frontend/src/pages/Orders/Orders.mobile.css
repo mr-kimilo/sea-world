@@ -14,6 +14,18 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+[data-device='mobile'] .orders-filters {
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--mob-card-radius, 16px);
+  padding: 12px 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+[data-device='mobile'] .orders-filter-select {
+  width: 180px;
+}
+
 [data-device='mobile'] .orders-header {
   position: fixed;
   top: 0;

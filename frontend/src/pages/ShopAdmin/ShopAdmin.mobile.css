@@ -1,0 +1,65 @@
+/* ============================================================
+   ShopAdmin.mobile.css — Mobile-only shell for ShopAdmin
+   ============================================================ */
+
+[data-device='mobile'] .shop-admin-page {
+  min-height: 100svh;
+  background: var(--mob-content-bg, #eaf6fb);
+  padding-top: calc(var(--mob-header-height, 56px) + 12px);
+  padding-bottom: calc(var(--mob-tabbar-block, 88px) + 8px);
+}
+
+[data-device='mobile'] .shop-admin-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--mob-header-height, 56px);
+  background: var(--mob-header-bg);
+  box-shadow: var(--mob-shadow-down);
+  z-index: 200;
+  padding: 0 var(--mob-spacing, 18px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+[data-device='mobile'] .shop-admin-header .header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+[data-device='mobile'] .shop-admin-header .header-left h1 {
+  font-size: 17px;
+  color: white;
+  font-weight: 800;
+  margin: 0;
+  white-space: nowrap;
+}
+
+[data-device='mobile'] .shop-admin-header .header-slogan {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+[data-device='mobile'] .shop-admin-header .header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+[data-device='mobile'] .shop-admin-page .product-manager {
+  margin: 0 var(--mob-spacing, 18px);
+}
+

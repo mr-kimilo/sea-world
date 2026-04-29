@@ -61,6 +61,30 @@
   padding-top: 0;
 }
 
+[data-device='mobile'] .score-maintenance-subnav {
+  /* Keep it in normal flow under the fixed header (avoid overlapping ChildSelector). */
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+[data-device='mobile'] .subnav-item {
+  padding: 9px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+[data-device='mobile'] .score-maintenance-card {
+  border-radius: var(--mob-card-radius, 18px);
+}
+
+[data-device='mobile'] .score-maintenance-child-selector {
+  margin-bottom: 10px;
+}
+
 [data-device='mobile'] .score-maintenance-section .info-card {
   padding: 18px;
   border-radius: var(--mob-card-radius, 18px);

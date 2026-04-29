@@ -6,18 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { familyApi } from '../../api/family';
 import ChildSelector from '../../components/ChildSelector';
 import AddScore from '../../components/AddScore';
-import ScoreHistory from '../../components/ScoreHistory';
 import AddChild from '../../components/AddChild';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import MobileSidebar from '../../components/MobileSidebar';
+import PokerChildSelector from '../../components/PokerChildSelector';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
 import './Home.css';
 import './Home.mobile.css';
-
-type HomeTab = 'addScore' | 'history';
 
 export default function Home() {
   const { t } = useTranslation(['home', 'common', 'family']);
@@ -25,10 +23,8 @@ export default function Home() {
   const { user, logout } = useAuthStore();
   const { currentFamily, setFamilies, setCurrentFamily } = useFamilyStore();
   const navigate = useNavigate();
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showAddChild, setShowAddChild] = useState(false);
   const [isFamilyLoading, setIsFamilyLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<HomeTab>('addScore');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -62,16 +58,14 @@ export default function Home() {
   };
 
   const handleScoreAdded = () => {
-    // 触发积分历史刷新
-    setRefreshTrigger((prev) => prev + 1);
-    // 切换到历史 tab 展示结果
-    setActiveTab('history');
+    // 积分历史已迁移到“积分维护”
+    navigate('/score-maintenance');
   };
 
   const handleAddChildSuccess = () => {
     // 关闭弹窗，触发刷新
     setShowAddChild(false);
-    setRefreshTrigger((prev) => prev + 1);
+    loadFamilies();
   };
 
   const homePageSections =
@@ -84,7 +78,6 @@ export default function Home() {
       : [
           { id: 'page-home-welcome', label: t('home:pageNav.welcome') },
           { id: 'page-home-children', label: t('home:pageNav.children') },
-          { id: 'page-home-history', label: t('home:tabs.history') },
         ];
 
   return (
@@ -143,43 +136,16 @@ export default function Home() {
               </Button>
             )}
           </div>
-          <ChildSelector />
+          {isMobile ? <PokerChildSelector /> : <ChildSelector layout="grid" />}
         </div>
 
         {/* 积分操作 Tab */}
         {user?.role === 'parent' && (
           <div className="score-tabs-section" id="page-home-score">
-            <div className="score-tabs">
-              <button
-                className={`score-tab ${activeTab === 'addScore' ? 'active' : ''}`}
-                onClick={() => setActiveTab('addScore')}
-                type="button"
-              >
-                {t('home:tabs.addScore')}
-              </button>
-              <button
-                className={`score-tab ${activeTab === 'history' ? 'active' : ''}`}
-                onClick={() => setActiveTab('history')}
-                type="button"
-              >
-                {t('home:tabs.history')}
-              </button>
-            </div>
             <div className="score-tab-content">
-              {activeTab === 'addScore' ? (
-                <AddScore onScoreAdded={handleScoreAdded} />
-              ) : (
-                <ScoreHistory refreshTrigger={refreshTrigger} />
-              )}
+              <AddScore onScoreAdded={handleScoreAdded} />
             </div>
           </div>
-        )}
-
-        {/* 孩子只看历史 */}
-        {user?.role !== 'parent' && (
-          <Card className="section-card" id="page-home-history">
-            <ScoreHistory refreshTrigger={refreshTrigger} />
-          </Card>
         )}
 
         {/* 快捷导航 (mobile removed — bottom tabbar already exists) */}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
@@ -11,14 +11,20 @@ import { useDeviceType } from '../../hooks/useDeviceType';
 
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
+import ChildSelector from '../../components/ChildSelector';
+import ScoreHistory from '../../components/ScoreHistory';
 import { Button } from '../../components/ui/button';
+import { Card } from '../../components/ui/card';
 
 import './ScoreMaintenance.css';
 import './ScoreMaintenance.mobile.css';
 
+type ScoreMaintenanceTab = 'history' | 'dimensions';
+
 export default function ScoreMaintenance() {
   const { t } = useTranslation(['profile', 'common', 'home']);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { logout } = useAuthStore();
   const { currentFamily } = useFamilyStore();
   const { isMobile } = useDeviceType();
@@ -36,6 +42,23 @@ export default function ScoreMaintenance() {
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [showEditIconPicker, setShowEditIconPicker] = useState(false);
+
+  const userRole = useAuthStore((s) => s.user?.role);
+  const canEditDimensions = userRole === 'parent' || userRole === 'admin';
+
+  const tabFromUrl = (searchParams.get('tab') ?? '') as ScoreMaintenanceTab | '';
+  const requestedTab: ScoreMaintenanceTab =
+    tabFromUrl === 'history' || tabFromUrl === 'dimensions' ? tabFromUrl : 'history';
+  const activeTab: ScoreMaintenanceTab =
+    requestedTab === 'dimensions' && !canEditDimensions ? 'history' : requestedTab;
+
+  const setActiveTab = (next: ScoreMaintenanceTab) => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set('tab', next);
+      return p;
+    });
+  };
 
   const iconOptions = [
     '⭐', '🌟', '✨', '💫', '🎯', '🏆', '🥇', '🥈', '🥉',
@@ -226,47 +249,83 @@ export default function ScoreMaintenance() {
 
   return (
     <div className="score-maintenance-page">
-      <header className="score-maintenance-header">
-        <div className="header-left">
-          {isMobile && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="mob-menu-btn"
-              onClick={() => setSidebarOpen(true)}
-              aria-label={t('common:menu')}
-            >
-              <span aria-hidden="true">≡</span>
-            </Button>
-          )}
-          <h1>🐠 {t('common:appName')}</h1>
-          <p className="header-slogan">{t('home:slogan')}</p>
-        </div>
-        <div className="header-right">
-          <LanguageSwitcher />
-          <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
-            {t('common:logout')}
-          </Button>
-        </div>
-      </header>
-
-      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {isMobile && (
+        <>
+          <header className="score-maintenance-header">
+            <div className="header-left">
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="mob-menu-btn"
+                onClick={() => setSidebarOpen(true)}
+                aria-label={t('common:menu')}
+              >
+                <span aria-hidden="true">≡</span>
+              </Button>
+              <h1>🐠 {t('common:appName')}</h1>
+              <p className="header-slogan">{t('home:slogan')}</p>
+            </div>
+            <div className="header-right">
+              <LanguageSwitcher />
+              <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
+                {t('common:logout')}
+              </Button>
+            </div>
+          </header>
+          <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        </>
+      )}
 
       <main className="score-maintenance-content">
-        <section className="score-maintenance-section">
-          <div className="section-header">
-            <h2 className="section-title">{t('profile:customCategories')}</h2>
-            <Button
-              type="button"
-              className="btn-primary"
-              onClick={() => setShowAddCategory((v) => !v)}
-              variant="outline"
-              size="sm"
-            >
-              {showAddCategory ? t('common:cancel') : `+ ${t('profile:addCategory')}`}
-            </Button>
-          </div>
+        <div className="score-maintenance-subnav" role="tablist" aria-label={t('profile:scoreMaintenanceSubnav')}>
+          <button
+            type="button"
+            className={`subnav-item ${activeTab === 'history' ? 'active' : ''}`}
+            onClick={() => setActiveTab('history')}
+            role="tab"
+            aria-selected={activeTab === 'history'}
+          >
+            {t('profile:scoreHistoryTab')}
+          </button>
+          <button
+            type="button"
+            className={`subnav-item ${activeTab === 'dimensions' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dimensions')}
+            role="tab"
+            aria-selected={activeTab === 'dimensions'}
+            disabled={!canEditDimensions}
+            title={!canEditDimensions ? t('profile:scoreDimensionsDisabledHint') : undefined}
+          >
+            {t('profile:scoreDimensionsTab')}
+          </button>
+        </div>
+
+        {activeTab === 'history' && (
+          <section className="score-maintenance-section" role="tabpanel">
+            <Card className="score-maintenance-card">
+              <div className="score-maintenance-child-selector">
+                <ChildSelector />
+              </div>
+              <ScoreHistory />
+            </Card>
+          </section>
+        )}
+
+        {activeTab === 'dimensions' && canEditDimensions && (
+          <section className="score-maintenance-section" role="tabpanel">
+            <div className="section-header">
+              <h2 className="section-title">{t('profile:customCategories')}</h2>
+              <Button
+                type="button"
+                className="btn-primary"
+                onClick={() => setShowAddCategory((v) => !v)}
+                variant="outline"
+                size="sm"
+              >
+                {showAddCategory ? t('common:cancel') : `+ ${t('profile:addCategory')}`}
+              </Button>
+            </div>
 
           {showAddCategory && (
             <div className="category-form info-card">
@@ -365,7 +424,8 @@ export default function ScoreMaintenance() {
               ))}
             </div>
           )}
-        </section>
+          </section>
+        )}
 
         {editingCategoryId && (
           <section className="score-maintenance-section">

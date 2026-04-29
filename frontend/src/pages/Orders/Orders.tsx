@@ -34,31 +34,33 @@ export default function Orders() {
 
   return (
     <div className="orders-page">
-      <header className="orders-header">
-        <div className="header-left">
-          {isMobile && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="mob-menu-btn"
-              onClick={() => setSidebarOpen(true)}
-              aria-label={t('common:menu')}
-            >
-              <span aria-hidden="true">≡</span>
-            </Button>
-          )}
-          <h1>🐠 {t('common:appName')}</h1>
-          <p className="header-slogan">{t('home:slogan')}</p>
-        </div>
-        <div className="header-right">
-          <LanguageSwitcher />
-          <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
-            {t('common:logout')}
-          </Button>
-        </div>
-      </header>
-      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {isMobile && (
+        <>
+          <header className="orders-header">
+            <div className="header-left">
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="mob-menu-btn"
+                onClick={() => setSidebarOpen(true)}
+                aria-label={t('common:menu')}
+              >
+                <span aria-hidden="true">≡</span>
+              </Button>
+              <h1>🐠 {t('common:appName')}</h1>
+              <p className="header-slogan">{t('home:slogan')}</p>
+            </div>
+            <div className="header-right">
+              <LanguageSwitcher />
+              <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
+                {t('common:logout')}
+              </Button>
+            </div>
+          </header>
+          <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        </>
+      )}
 
       <div className="orders-child-selector">
         <ChildSelector layout="carousel" />

@@ -40,7 +40,7 @@ export default function WebSidebar() {
           <NavLink
             key={route.path}
             to={route.path}
-            end={false}
+            end={route.path === '/'}
             className={navLinkClassName}
           >
             <span className="web-sidebar-link-icon" aria-hidden="true">

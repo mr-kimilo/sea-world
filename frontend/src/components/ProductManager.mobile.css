@@ -90,15 +90,25 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
+/* Zebra / separation for readability */
+[data-device="mobile"] .products-table tr:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+[data-device="mobile"] .products-table tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.82);
+}
+
 [data-device="mobile"] .products-table td {
   display: block;
   padding: 0;
   border: none;
 }
 
-/* Image cell */
+/* Product cell (image + name) */
 [data-device="mobile"] .products-table td:nth-child(1) {
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 [data-device="mobile"] .products-table .table-image {
@@ -119,35 +129,25 @@
   background: #f0f4f8;
 }
 
-/* Info cells (name, desc, price) grouped via flex layout */
-[data-device="mobile"] .products-table td:nth-child(2) {
-  flex: 1;
-  min-width: 0;
-}
-
-[data-device="mobile"] .products-table td:nth-child(3),
-[data-device="mobile"] .products-table td:nth-child(4) {
+/* Hide description + points on the card row (keep details in edit) */
+[data-device="mobile"] .products-table td:nth-child(2),
+[data-device="mobile"] .products-table td:nth-child(3) {
   display: none;
 }
 
-[data-device="mobile"] .products-table td:nth-child(2) {
+[data-device="mobile"] .products-table td:nth-child(1) .product-name {
   font-weight: 800;
   font-size: 14px;
   color: #1d1d1f;
 }
 
-/* Sort order cell: hide on mobile */
-[data-device="mobile"] .products-table td:nth-child(5) {
-  display: none;
-}
-
 /* Status badge */
-[data-device="mobile"] .products-table td:nth-child(6) {
+[data-device="mobile"] .products-table td:nth-child(4) {
   flex-shrink: 0;
 }
 
 /* Action buttons: side-by-side */
-[data-device="mobile"] .products-table td:nth-child(7) {
+[data-device="mobile"] .products-table td:nth-child(5) {
   flex-shrink: 0;
 }
 

@@ -6,22 +6,21 @@ import { useFamilyStore } from '../../store/familyStore';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
-import ProductManager from '../../components/ProductManager';
 import MobileSidebar from '../../components/MobileSidebar';
+import PokerChildSelector from '../../components/PokerChildSelector';
 import ItemList from './components/ItemList';
 import PendingOrders from './components/PendingOrders';
 import CompletedOrders from './components/CompletedOrders';
 import { Button } from '../../components/ui/button';
-import { Card } from '../../components/ui/card';
 import './Shop.css';
 import './Shop.mobile.css';
 
-type TabType = 'items' | 'pending' | 'completed' | 'admin';
+type TabType = 'items' | 'pending' | 'completed';
 
 export default function Shop() {
   const { t } = useTranslation(['shop', 'common', 'home']);
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { logout } = useAuthStore();
   const { selectedChild } = useFamilyStore();
   const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState<TabType>('items');
@@ -80,36 +79,29 @@ export default function Shop() {
                   className={`tab-button ${activeTab === 'items' ? 'active' : ''}`}
                   onClick={() => setActiveTab('items')}
                   type="button"
+                  aria-label={t('items')}
+                  title={t('items')}
                 >
                   <span className="tab-icon">🎁</span>
-                  <span className="tab-label">{t('items')}</span>
                 </button>
                 <button
                   className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
                   onClick={() => setActiveTab('pending')}
                   type="button"
+                  aria-label={t('pendingOrders')}
+                  title={t('pendingOrders')}
                 >
                   <span className="tab-icon">⏳</span>
-                  <span className="tab-label">{t('pendingOrders')}</span>
                 </button>
                 <button
                   className={`tab-button ${activeTab === 'completed' ? 'active' : ''}`}
                   onClick={() => setActiveTab('completed')}
                   type="button"
+                  aria-label={t('completedOrders')}
+                  title={t('completedOrders')}
                 >
                   <span className="tab-icon">✅</span>
-                  <span className="tab-label">{t('completedOrders')}</span>
                 </button>
-                {(user?.role === 'admin' || user?.role === 'parent') && (
-                  <button
-                    className={`tab-button ${activeTab === 'admin' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('admin')}
-                    type="button"
-                  >
-                    <span className="tab-icon">⚙️</span>
-                    <span className="tab-label">{t('admin.title')}</span>
-                  </button>
-                )}
               </div>
             </div>
 
@@ -132,9 +124,9 @@ export default function Shop() {
       )}
 
       {isMobile && (
-        <Card className="mobile-child-selector-section">
-          <ChildSelector layout="carousel" />
-        </Card>
+        <div className="mobile-child-selector-section" aria-label={t('family:childrenList')}>
+          <PokerChildSelector />
+        </div>
       )}
 
       <div className="shop-content">
@@ -145,41 +137,32 @@ export default function Shop() {
               className={`tab-button ${activeTab === 'items' ? 'active' : ''}`}
               onClick={() => setActiveTab('items')}
               type="button"
+              aria-label={t('items')}
+              title={t('items')}
             >
               <span className="tab-icon">🎁</span>
-              <span className="tab-label">{t('items')}</span>
             </button>
             <button
               className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
               onClick={() => setActiveTab('pending')}
               type="button"
+              aria-label={t('pendingOrders')}
+              title={t('pendingOrders')}
             >
               <span className="tab-icon">⏳</span>
-              <span className="tab-label">{t('pendingOrders')}</span>
             </button>
             <button
               className={`tab-button ${activeTab === 'completed' ? 'active' : ''}`}
               onClick={() => setActiveTab('completed')}
               type="button"
+              aria-label={t('completedOrders')}
+              title={t('completedOrders')}
             >
               <span className="tab-icon">✅</span>
-              <span className="tab-label">{t('completedOrders')}</span>
             </button>
-            {(user?.role === 'admin' || user?.role === 'parent') && (
-              <button
-                className={`tab-button ${activeTab === 'admin' ? 'active' : ''}`}
-                onClick={() => setActiveTab('admin')}
-                type="button"
-              >
-                <span className="tab-icon">⚙️</span>
-                <span className="tab-label">{t('admin.title')}</span>
-              </button>
-            )}
           </nav>
         )}
-        {activeTab === 'admin' ? (
-          <ProductManager />
-        ) : activeTab === 'items' ? (
+        {activeTab === 'items' ? (
           <ItemList 
             key={`items-${refreshKey}`}
             selectedChild={selectedChild} 

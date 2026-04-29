@@ -84,10 +84,14 @@
     "actions": "操作",
     "table": {
       "name": "商品",
+      "product": "商品",
       "description": "说明",
       "price": "积分",
+      "points": "积分",
       "status": "状态",
-      "actions": "操作"
+      "enabled": "启用",
+      "actions": "操作",
+      "edit": "编辑"
     },
     "form": {
       "name": "商品名称",

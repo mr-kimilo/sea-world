@@ -188,7 +188,7 @@
 .tab-button {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0;
   padding: 12px 20px;
   background: none;
   border: 1px solid transparent;
@@ -214,7 +214,7 @@
 }
 
 .tab-icon {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 [data-device='mobile'] .shop-header-tabs .tab-button {

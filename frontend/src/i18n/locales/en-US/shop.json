@@ -84,10 +84,14 @@
     "actions": "Actions",
     "table": {
       "name": "Product",
+      "product": "Product",
       "description": "Description",
       "price": "Points",
+      "points": "Points",
       "status": "Status",
-      "actions": "Actions"
+      "enabled": "Enabled",
+      "actions": "Actions",
+      "edit": "Edit"
     },
     "form": {
       "name": "Product Name",
