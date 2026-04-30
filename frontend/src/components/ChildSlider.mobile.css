@@ -1,0 +1,191 @@
+/* ============================================================
+   ChildSlider.mobile.css — 指向型滑动（scroll-snap）子女卡片滑动条
+   Applies only when [data-device="mobile"] is set on <html>
+   Inspired by docs/ui/ui-v2.md: “跟随手势 + 卡片对齐保持整齐感”
+   ============================================================ */
+
+/* Root */
+[data-device='mobile'] .child-slider-root {
+  overflow: hidden;
+}
+
+/* ============================================================
+   Variant: stacked-overlap (ui-v2.md)
+   - card height: 30% viewport
+   - card width: 80% viewport
+   - overlap: 80% (peek 20%)
+   ============================================================ */
+
+[data-device='mobile'] .child-slider-root--stacked {
+  height: 30svh;
+}
+
+[data-device='mobile'] .child-slider-stack {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  /* prevent page scroll during horizontal swipes */
+  touch-action: pan-y;
+  display: flex;
+  justify-content: center;
+}
+
+[data-device='mobile'] .child-slider-stack {
+  --child-slider-card-w: min(80vw, 520px);
+  --child-slider-card-h: 30svh;
+}
+
+[data-device='mobile'] .child-slider-card--stacked {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--child-slider-card-w);
+  height: var(--child-slider-card-h);
+  max-width: 80vw;
+  border-radius: 20px;
+  scroll-snap-align: none;
+}
+
+[data-device='mobile'] .child-slider-card--stacked .child-slider-face {
+  border-radius: 16px;
+}
+
+[data-device='mobile'] .child-slider-card--stacked.is-selected {
+  /* base centering handled by inline transform; scale is handled here */
+  border-color: rgba(0, 122, 255, 0.42);
+  box-shadow: 0 18px 52px rgba(0, 122, 255, 0.20);
+  scale: 1.2; /* ui-v2: selected card grows 20% */
+}
+
+[data-device='mobile'] .child-slider-root--stacked .child-slider-card {
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+[data-device='mobile'] .child-slider-root--stacked .child-slider-card:active {
+  transform: translateX(0) scale(0.99);
+}
+
+/* Loading / error (match existing mobile components) */
+[data-device='mobile'] .child-slider-loading,
+[data-device='mobile'] .child-slider-error {
+  padding: 16px;
+  font-size: 13px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 0.5px solid rgba(60, 60, 67, 0.12);
+}
+
+/* ============================================================
+   Variant: snap-row (legacy)
+   ============================================================ */
+
+[data-device='mobile'] .child-slider-root--snap {
+  max-height: 34svh;
+}
+
+[data-device='mobile'] .child-slider-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 4px 10px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 4px;
+  scroll-padding-right: 4px;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+[data-device='mobile'] .child-slider-row::-webkit-scrollbar {
+  display: none;
+}
+
+[data-device='mobile'] .child-slider-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  width: clamp(92px, 30vw, 168px);
+  height: clamp(140px, 24svh, 220px);
+  border-radius: 18px;
+  border: 1px solid rgba(60, 60, 67, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.16s ease,
+    border-color 0.16s ease;
+  will-change: transform;
+}
+
+[data-device='mobile'] .child-slider-card:active {
+  transform: scale(0.98);
+}
+
+/* 指向型动效：选中卡片轻微上浮 + 强调 */
+[data-device='mobile'] .child-slider-card.is-selected {
+  transform: translateY(-2px);
+  border-color: rgba(0, 122, 255, 0.38);
+  box-shadow: 0 14px 40px rgba(0, 122, 255, 0.18);
+}
+
+[data-device='mobile'] .child-slider-face {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.12) 0%, rgba(0, 119, 182, 0.06) 100%);
+  color: rgba(29, 29, 31, 0.92);
+  font-weight: 900;
+  font-size: clamp(38px, 10vw, 66px);
+  letter-spacing: 0.02em;
+}
+
+[data-device='mobile'] .child-slider-meta {
+  margin-top: 10px;
+}
+
+[data-device='mobile'] .child-slider-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(29, 29, 31, 0.92);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-device='mobile'] .child-slider-scores {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+[data-device='mobile'] .child-slider-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 0.5px solid rgba(60, 60, 67, 0.12);
+  font-size: 12px;
+  font-weight: 750;
+  color: rgba(60, 60, 67, 0.9);
+}
+
+[data-device='mobile'] .child-slider-pill--available {
+  background: rgba(16, 185, 129, 0.10);
+  border-color: rgba(16, 185, 129, 0.18);
+  color: rgba(6, 95, 70, 0.92);
+}
+

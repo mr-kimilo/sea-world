@@ -6,6 +6,7 @@ import { useFamilyStore } from '../../store/familyStore';
 import { useAuthStore } from '../../store/authStore';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
+import ChildSlider from '../../components/ChildSlider';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import { Button } from '../../components/ui/button';
@@ -63,7 +64,7 @@ export default function Orders() {
       )}
 
       <div className="orders-child-selector">
-        <ChildSelector layout="carousel" />
+        {isMobile ? <ChildSlider /> : <ChildSelector layout="carousel" />}
       </div>
 
       <div className="orders-filters" aria-label={t('shop:title')}>

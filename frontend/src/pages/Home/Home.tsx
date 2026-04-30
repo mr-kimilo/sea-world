@@ -10,7 +10,7 @@ import AddChild from '../../components/AddChild';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import MobileSidebar from '../../components/MobileSidebar';
-import PokerChildSelector from '../../components/PokerChildSelector';
+import ChildSlider from '../../components/ChildSlider';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
@@ -58,8 +58,7 @@ export default function Home() {
   };
 
   const handleScoreAdded = () => {
-    // 积分历史已迁移到“积分维护”
-    navigate('/score-maintenance');
+    // Mobile: keep user on current page after recording
   };
 
   const handleAddChildSuccess = () => {
@@ -136,7 +135,7 @@ export default function Home() {
               </Button>
             )}
           </div>
-          {isMobile ? <PokerChildSelector /> : <ChildSelector layout="grid" />}
+          {isMobile ? <ChildSlider /> : <ChildSelector layout="grid" />}
         </div>
 
         {/* 积分操作 Tab */}

@@ -12,6 +12,7 @@ import { useDeviceType } from '../../hooks/useDeviceType';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import ChildSelector from '../../components/ChildSelector';
+import ChildSlider from '../../components/ChildSlider';
 import ScoreHistory from '../../components/ScoreHistory';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
@@ -305,7 +306,7 @@ export default function ScoreMaintenance() {
           <section className="score-maintenance-section" role="tabpanel">
             <Card className="score-maintenance-card">
               <div className="score-maintenance-child-selector">
-                <ChildSelector />
+                {isMobile ? <ChildSlider /> : <ChildSelector />}
               </div>
               <ScoreHistory />
             </Card>

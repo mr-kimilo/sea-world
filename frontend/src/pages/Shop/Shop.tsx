@@ -7,7 +7,7 @@ import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
-import PokerChildSelector from '../../components/PokerChildSelector';
+import ChildSlider from '../../components/ChildSlider';
 import ItemList from './components/ItemList';
 import PendingOrders from './components/PendingOrders';
 import CompletedOrders from './components/CompletedOrders';
@@ -125,7 +125,7 @@ export default function Shop() {
 
       {isMobile && (
         <div className="mobile-child-selector-section" aria-label={t('family:childrenList')}>
-          <PokerChildSelector />
+          <ChildSlider />
         </div>
       )}
 
