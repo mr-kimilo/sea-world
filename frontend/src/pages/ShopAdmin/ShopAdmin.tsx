@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { useDeviceType } from '../../hooks/useDeviceType';
 import { useAuthStore } from '../../store/authStore';
+import { useUiStore } from '../../store/uiStore';
 
 import ProductManager from '../../components/ProductManager';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
@@ -19,7 +19,8 @@ export default function ShopAdmin() {
   const navigate = useNavigate();
   const { logout } = useAuthStore();
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
 
   const handleLogout = () => {
     logout();
@@ -32,16 +33,6 @@ export default function ShopAdmin() {
         <>
           <header className="shop-admin-header">
             <div className="header-left">
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="mob-menu-btn"
-                onClick={() => setSidebarOpen(true)}
-                aria-label={t('common:menu')}
-              >
-                <span aria-hidden="true">≡</span>
-              </Button>
               <h1>🐠 {t('common:appName')}</h1>
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
@@ -52,7 +43,7 @@ export default function ShopAdmin() {
               </Button>
             </div>
           </header>
-          <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
         </>
       )}
       <ProductManager />

@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useFamilyStore } from '../../store/familyStore';
 import { useAuthStore } from '../../store/authStore';
+import { useUiStore } from '../../store/uiStore';
 import { familyApi, type ChildRequest, type ChildResponse } from '../../api/family';
 import { useConfirm } from '../../hooks/useConfirm';
+import AddChild from '../../components/AddChild';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import { useDeviceType } from '../../hooks/useDeviceType';
@@ -18,7 +20,7 @@ export default function Profile() {
   const { t } = useTranslation(['profile', 'common', 'family', 'home']);
   const { isMobile } = useDeviceType();
   const navigate = useNavigate();
-  const { currentFamily, children, setCurrentFamily } = useFamilyStore();
+  const { currentFamily, children, setChildren, setCurrentFamily } = useFamilyStore();
   const { user, logout } = useAuthStore();
   const { confirm, ConfirmDialogComponent } = useConfirm();
 
@@ -31,7 +33,9 @@ export default function Profile() {
     avatarUrl: '',
   });
   const [isSaving, setIsSaving] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
+  const [showAddChild, setShowAddChild] = useState(false);
 
   useEffect(() => {
     if (currentFamily) {
@@ -117,7 +121,7 @@ export default function Profile() {
       // 刷新孩子列表
       const res = await familyApi.getChildren(currentFamily.id);
       if (res.data.success && res.data.data) {
-        useFamilyStore.setState({ children: res.data.data });
+        setChildren(res.data.data);
       }
 
       setEditingChildId(null);
@@ -148,6 +152,15 @@ export default function Profile() {
     navigate('/login');
   };
 
+  const handleAddChildSuccess = async () => {
+    setShowAddChild(false);
+    if (!currentFamily) return;
+    const res = await familyApi.getChildren(currentFamily.id);
+    if (res.data.success && res.data.data) {
+      setChildren(res.data.data);
+    }
+  };
+
   const profilePageSections = [
     { id: 'page-profile-family', label: t('profile:pageNav.family') },
     { id: 'page-profile-children', label: t('profile:pageNav.children') },
@@ -159,16 +172,6 @@ export default function Profile() {
       {isMobile && (
         <header className="profile-header">
           <div className="header-left">
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="mob-menu-btn"
-              onClick={() => setSidebarOpen(true)}
-              aria-label={t('common:menu')}
-            >
-              <span aria-hidden="true">≡</span>
-            </Button>
             <h1>🐠 {t('common:appName')}</h1>
             <p className="header-slogan">{t('home:slogan')}</p>
           </div>
@@ -180,7 +183,9 @@ export default function Profile() {
           </div>
         </header>
       )}
-      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {isMobile && (
+        <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+      )}
 
       {/* Mobile: remove in-page section nav (keep it simple like Home) */}
 
@@ -223,7 +228,7 @@ export default function Profile() {
         {/* 孩子列表 */}
         <section className="profile-section" id="page-profile-children">
           <h2 className="section-title">{t('profile:childrenList')}</h2>
-          {children.length === 0 ? (
+          {children.length === 0 && user?.role !== 'parent' ? (
             <div className="empty-state">
               <span className="empty-icon">👶</span>
               <p className="empty-text">{t('profile:noChildren')}</p>
@@ -365,11 +370,30 @@ export default function Profile() {
                   )}
                 </div>
               ))}
+              {user?.role === 'parent' && (
+                <button
+                  type="button"
+                  className="profile-child-card profile-child-card--add"
+                  onClick={() => setShowAddChild(true)}
+                  aria-label={t('family:addChild')}
+                >
+                  <div className="add-child-card-inner">
+                    <div className="add-child-icon" aria-hidden="true">
+                      ＋
+                    </div>
+                    <div className="add-child-label">{t('family:addChild')}</div>
+                  </div>
+                </button>
+              )}
             </div>
           )}
         </section>
 
       </main>
+
+      {showAddChild && (
+        <AddChild onClose={() => setShowAddChild(false)} onSuccess={handleAddChildSuccess} />
+      )}
 
       {ConfirmDialogComponent}
     </div>

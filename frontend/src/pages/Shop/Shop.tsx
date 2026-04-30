@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { useFamilyStore } from '../../store/familyStore';
+import { useUiStore } from '../../store/uiStore';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
@@ -25,7 +26,8 @@ export default function Shop() {
   const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState<TabType>('items');
   const [refreshKey, setRefreshKey] = useState(0);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
 
   const handleDataChanged = () => {
     setRefreshKey(prev => prev + 1);
@@ -42,16 +44,6 @@ export default function Shop() {
         {isMobile ? (
           <>
             <div className="header-left">
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="mob-menu-btn"
-                onClick={() => setSidebarOpen(true)}
-                aria-label={t('common:menu')}
-              >
-                <span aria-hidden="true">≡</span>
-              </Button>
               <h1>🐠 {t('common:appName')}</h1>
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
@@ -114,7 +106,9 @@ export default function Shop() {
           </>
         )}
       </header>
-      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {isMobile && (
+        <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+      )}
 
       {/* On web: show ChildSelector below tabs */}
       {!isMobile && (

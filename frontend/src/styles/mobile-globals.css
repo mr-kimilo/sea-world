@@ -56,6 +56,18 @@
   min-height: 40px;
 }
 
+/* Mobile header menu button: bigger tap target */
+[data-device="mobile"] .mob-menu-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+}
+
+[data-device="mobile"] .mob-menu-btn span[aria-hidden='true'] {
+  font-size: 20px;
+  line-height: 1;
+}
+
 /* ── Universal mobile card style ── */
 [data-device="mobile"] .section-card {
   margin-bottom: 12px;

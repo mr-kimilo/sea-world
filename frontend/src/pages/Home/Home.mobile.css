@@ -47,18 +47,7 @@
   flex-shrink: 0;
 }
 
-[data-device="mobile"] .mob-menu-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: white;
-}
-
-[data-device="mobile"] .mob-menu-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
+/* menu button moved to bottom tab bar (center) */
 
 /* ── Scrollable content area (between fixed header & tabbar) ── */
 [data-device="mobile"] .home-content {

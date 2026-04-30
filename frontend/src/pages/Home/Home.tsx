@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useFamilyStore } from '../../store/familyStore';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { familyApi } from '../../api/family';
 import ChildSelector from '../../components/ChildSelector';
 import AddScore from '../../components/AddScore';
-import AddChild from '../../components/AddChild';
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import MobileSidebar from '../../components/MobileSidebar';
@@ -14,6 +13,7 @@ import ChildSlider from '../../components/ChildSlider';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import { Button } from '../../components/ui/button';
 import { Card } from '../../components/ui/card';
+import { useUiStore } from '../../store/uiStore';
 import './Home.css';
 import './Home.mobile.css';
 
@@ -21,25 +21,18 @@ export default function Home() {
   const { t } = useTranslation(['home', 'common', 'family']);
   const { isMobile } = useDeviceType();
   const { user, logout } = useAuthStore();
-  const { currentFamily, setFamilies, setCurrentFamily } = useFamilyStore();
+  const { setFamilies, setCurrentFamily } = useFamilyStore();
   const navigate = useNavigate();
-  const [showAddChild, setShowAddChild] = useState(false);
-  const [isFamilyLoading, setIsFamilyLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    // 加载家庭信息
-    loadFamilies();
-  }, []);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
 
   const loadFamilies = async () => {
-    setIsFamilyLoading(true);
     try {
       const res = await familyApi.getMyFamilies();
       if (res.data.success && res.data.data) {
         const families = res.data.data;
         setFamilies(families);
-        
+
         // 自动选中第一个家庭
         if (families.length > 0) {
           setCurrentFamily(families[0]);
@@ -47,10 +40,13 @@ export default function Home() {
       }
     } catch (err) {
       console.error('Failed to load families:', err);
-    } finally {
-      setIsFamilyLoading(false);
     }
   };
+
+  useEffect(() => {
+    // 加载家庭信息
+    loadFamilies();
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -59,12 +55,6 @@ export default function Home() {
 
   const handleScoreAdded = () => {
     // Mobile: keep user on current page after recording
-  };
-
-  const handleAddChildSuccess = () => {
-    // 关闭弹窗，触发刷新
-    setShowAddChild(false);
-    loadFamilies();
   };
 
   const homePageSections =
@@ -83,18 +73,6 @@ export default function Home() {
     <div className="home-container">
       <header className="home-header">
         <div className="header-left">
-          {isMobile && (
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="mob-menu-btn"
-              onClick={() => setSidebarOpen(true)}
-              aria-label={t('common:menu')}
-            >
-              <span aria-hidden="true">≡</span>
-            </Button>
-          )}
           <h1>🐠 {t('common:appName')}</h1>
           <p className="header-slogan">{t('home:slogan')}</p>
         </div>
@@ -105,7 +83,9 @@ export default function Home() {
           </Button>
         </div>
       </header>
-      {isMobile && <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {isMobile && (
+        <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
+      )}
 
       <main className="home-content">
         {/* Mobile: remove in-page section nav per ui.md task #11 */}
@@ -122,19 +102,6 @@ export default function Home() {
 
         {/* 选择孩子 */}
         <div className="child-section" id="page-home-children">
-          <div className="section-header">
-            {user?.role === 'parent' && (
-              <Button
-                className="btn-add-child"
-                onClick={() => setShowAddChild(true)}
-                disabled={isFamilyLoading || !currentFamily}
-                type="button"
-                size="sm"
-              >
-                + {t('family:addChild')}
-              </Button>
-            )}
-          </div>
           {isMobile ? <ChildSlider /> : <ChildSelector layout="grid" />}
         </div>
 
@@ -162,13 +129,6 @@ export default function Home() {
         )}
       </main>
 
-      {/* 添加孩子弹窗 */}
-      {showAddChild && (
-        <AddChild
-          onClose={() => setShowAddChild(false)}
-          onSuccess={handleAddChildSuccess}
-        />
-      )}
     </div>
   );
 }

@@ -18,8 +18,10 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
   const [activeIndexFallback, setActiveIndexFallback] = useState(0);
   const [dragX, setDragX] = useState(0);
   const dragStartXRef = useRef<number | null>(null);
+  const didDragRef = useRef(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const loadedFamilyIdRef = useRef<string | null>(null);
 
   const items = useMemo(
     () =>
@@ -33,18 +35,16 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
     [children],
   );
 
-  const loadChildren = useCallback(async () => {
-    if (!currentFamily) return;
+  const loadChildren = useCallback(async (familyId: string) => {
     setLoading(true);
     setError('');
     try {
-      const res = await familyApi.getChildren(currentFamily.id);
+      const res = await familyApi.getChildren(familyId);
       if (res.data.success && res.data.data) {
         const list = res.data.data as ChildResponse[];
         setChildren(list);
-        if (!selectedChild && list.length > 0) {
-          setSelectedChild(list[0]);
-        }
+        // selectedChild auto-selection is handled inside familyStore.setChildren
+        loadedFamilyIdRef.current = familyId;
       } else {
         setError(res.data.message || t('family:errors.loadFailed'));
       }
@@ -62,12 +62,18 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
     } finally {
       setLoading(false);
     }
-  }, [currentFamily, selectedChild, setChildren, setSelectedChild, t]);
+  }, [setChildren, t]);
 
   useEffect(() => {
     if (!currentFamily) return;
-    loadChildren();
-  }, [currentFamily, loadChildren]);
+    // If we already have children for this family, don't refetch on every selectedChild change.
+    if (children.length > 0) {
+      loadedFamilyIdRef.current = currentFamily.id;
+      return;
+    }
+    if (loadedFamilyIdRef.current === currentFamily.id) return;
+    loadChildren(currentFamily.id);
+  }, [children.length, currentFamily, loadChildren]);
 
   const activeIndex = useMemo(() => {
     if (!selectedChild) return activeIndexFallback;
@@ -98,7 +104,10 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (variant !== 'stacked-overlap') return;
+    // Prevent focus/scroll adjustments during drag start.
+    e.preventDefault();
     dragStartXRef.current = e.clientX;
+    didDragRef.current = false;
     setDragX(0);
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
@@ -108,6 +117,7 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
     if (dragStartXRef.current === null) return;
     const dx = e.clientX - dragStartXRef.current;
     // Clamp to avoid extreme transforms.
+    if (Math.abs(dx) > 6) didDragRef.current = true;
     setDragX(Math.max(-120, Math.min(120, dx)));
   };
 
@@ -120,6 +130,12 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
     // Left swipe → next card (reveal below). Right swipe → previous card (reveal above).
     if (dx < 0) setActive(activeIndex + 1);
     else setActive(activeIndex - 1);
+    // Avoid mobile viewport "jump" caused by focus retention.
+    requestAnimationFrame(() => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+    });
   };
 
   const onPointerUp = () => {
@@ -150,11 +166,21 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerCancel}
+          onClickCapture={(e) => {
+            // If the user was dragging, suppress the click to avoid focus/scroll jumps.
+            if (didDragRef.current) {
+              e.preventDefault();
+              e.stopPropagation();
+              didDragRef.current = false;
+            }
+          }}
         >
           {order.map((c, pos) => {
             const isTop = pos === 0;
             const translateX = `calc(-50% + ${pos * peek} * var(--child-slider-card-w))`;
             const actualIndex = (activeIndex + pos) % items.length;
+            const baseX = isTop ? `calc(-50% + ${dragX}px)` : translateX;
+            const scale = isTop ? 1.2 : 1;
             return (
               <button
                 key={c.id}
@@ -163,10 +189,17 @@ export default function ChildSlider({ variant = 'stacked-overlap' }: ChildSlider
                 data-child-id={c.id}
                 className={`child-slider-card child-slider-card--stacked${isTop ? ' is-selected' : ''}`}
                 style={{
-                  transform: isTop ? `translateX(calc(-50% + ${dragX}px))` : `translateX(${translateX})`,
+                  transform: `translate(${baseX}, -50%) scale(${scale})`,
                   zIndex: order.length - pos,
                 }}
-                onClick={() => setActive(actualIndex)}
+                onPointerDown={(e) => {
+                  // Prevent the button from taking focus on touch (causes viewport adjustments on some devices).
+                  e.preventDefault();
+                }}
+                onClick={() => {
+                  if (!didDragRef.current) setActive(actualIndex);
+                  didDragRef.current = false;
+                }}
                 aria-pressed={isTop}
                 aria-label={c.name}
               >

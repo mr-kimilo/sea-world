@@ -17,7 +17,13 @@
    ============================================================ */
 
 [data-device='mobile'] .child-slider-root--stacked {
-  height: 30svh;
+  /* Base card height is 30svh; selected card scales to 1.2 → needs ~36svh to avoid clipping. */
+  height: calc(30svh * 1.2);
+  /* Prevent scroll anchoring jump when cards scale/transform */
+  overflow-anchor: none;
+  contain: layout paint;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 [data-device='mobile'] .child-slider-stack {
@@ -28,6 +34,9 @@
   touch-action: pan-y;
   display: flex;
   justify-content: center;
+  overflow-anchor: none;
+  user-select: none;
+  overscroll-behavior: contain;
 }
 
 [data-device='mobile'] .child-slider-stack {
@@ -37,13 +46,14 @@
 
 [data-device='mobile'] .child-slider-card--stacked {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 50%;
   width: var(--child-slider-card-w);
   height: var(--child-slider-card-h);
   max-width: 80vw;
   border-radius: 20px;
   scroll-snap-align: none;
+  transform-origin: center;
 }
 
 [data-device='mobile'] .child-slider-card--stacked .child-slider-face {
@@ -51,10 +61,9 @@
 }
 
 [data-device='mobile'] .child-slider-card--stacked.is-selected {
-  /* base centering handled by inline transform; scale is handled here */
+  /* base centering + scale handled by inline transform */
   border-color: rgba(0, 122, 255, 0.42);
   box-shadow: 0 18px 52px rgba(0, 122, 255, 0.20);
-  scale: 1.2; /* ui-v2: selected card grows 20% */
 }
 
 [data-device='mobile'] .child-slider-root--stacked .child-slider-card {

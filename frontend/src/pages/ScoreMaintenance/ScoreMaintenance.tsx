@@ -8,6 +8,7 @@ import { useFamilyStore } from '../../store/familyStore';
 import { customCategoryApi, type CustomCategoryResponse } from '../../api/customCategory';
 import { useConfirm } from '../../hooks/useConfirm';
 import { useDeviceType } from '../../hooks/useDeviceType';
+import { useUiStore } from '../../store/uiStore';
 
 import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
@@ -31,7 +32,8 @@ export default function ScoreMaintenance() {
   const { isMobile } = useDeviceType();
   const { confirm, ConfirmDialogComponent } = useConfirm();
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
   const [customCategories, setCustomCategories] = useState<CustomCategoryResponse[]>([]);
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -254,16 +256,6 @@ export default function ScoreMaintenance() {
         <>
           <header className="score-maintenance-header">
             <div className="header-left">
-              <Button
-                type="button"
-                size="icon"
-                variant="ghost"
-                className="mob-menu-btn"
-                onClick={() => setSidebarOpen(true)}
-                aria-label={t('common:menu')}
-              >
-                <span aria-hidden="true">≡</span>
-              </Button>
               <h1>🐠 {t('common:appName')}</h1>
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
@@ -274,7 +266,7 @@ export default function ScoreMaintenance() {
               </Button>
             </div>
           </header>
-          <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
         </>
       )}
 
