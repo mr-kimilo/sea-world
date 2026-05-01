@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
 import { authApi } from '../../api/auth';
 import './VerifyEmail.css';
 
@@ -13,31 +14,24 @@ const VerifyEmail = () => {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    
-    console.log('[VerifyEmail] Token from URL:', token);
-    
+
     if (!token) {
-      console.error('[VerifyEmail] No token found in URL');
       setStatus('error');
       setMessage(t('verify.invalidToken'));
       return;
     }
 
-    console.log('[VerifyEmail] Calling verifyEmail API with token:', token);
-
-    // 验证邮箱
     authApi.verifyEmail(token)
       .then((response) => {
-        console.log('[VerifyEmail] API Success:', response);
         setStatus('success');
         setMessage(response.data.message || t('verify.successMessage'));
       })
-      .catch((error) => {
-        console.error('[VerifyEmail] API Error:', error);
-        console.error('[VerifyEmail] Error response:', error.response);
+      .catch((error: unknown) => {
         setStatus('error');
-        const errorMsg = error.response?.data?.message || t('verify.errorMessage');
-        setMessage(errorMsg);
+        const msg = axios.isAxiosError(error)
+          ? error.response?.data?.message
+          : undefined;
+        setMessage(typeof msg === 'string' ? msg : t('verify.errorMessage'));
       });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // 只在组件挂载时执行一次
