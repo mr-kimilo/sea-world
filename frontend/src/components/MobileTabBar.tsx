@@ -10,6 +10,7 @@ export default function MobileTabBar() {
   const location = useLocation();
   const { t } = useTranslation(['home', 'common']);
   const toggleMobileSidebar = useUiStore((s) => s.toggleMobileSidebar);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
 
   return (
     <nav className="mobile-tabbar" role="navigation" aria-label={t('tabBarAria')}>
@@ -40,12 +41,18 @@ export default function MobileTabBar() {
         {/* center menu */}
         <button
           type="button"
-          className="mobile-tab mobile-tab--menu"
+          className={`mobile-tab mobile-tab--menu${mobileSidebarOpen ? ' active' : ''}`}
           onClick={toggleMobileSidebar}
           aria-label={t('common:menu')}
+          aria-pressed={mobileSidebarOpen}
         >
           <span className="mobile-tab-icon" aria-hidden="true">
-            <span className="mobile-tab-menu-glyph">≡</span>
+            <svg className="mobile-tab-menu-glyph" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                fill="currentColor"
+                d="M6.5 7.6c-.5 0-.9-.4-.9-.9s.4-.9.9-.9h11c.5 0 .9.4.9.9s-.4.9-.9.9h-11Zm0 5.3c-.5 0-.9-.4-.9-.9s.4-.9.9-.9h11c.5 0 .9.4.9.9s-.4.9-.9.9h-11Zm0 5.3c-.5 0-.9-.4-.9-.9s.4-.9.9-.9h11c.5 0 .9.4.9.9s-.4.9-.9.9h-11Z"
+              />
+            </svg>
           </span>
         </button>
 

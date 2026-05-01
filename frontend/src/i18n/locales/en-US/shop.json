@@ -102,6 +102,7 @@
       "imageUrlPlaceholder": "Enter image URL",
       "price": "Price (Points)",
       "pricePlaceholder": "Enter price",
+      "priceInvalid": "Points must be a whole number of at least 1",
       "rarity": "Rarity",
       "rarityOptions": {
         "common": "Common",
@@ -112,6 +113,8 @@
       "sortOrder": "Sort Order",
       "sortOrderPlaceholder": "Lower number appears first",
       "isActive": "Active",
+      "statusEnabled": "Enabled",
+      "statusDisabled": "Disabled",
       "allowedChildren": "Allowed Children",
       "allowedChildrenHint": "Empty = available for all children",
       "submit": "Save",

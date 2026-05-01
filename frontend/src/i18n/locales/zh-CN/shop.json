@@ -102,6 +102,7 @@
       "imageUrlPlaceholder": "请输入图片URL",
       "price": "所需积分",
       "pricePlaceholder": "请输入所需积分",
+      "priceInvalid": "所需积分须为大于等于 1 的整数",
       "rarity": "稀有度",
       "rarityOptions": {
         "common": "普通",
@@ -112,6 +113,8 @@
       "sortOrder": "排序",
       "sortOrderPlaceholder": "数字越小越靠前",
       "isActive": "是否启用",
+      "statusEnabled": "启用",
+      "statusDisabled": "禁用",
       "allowedChildren": "可购买的孩子",
       "allowedChildrenHint": "不选择表示所有孩子都可购买",
       "submit": "保存",

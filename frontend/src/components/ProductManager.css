@@ -70,38 +70,21 @@
   text-overflow: ellipsis;
 }
 
-.products-table th:nth-child(1),
-.products-table td:nth-child(1) {
-  width: 84px;
-}
-.products-table th:nth-child(4),
-.products-table td:nth-child(4) {
+/* Column sizing for current 5-column table:
+   (1) product (image+name) (2) description (3) points (4) enabled (5) edit */
+.products-table th:nth-child(3),
+.products-table td:nth-child(3) {
   width: 110px;
 }
-.products-table th:nth-child(5),
-.products-table td:nth-child(5) {
-  width: 92px;
-}
-.products-table th:nth-child(6),
-.products-table td:nth-child(6) {
-  width: 92px;
-}
-.products-table th:nth-child(7),
-.products-table td:nth-child(7) {
-  width: 140px;
-  overflow: visible;
-  text-overflow: clip;
-}
 
-/* Hide columns per request: Image + Sort Order */
-.products-table th:nth-child(1),
-.products-table td:nth-child(1) {
-  display: none;
+.products-table th:nth-child(4),
+.products-table td:nth-child(4) {
+  width: 92px;
 }
 
 .products-table th:nth-child(5),
 .products-table td:nth-child(5) {
-  display: none;
+  width: 92px;
 }
 
 .table-image {
@@ -125,6 +108,12 @@
 .product-name {
   font-weight: 500;
   color: #2c3e50;
+}
+
+.pm-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .product-description {
@@ -346,132 +335,59 @@
   cursor: pointer;
 }
 
-/* Switch Container - Apple Style */
-.switch-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  user-select: none;
-  padding: 12px 16px;
-  background: white;
-  border-radius: 10px;
-  border: 1px solid #d2d2d7;
-  transition: all 0.2s;
-}
-
-.switch-container:hover {
-  background: #f5f5f7;
-}
-
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-/* Switch Toggle */
-.switch-label {
+/* 是否启用：原生 checkbox，未勾选时灰色，勾选为正常强调色 */
+.pm-enable-cb-col {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-start;
+}
+
+.pm-enable-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
   user-select: none;
-}
-
-.switch-input {
-  display: none;
-}
-
-.switch-slider {
-  position: relative;
-  width: 50px;
-  height: 26px;
-  background: #ccc;
-  border-radius: 26px;
-  transition: background 0.3s;
-}
-
-.switch-slider::before {
-  content: '';
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  padding: 12px 16px;
   background: white;
-  top: 3px;
-  left: 3px;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 1px solid #d2d2d7;
+  transition: background 0.2s;
 }
 
-.switch-input:checked + .switch-slider {
-  background: #28a745;
-}
-
-.switch-input:checked + .switch-slider::before {
-  transform: translateX(24px);
-}
-
-.switch-text {
-  font-weight: 500;
-  color: #495057;
-}
-
-.switch-container:hover {
+.pm-enable-checkbox-row:hover {
   background: #f5f5f7;
 }
 
-.switch-input {
-  display: none;
-}
-
-.switch-slider {
-  position: relative;
-  width: 52px;
-  height: 32px;
-  border-radius: 16px;
-  transition: all 0.3s;
+.pm-is-active-checkbox {
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
+  cursor: pointer;
+  margin: 0;
+  accent-color: #0071e3;
 }
 
-.switch-slider.inactive {
-  background: #d2d2d7;
+.pm-is-active-checkbox:not(:checked) {
+  opacity: 0.55;
+  filter: grayscale(1);
 }
 
-.switch-slider.active {
-  background: #34c759;
+.pm-is-active-checkbox:checked {
+  opacity: 1;
+  filter: none;
 }
 
-.switch-slider::before {
-  content: '';
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: white;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.switch-input:checked + .switch-slider::before {
-  transform: translateX(20px);
-}
-
-.switch-text {
-  font-weight: 500;
+.pm-enable-checkbox-caption {
   font-size: 0.95rem;
-  text-align: left;
-}
-
-.switch-text.active {
-  color: #34c759;
-}
-
-.switch-text.inactive {
-  color: #6e6e73;
+  font-weight: 600;
+  color: #1d1d1f;
 }
 
 .children-checkboxes {

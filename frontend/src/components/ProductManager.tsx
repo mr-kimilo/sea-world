@@ -42,6 +42,8 @@ export default function ProductManager() {
   const [displayCount, setDisplayCount] = useState(10);
   const [useDefaultImage, setUseDefaultImage] = useState(true);
   const [mobileActionProduct, setMobileActionProduct] = useState<ShopItem | null>(null);
+  /** 所需积分：用字符串控制输入框，允许清空后再输入，避免 number 输入框无法删光「0」 */
+  const [priceInput, setPriceInput] = useState('10');
   const [formData, setFormData] = useState<ProductFormData>({
     name: '',
     description: '',
@@ -73,6 +75,7 @@ export default function ProductManager() {
   const handleCreate = () => {
     setEditingProduct(null);
     setUseDefaultImage(true);
+    setPriceInput('10');
     setFormData({
       name: '',
       description: '',
@@ -90,6 +93,7 @@ export default function ProductManager() {
       const detail = await getProductDetail(product.id);
       setEditingProduct(detail);
       setUseDefaultImage(!detail.imageUrl);
+      setPriceInput(String(detail.price));
       setFormData({
         name: detail.name,
         description: detail.description || '',
@@ -154,13 +158,27 @@ export default function ProductManager() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const trimmedPrice = priceInput.trim();
+    const parsedPrice = trimmedPrice === '' ? NaN : Number.parseInt(trimmedPrice, 10);
+    if (!Number.isInteger(parsedPrice) || parsedPrice < 1) {
+      await confirm({
+        title: t('admin.messages.error'),
+        message: t('admin.form.priceInvalid'),
+        type: 'danger',
+        confirmText: t('common:confirm')
+      });
+      return;
+    }
+
+    const payloadBase = { ...formData, price: parsedPrice };
+
     try {
       if (editingProduct) {
         // 更新商品
         const updateData: UpdateProductRequest = {
-          ...formData,
-          description: formData.description || undefined,
-          imageUrl: formData.imageUrl || undefined,
+          ...payloadBase,
+          description: payloadBase.description || undefined,
+          imageUrl: payloadBase.imageUrl || undefined,
         };
         await updateProduct(editingProduct.id, updateData);
         await confirm({
@@ -172,13 +190,13 @@ export default function ProductManager() {
       } else {
         // 创建商品
         const createData: CreateProductRequest = {
-          name: formData.name,
-          description: formData.description || undefined,
-          imageUrl: formData.imageUrl || undefined,
-          price: formData.price,
+          name: payloadBase.name,
+          description: payloadBase.description || undefined,
+          imageUrl: payloadBase.imageUrl || undefined,
+          price: payloadBase.price,
           rarity: 'common',
-          sortOrder: formData.sortOrder,
-          allowedChildIds: formData.allowedChildIds.length > 0 ? formData.allowedChildIds : undefined
+          sortOrder: payloadBase.sortOrder,
+          allowedChildIds: payloadBase.allowedChildIds.length > 0 ? payloadBase.allowedChildIds : undefined
         };
         await createProduct(createData);
         await confirm({
@@ -259,61 +277,83 @@ export default function ProductManager() {
                 <tr
                   key={product.id}
                   className={isMobile ? 'pm-row-clickable' : undefined}
+                  data-active={product.isActive ? '1' : '0'}
                   onClick={() => openMobileActions(product)}
                 >
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      {product.imageUrl ? (
-                        <img src={product.imageUrl} alt={product.name} className="table-image" />
-                      ) : (
-                        <div className="no-image" aria-hidden="true">📦</div>
-                      )}
-                      <div className="product-name">{product.name}</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="product-description">
-                      {product.description || '-'}
-                    </div>
-                  </td>
-                  <td>
-                    <span className="price-badge">⭐ {product.price}</span>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${product.isActive ? 'active' : 'inactive'}`}>
-                      {product.isActive ? '✅' : '❌'}
-                    </span>
-                  </td>
-                  <td>
-                    {!isMobile && (
-                      <div className="table-actions">
-                        <button
-                          className="btn-edit"
-                          type="button"
-                          aria-label={t('admin.edit')}
-                          title={t('admin.edit')}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleEdit(product);
-                          }}
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="btn-delete"
-                          type="button"
-                          aria-label={t('admin.delete')}
-                          title={t('admin.delete')}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDelete(product);
-                          }}
-                        >
-                          🗑️
-                        </button>
+                  {isMobile ? (
+                    <td className="pm-card-cell">
+                      <div className="pm-card-main">
+                        {product.imageUrl ? (
+                          <img src={product.imageUrl} alt={product.name} className="table-image" />
+                        ) : (
+                          <div className="no-image" aria-hidden="true">📦</div>
+                        )}
+                        <div className="pm-card-text">
+                          <div className="product-name">{product.name}</div>
+                          {product.description ? (
+                            <div className="pm-card-desc">{product.description}</div>
+                          ) : null}
+                          <div className="pm-card-meta">
+                            <span className="price-badge">⭐ {product.price}</span>
+                          </div>
+                        </div>
                       </div>
-                    )}
-                  </td>
+                    </td>
+                  ) : (
+                    <>
+                      <td>
+                        <div className="pm-product-cell">
+                          {product.imageUrl ? (
+                            <img src={product.imageUrl} alt={product.name} className="table-image" />
+                          ) : (
+                            <div className="no-image" aria-hidden="true">📦</div>
+                          )}
+                          <div className="product-name">{product.name}</div>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="product-description">
+                          {product.description || '-'}
+                        </div>
+                      </td>
+                      <td>
+                        <span className="price-badge">⭐ {product.price}</span>
+                      </td>
+                      <td>
+                        <span className={`status-badge ${product.isActive ? 'active' : 'inactive'}`}>
+                          {product.isActive ? '✅' : '❌'}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="table-actions">
+                          <button
+                            className="btn-edit"
+                            type="button"
+                            aria-label={t('admin.edit')}
+                            title={t('admin.edit')}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEdit(product);
+                            }}
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="btn-delete"
+                            type="button"
+                            aria-label={t('admin.delete')}
+                            title={t('admin.delete')}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDelete(product);
+                            }}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -402,13 +442,31 @@ export default function ProductManager() {
                   <span className="required">*</span> {t('admin.form.price')}
                 </label>
                 <input
-                  type="number"
-                  className={formData.price < 1 ? 'input-error' : ''}
-                  value={formData.price}
-                  onChange={(e) => setFormData({...formData, price: Number(e.target.value)})}
-                  placeholder="10"
-                  min="1"
-                  required
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  className={
+                    priceInput.trim() === '' ||
+                    !/^\d+$/.test(priceInput.trim()) ||
+                    Number.parseInt(priceInput.trim(), 10) < 1
+                      ? 'input-error'
+                      : ''
+                  }
+                  value={priceInput}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    if (v !== '' && !/^\d+$/.test(v)) return;
+                    setPriceInput(v);
+                    if (v !== '') {
+                      setFormData((prev) => ({ ...prev, price: Number.parseInt(v, 10) }));
+                    }
+                  }}
+                  placeholder={t('admin.form.pricePlaceholder')}
+                  aria-invalid={
+                    priceInput.trim() === '' ||
+                    !/^\d+$/.test(priceInput.trim()) ||
+                    Number.parseInt(priceInput.trim(), 10) < 1
+                  }
                 />
                 <p className="field-hint">⭐ 默认 10 积分，可调整</p>
               </div>
@@ -427,16 +485,17 @@ export default function ProductManager() {
               {editingProduct && (
                 <div className="form-group">
                   <label className="form-label">{t('admin.form.isActive')}</label>
-                  <label className="switch-container">
-                    <input
-                      type="checkbox"
-                      checked={formData.isActive}
-                      onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
-                      className="switch-input"
-                    />
-                    <span className={`switch-slider ${formData.isActive ? 'active' : 'inactive'}`}></span>
-                    <span className={`switch-text ${formData.isActive ? 'active' : 'inactive'}`}>
-                      {formData.isActive ? '✅ 已启用' : '❌ 未启用'}
+                  <label className="pm-enable-checkbox-row">
+                    <span className="pm-enable-cb-col">
+                      <input
+                        type="checkbox"
+                        className="pm-is-active-checkbox"
+                        checked={formData.isActive}
+                        onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      />
+                    </span>
+                    <span className="pm-enable-checkbox-caption">
+                      {formData.isActive ? t('admin.form.statusEnabled') : t('admin.form.statusDisabled')}
                     </span>
                   </label>
                 </div>

@@ -30,5 +30,15 @@
   "errors": {
     "unknown": "Unknown error, please try again later",
     "networkError": "Network error, please check your connection"
+  },
+  "pwa": {
+    "bannerAria": "Install to home screen",
+    "bannerTitle": "Install Sea World",
+    "bannerBodyChromium": "Add to your home screen for quick access and a more app-like experience.",
+    "bannerBodyIos": "In Safari: tap Share → scroll to “Add to Home Screen” → Add.",
+    "bannerBodyAndroidOther": "Open the browser menu (⋮), then choose “Install app”, “Add to Home screen”, or “Add to Home” (wording varies by browser). In Samsung Internet you can also use “Add page to” → “Home screen”.",
+    "install": "Install",
+    "later": "Not now",
+    "gotIt": "OK"
   }
 }

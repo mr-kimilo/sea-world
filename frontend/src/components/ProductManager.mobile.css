@@ -82,12 +82,17 @@
 
 [data-device="mobile"] .products-table tr {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 12px;
   background: white;
   border-radius: 14px;
   padding: 14px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+[data-device="mobile"] .products-table tr[data-active='0'] {
+  opacity: 0.62;
+  filter: grayscale(1);
 }
 
 /* Zebra / separation for readability */
@@ -105,9 +110,16 @@
   border: none;
 }
 
-/* Product cell (image + name) */
-[data-device="mobile"] .products-table td:nth-child(1) {
+/* Mobile: render a single card cell only */
+[data-device="mobile"] .products-table .pm-card-cell {
   flex: 1;
+  min-width: 0;
+}
+
+[data-device="mobile"] .pm-card-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   min-width: 0;
 }
 
@@ -116,6 +128,7 @@
   height: 56px;
   border-radius: 10px;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 [data-device="mobile"] .products-table .no-image {
@@ -127,42 +140,38 @@
   align-items: center;
   justify-content: center;
   background: #f0f4f8;
+  flex-shrink: 0;
 }
 
-/* Hide description + points on the card row (keep details in edit) */
-[data-device="mobile"] .products-table td:nth-child(2),
-[data-device="mobile"] .products-table td:nth-child(3) {
-  display: none;
+[data-device="mobile"] .pm-card-text {
+  flex: 1;
+  min-width: 0;
 }
 
-[data-device="mobile"] .products-table td:nth-child(1) .product-name {
+[data-device="mobile"] .products-table .product-name {
   font-weight: 800;
   font-size: 14px;
   color: #1d1d1f;
+  line-height: 1.25;
+  word-break: break-word;
 }
 
-/* Status badge */
-[data-device="mobile"] .products-table td:nth-child(4) {
-  flex-shrink: 0;
-}
-
-/* Action buttons: side-by-side */
-[data-device="mobile"] .products-table td:nth-child(5) {
-  flex-shrink: 0;
-}
-
-[data-device="mobile"] .table-actions {
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-}
-
-[data-device="mobile"] .btn-edit,
-[data-device="mobile"] .btn-delete {
-  padding: 6px 10px;
+[data-device="mobile"] .pm-card-desc {
+  margin-top: 4px;
   font-size: 12px;
-  border-radius: 8px;
-  white-space: nowrap;
+  line-height: 1.35;
+  color: rgba(60, 60, 67, 0.72);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+[data-device="mobile"] .pm-card-meta {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Mobile actions: card tap opens bottom sheet */
@@ -226,4 +235,27 @@
   border-color: rgba(220, 38, 38, 0.25);
   background: rgba(220, 38, 38, 0.08);
   color: #dc2626;
+}
+
+/* 编辑表单：是否启用 — checkbox 与「启用」同一行，各占 50% */
+[data-device="mobile"] .pm-enable-checkbox-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  column-gap: 12px;
+}
+
+[data-device="mobile"] .pm-enable-cb-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+
+[data-device="mobile"] .pm-enable-checkbox-caption {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
 }

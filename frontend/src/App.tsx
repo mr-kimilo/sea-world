@@ -17,6 +17,7 @@ import Profile from './pages/Profile/Profile';
 import Orders from './pages/Orders/Orders';
 import ShopAdmin from './pages/ShopAdmin/ShopAdmin';
 import ScoreMaintenance from './pages/ScoreMaintenance/ScoreMaintenance';
+import PwaInstallBanner from './components/PwaInstallBanner';
 import './styles/mobile-globals.css';
 
 /**
@@ -75,6 +76,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <PwaInstallBanner />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

@@ -39,7 +39,6 @@ export default function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             </span>
             <div className="mobile-sidebar-brand-text">
               <div className="mobile-sidebar-app-name">{t('common:appName')}</div>
-              <div className="mobile-sidebar-tagline">{t('home:slogan')}</div>
             </div>
           </div>
           <Button type="button" variant="ghost" size="icon" className="mobile-sidebar-close" onClick={onClose}>
