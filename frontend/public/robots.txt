@@ -6,4 +6,4 @@ Allow: /
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://seaworld.app/sitemap.xml
+Sitemap: https://www.hypeone.top/sitemap.xml
