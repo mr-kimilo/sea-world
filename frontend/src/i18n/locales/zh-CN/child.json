@@ -1,4 +1,9 @@
 {
+  "valueCorrector": {
+    "title": "金钱价值观纠正器",
+    "loading": "加载金钱价值观纠正器...",
+    "error": "价值观纠正器暂时不可用，请在电脑上打开此页面"
+  },
   "addChild": {
     "title": "添加孩子",
     "nameLabel": "姓名",

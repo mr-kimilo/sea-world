@@ -1,4 +1,9 @@
 {
+  "valueCorrector": {
+    "title": "Money Value Corrector",
+    "loading": "Loading money value corrector...",
+    "error": "Value corrector is temporarily unavailable. Please open this page on your computer"
+  },
   "addChild": {
     "title": "Add Child",
     "nameLabel": "Name",

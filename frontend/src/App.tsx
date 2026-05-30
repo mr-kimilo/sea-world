@@ -19,6 +19,10 @@ import ShopAdmin from './pages/ShopAdmin/ShopAdmin';
 import ScoreMaintenance from './pages/ScoreMaintenance/ScoreMaintenance';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import './styles/mobile-globals.css';
+// Portal
+import PortalLayout from './pages/Portal/PortalLayout';
+import PortalHome from './pages/Portal/PortalHome';
+import ChildValuePage from './pages/Portal/ChildValuePage';
 
 /**
  * ProtectedLayout wraps authenticated pages and renders the mobile tab bar
@@ -78,11 +82,21 @@ function App() {
     <BrowserRouter>
       <PwaInstallBanner />
       <Routes>
+        {/* Portal (public) — 超体 · 超级家庭 */}
+        <Route path="/portal" element={<PortalLayout />}>
+          <Route index element={<PortalHome />} />
+          <Route path="child-value" element={<ChildValuePage />} />
+          <Route path="under-sea" element={<Navigate to="/home" replace />} />
+        </Route>
+
+        {/* Auth pages (public) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+
+        {/* Protected routes — /home 而不是 / 避免冲突 */}
         <Route
-          path="/"
+          path="/home"
           element={
             <ProtectedRoute>
               <ProtectedLayout>
@@ -141,7 +155,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Root → portal */}
+        <Route path="/" element={<Navigate to="/portal" replace />} />
+        <Route path="*" element={<Navigate to="/portal" replace />} />
       </Routes>
     </BrowserRouter>
   );
