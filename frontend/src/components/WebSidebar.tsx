@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
-import LanguageSwitcher from './LanguageSwitcher';
 import { getSidebarRoutes, type AppUserRole } from './nav/NavRoutes';
 import { NavRouteIcon } from './nav/NavRouteIcons';
 import './WebSidebar.css';
@@ -52,7 +51,6 @@ export default function WebSidebar() {
       </nav>
 
       <div className="web-sidebar-actions" aria-label={t('home:sidebarActionsAria')}>
-        <LanguageSwitcher />
         <button type="button" className="web-sidebar-logout" onClick={handleLogout}>
           {t('common:logout')}
         </button>

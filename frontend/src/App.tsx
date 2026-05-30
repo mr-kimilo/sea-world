@@ -5,6 +5,7 @@ import { useOfflineSync } from './hooks/useOfflineSync';
 import { useDeviceType } from './hooks/useDeviceType';
 import MobileTabBar from './components/MobileTabBar';
 import WebSidebar from './components/WebSidebar';
+import LanguageSwitcher from './components/LanguageSwitcher';
 import OceanBackground from './components/OceanBackground';
 import './styles/web-app-layout.css';
 import './styles/ocean-authed-shell.css';
@@ -51,6 +52,10 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
       <div className="app-authed-root">
         <OceanBackground fixed />
         <div className="app-authed-stack">
+          {/* Fixed top-right language switcher */}
+          <div className="global-lang-switcher">
+            <LanguageSwitcher />
+          </div>
           {children}
           <MobileTabBar />
         </div>
@@ -60,6 +65,10 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-authed-root">
       <OceanBackground fixed />
+      {/* Fixed top-right language switcher */}
+      <div className="global-lang-switcher">
+        <LanguageSwitcher />
+      </div>
       <div className="app-layout-web app-layout-web--framed">
         <div className="app-layout-web-inner">
           <WebSidebar />
@@ -82,11 +91,11 @@ function App() {
     <BrowserRouter>
       <PwaInstallBanner />
       <Routes>
-        {/* Portal (public) — 超体 · 超级家庭 */}
+        {/* Portal — 超体 · 超级家庭 */}
         <Route path="/portal" element={<PortalLayout />}>
           <Route index element={<PortalHome />} />
-          <Route path="child-value" element={<ChildValuePage />} />
           <Route path="under-sea" element={<Navigate to="/home" replace />} />
+          <Route path="child-value" element={<ChildValuePage />} />
         </Route>
 
         {/* Auth pages (public) */}

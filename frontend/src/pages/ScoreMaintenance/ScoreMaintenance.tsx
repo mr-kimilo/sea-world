@@ -10,7 +10,6 @@ import { useConfirm } from '../../hooks/useConfirm';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import { useUiStore } from '../../store/uiStore';
 
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import ChildSelector from '../../components/ChildSelector';
 import ChildSlider from '../../components/ChildSlider';
@@ -260,7 +259,6 @@ export default function ScoreMaintenance() {
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
             <div className="header-right">
-              <LanguageSwitcher />
               <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
                 {t('common:logout')}
               </Button>

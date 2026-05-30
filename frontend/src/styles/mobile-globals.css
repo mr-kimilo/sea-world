@@ -37,6 +37,23 @@
   overflow-x: hidden;
 }
 
+/* ── Global language switcher (mobile) ── */
+[data-device="mobile"] .global-lang-switcher {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 300;
+}
+
+[data-device="mobile"] .global-lang-switcher .language-switcher {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 16px;
+}
+
 /* ── Remove default tap highlight on all interactive elements ── */
 [data-device="mobile"] button,
 [data-device="mobile"] a,

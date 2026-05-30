@@ -27,7 +27,7 @@ vi application-dev-local.yml
 
 # 3. 启动（会自动合并 dev + dev-local 配置）
 cd ../../../..  # 回到 backend 目录
-mvn spring-boot:run -Dspring-boot.run.profiles=dev,dev-local
+mvn spring-boot:run "-Dspring-boot.run.profiles=dev,local"
 ```
 
 ### 2. 生产本地环境设置（模拟生产）

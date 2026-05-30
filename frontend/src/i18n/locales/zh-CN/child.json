@@ -1,8 +1,33 @@
 {
   "valueCorrector": {
     "title": "金钱价值观纠正器",
-    "loading": "加载金钱价值观纠正器...",
-    "error": "价值观纠正器暂时不可用，请在电脑上打开此页面"
+    "subtitle": "选择商品，输入金额，看看能买多少",
+    "loading": "加载商品数据...",
+    "error": "数据加载失败，请稍后重试",
+    "calcError": "计算失败，请重试",
+    "categoryAll": "全部",
+    "howMuchMoney": "你有多少钱？",
+    "amountPlaceholder": "输入金额",
+    "unitYuan": "元",
+    "calculating": "计算中...",
+    "calculate": "计算",
+    "speakTitle": "朗读结果",
+    "speakLabel": "朗读",
+    "cannotAfford": "钱不够买",
+    "needMoney_one": "需要",
+    "needMoney_two": "，你只有",
+    "canBuy": "可以买",
+    "remainder": "，还剩",
+    "category": {
+      "drink": "饮品",
+      "food": "食品",
+      "fruit": "水果",
+      "toy": "玩具",
+      "clothes": "服装",
+      "stationery": "文具"
+    },
+    "ttsFallbackTooExpensive": "钱不够买{{name}}，{{name}}需要{{price}}元，你只有{{amount}}元",
+    "ttsFallbackCanBuy": "{{amount}}元可以买{{count}}{{unit}}{{name}}"
   },
   "addChild": {
     "title": "添加孩子",
@@ -20,5 +45,16 @@
     "successMessage": "孩子添加成功！",
     "errorMessage": "添加孩子失败，请重试",
     "loadingMessage": "保存中..."
+  },
+  "portal": {
+    "home": "首页",
+    "points": "积分管理",
+    "moneyValue": "金钱价值观纠正",
+    "tagline": "超级家庭",
+    "brandTitle": "超体 · 超级家庭",
+    "subtitle": "统一家庭数字入口 — 积分管理 · 金钱教育",
+    "pointsDesc": "查看和管理孩子的积分、兑换奖品",
+    "moneyValueDesc": "让孩子直观了解金钱的价值",
+    "enterAction": "进入"
   }
 }

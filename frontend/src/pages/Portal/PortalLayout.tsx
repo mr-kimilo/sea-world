@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useDeviceType } from '../../hooks/useDeviceType';
+import LanguageSwitcher from '../../components/LanguageSwitcher';
 import './Portal.css';
 
 const NAV_ITEMS = [
@@ -8,11 +11,13 @@ const NAV_ITEMS = [
     end: true,
     icon: '🏠',
     label: { zh: '首页', en: 'Home' },
+    i18nKey: 'portal.home',
   },
   {
     path: '/portal/under-sea',
     icon: '🐠',
     label: { zh: '积分管理', en: 'Points' },
+    i18nKey: 'portal.points',
     external: true,
     href: '/home',
   },
@@ -20,40 +25,50 @@ const NAV_ITEMS = [
     path: '/portal/child-value',
     icon: '💰',
     label: { zh: '金钱价值观纠正', en: 'Money Value' },
+    i18nKey: 'portal.moneyValue',
   },
 ];
 
 export default function PortalLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const lang = 'zh';
+  const { isMobile } = useDeviceType();
+  const { t } = useTranslation(['child', 'common']);
 
-  const t = (zh: string, _en: string) => lang === 'zh' ? zh : _en;
+  // On desktop the sidebar is always visible — keep it open
+  const showSidebar = !isMobile || sidebarOpen;
 
   return (
     <div className="portal-root">
-      {/* Mobile hamburger */}
-      <button
-        className="portal-hamburger"
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        aria-label="Toggle menu"
-      >
-        <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
-        <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
-        <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
-      </button>
+      {/* Fixed top-right language switcher */}
+      <div className="global-lang-switcher">
+        <LanguageSwitcher />
+      </div>
+
+      {/* Mobile hamburger — only visible on mobile */}
+      {isMobile && (
+        <button
+          className="portal-hamburger"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
+          <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
+          <span className={`hamburger-line ${sidebarOpen ? 'open' : ''}`} />
+        </button>
+      )}
 
       {/* Overlay for mobile */}
-      {sidebarOpen && (
+      {isMobile && sidebarOpen && (
         <div className="portal-overlay" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`portal-sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <aside className={`portal-sidebar ${showSidebar ? 'open' : ''}`}>
         <div className="portal-brand">
           <span className="portal-logo">⚡</span>
           <div className="portal-brand-text">
-            <span className="portal-app-name">超体</span>
-            <span className="portal-tagline">超级家庭</span>
+            <span className="portal-app-name">{t('common:appName')}</span>
+            <span className="portal-tagline">{t('portal.tagline')}</span>
           </div>
         </div>
 
@@ -67,7 +82,7 @@ export default function PortalLayout() {
                 onClick={() => setSidebarOpen(false)}
               >
                 <span className="portal-nav-icon">{item.icon}</span>
-                <span>{t(item.label.zh, item.label.en)}</span>
+                <span>{t(item.i18nKey)}</span>
                 <span className="portal-external-badge">↗</span>
               </a>
             ) : (
@@ -78,17 +93,17 @@ export default function PortalLayout() {
                 className={({ isActive }) =>
                   `portal-nav-link${isActive ? ' active' : ''}`
                 }
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => isMobile && setSidebarOpen(false)}
               >
                 <span className="portal-nav-icon">{item.icon}</span>
-                <span>{t(item.label.zh, item.label.en)}</span>
+                <span>{t(item.i18nKey)}</span>
               </NavLink>
             )
           )}
         </nav>
 
         <div className="portal-sidebar-footer">
-          <span className="portal-version">v1.0 · 超体</span>
+          <span className="portal-version">v1.0 · {t('common:appName')}</span>
         </div>
       </aside>
 

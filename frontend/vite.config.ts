@@ -8,6 +8,13 @@ export default defineConfig({
     host: '0.0.0.0', // 允许局域网访问
     port: 5173,
     strictPort: true,
+    proxy: {
+      // API 请求代理到后端 Spring Boot
+      '/api/': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',

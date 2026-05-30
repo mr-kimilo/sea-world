@@ -3,6 +3,18 @@
    Active when [data-device="web"] (see useDeviceType)
    ============================================================ */
 
+/* ── Global language switcher (fixed top-right) ── */
+.global-lang-switcher {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 300;
+}
+
+.global-lang-switcher .language-switcher {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
 [data-device='web'] #root {
   max-width: none;
   width: 100%;

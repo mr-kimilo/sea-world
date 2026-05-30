@@ -1,8 +1,33 @@
 {
   "valueCorrector": {
     "title": "Money Value Corrector",
-    "loading": "Loading money value corrector...",
-    "error": "Value corrector is temporarily unavailable. Please open this page on your computer"
+    "subtitle": "Pick an item, enter an amount, see what you can buy",
+    "loading": "Loading items...",
+    "error": "Failed to load data, please try again later",
+    "calcError": "Calculation failed, please retry",
+    "categoryAll": "All",
+    "howMuchMoney": "How much money do you have?",
+    "amountPlaceholder": "Enter amount",
+    "unitYuan": "¥",
+    "calculating": "Calculating...",
+    "calculate": "Calculate",
+    "speakTitle": "Read aloud",
+    "speakLabel": "Speak",
+    "cannotAfford": "Not enough to buy",
+    "needMoney_one": "costs",
+    "needMoney_two": "you only have",
+    "canBuy": "can buy",
+    "remainder": "remaining",
+    "category": {
+      "drink": "Drinks",
+      "food": "Food",
+      "fruit": "Fruits",
+      "toy": "Toys",
+      "clothes": "Clothing",
+      "stationery": "Stationery"
+    },
+    "ttsFallbackTooExpensive": "Not enough to buy {{name}}. {{name}} costs {{price}} yuan, you only have {{amount}} yuan.",
+    "ttsFallbackCanBuy": "{{amount}} yuan can buy {{count}} {{unit}} of {{name}}."
   },
   "addChild": {
     "title": "Add Child",
@@ -20,5 +45,16 @@
     "successMessage": "Child added successfully!",
     "errorMessage": "Failed to add child, please try again",
     "loadingMessage": "Saving..."
+  },
+  "portal": {
+    "home": "Home",
+    "points": "Points Management",
+    "moneyValue": "Money Value",
+    "tagline": "Super Family",
+    "brandTitle": "Meta · Super Family",
+    "subtitle": "Unified Family Portal — Points · Money Education",
+    "pointsDesc": "View & manage children's points and redeem rewards",
+    "moneyValueDesc": "Help children understand the value of money",
+    "enterAction": "Enter"
   }
 }

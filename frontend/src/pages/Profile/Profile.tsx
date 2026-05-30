@@ -8,7 +8,6 @@ import { useUiStore } from '../../store/uiStore';
 import { familyApi, type ChildRequest, type ChildResponse } from '../../api/family';
 import { useConfirm } from '../../hooks/useConfirm';
 import AddChild from '../../components/AddChild';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import MobileSidebar from '../../components/MobileSidebar';
@@ -176,7 +175,6 @@ export default function Profile() {
             <p className="header-slogan">{t('home:slogan')}</p>
           </div>
           <div className="header-right">
-            <LanguageSwitcher />
             <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
               {t('common:logout')}
             </Button>

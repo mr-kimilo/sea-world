@@ -6,7 +6,6 @@ import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
 
 import ProductManager from '../../components/ProductManager';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import { Button } from '../../components/ui/button';
 
@@ -37,7 +36,6 @@ export default function ShopAdmin() {
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
             <div className="header-right">
-              <LanguageSwitcher />
               <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
                 {t('common:logout')}
               </Button>

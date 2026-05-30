@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { familyApi } from '../../api/family';
 import ChildSelector from '../../components/ChildSelector';
 import AddScore from '../../components/AddScore';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import PageShellHeader from '../../components/PageShellHeader';
 import MobileSidebar from '../../components/MobileSidebar';
 import ChildSlider from '../../components/ChildSlider';
@@ -77,7 +76,6 @@ export default function Home() {
           <p className="header-slogan">{t('home:slogan')}</p>
         </div>
         <div className="header-right">
-          <LanguageSwitcher />
           <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
             {t('common:logout')}
           </Button>
