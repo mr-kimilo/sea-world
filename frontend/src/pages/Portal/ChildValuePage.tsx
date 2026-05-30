@@ -169,31 +169,35 @@ export default function ChildValuePage() {
             <div style={{ fontSize: 14, marginBottom: 8, color: '#666' }}>
               {t('valueCorrector.howMuchMoney')}
             </div>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-              <span style={{ fontSize: 20 }}>💰</span>
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder={t('valueCorrector.amountPlaceholder')}
-                style={{
-                  flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid #ddd',
-                  fontSize: 16, outline: 'none',
-                }}
-                onKeyDown={(e) => e.key === 'Enter' && handleCalculate()}
-              />
-              <span style={{ fontSize: 14, color: '#888' }}>{t('valueCorrector.unitYuan')}</span>
-              <button
-                onClick={handleCalculate}
-                disabled={calculating || !amount}
-                style={{
-                  padding: '10px 24px', borderRadius: 10, border: 'none',
-                  background: calculating ? '#ccc' : 'linear-gradient(135deg, #667eea, #764ba2)',
-                  color: '#fff', fontSize: 15, fontWeight: 600, cursor: 'pointer',
-                }}
-              >
-                {calculating ? t('valueCorrector.calculating') : t('valueCorrector.calculate')}
-              </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                <span style={{ fontSize: 20 }}>💰</span>
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder={t('valueCorrector.amountPlaceholder')}
+                  style={{
+                    flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid #ddd',
+                    fontSize: 16, outline: 'none',
+                  }}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCalculate()}
+                />
+                <span style={{ fontSize: 14, color: '#888' }}>{t('valueCorrector.unitYuan')}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button
+                  onClick={handleCalculate}
+                  disabled={calculating || !amount}
+                  style={{
+                    padding: '10px 24px', borderRadius: 10, border: 'none',
+                    background: calculating ? '#ccc' : 'linear-gradient(135deg, #667eea, #764ba2)',
+                    color: '#fff', fontSize: 15, fontWeight: 600, cursor: 'pointer',
+                  }}
+                >
+                  {calculating ? t('valueCorrector.calculating') : t('valueCorrector.calculate')}
+                </button>
+              </div>
             </div>
           </div>
         )}

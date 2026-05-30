@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
@@ -24,9 +24,7 @@ type ScoreMaintenanceTab = 'history' | 'dimensions';
 
 export default function ScoreMaintenance() {
   const { t } = useTranslation(['profile', 'common', 'home']);
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { logout } = useAuthStore();
   const { currentFamily } = useFamilyStore();
   const { isMobile } = useDeviceType();
   const { confirm, ConfirmDialogComponent } = useConfirm();
@@ -72,11 +70,6 @@ export default function ScoreMaintenance() {
     '💪', '🧠', '❤️', '💚', '💙', '💛', '🧡', '💜', '🖤',
     '🔥', '💧', '⚡', '☀️', '🌙',
   ];
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const loadCustomCategories = async () => {
     if (!currentFamily) return;
@@ -257,11 +250,6 @@ export default function ScoreMaintenance() {
             <div className="header-left">
               <h1>🐠 {t('common:appName')}</h1>
               <p className="header-slogan">{t('home:slogan')}</p>
-            </div>
-            <div className="header-right">
-              <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
-                {t('common:logout')}
-              </Button>
             </div>
           </header>
           <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />

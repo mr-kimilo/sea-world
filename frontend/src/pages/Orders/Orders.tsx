@@ -8,7 +8,6 @@ import { useUiStore } from '../../store/uiStore';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
 import ChildSlider from '../../components/ChildSlider';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import { Button } from '../../components/ui/button';
 import PendingOrders from '../Shop/components/PendingOrders';
@@ -45,7 +44,6 @@ export default function Orders() {
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
             <div className="header-right">
-              <LanguageSwitcher />
               <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
                 {t('common:logout')}
               </Button>

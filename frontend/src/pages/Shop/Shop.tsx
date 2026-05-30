@@ -6,7 +6,6 @@ import { useFamilyStore } from '../../store/familyStore';
 import { useUiStore } from '../../store/uiStore';
 import { useDeviceType } from '../../hooks/useDeviceType';
 import ChildSelector from '../../components/ChildSelector';
-import LanguageSwitcher from '../../components/LanguageSwitcher';
 import MobileSidebar from '../../components/MobileSidebar';
 import ChildSlider from '../../components/ChildSlider';
 import ItemList from './components/ItemList';
@@ -48,7 +47,6 @@ export default function Shop() {
               <p className="header-slogan">{t('home:slogan')}</p>
             </div>
             <div className="header-right">
-              <LanguageSwitcher />
               <Button type="button" className="logout-btn" onClick={handleLogout} variant="ghost">
                 {t('common:logout')}
               </Button>
@@ -98,7 +96,6 @@ export default function Shop() {
             </div>
 
             <div className="shop-header-right">
-              <LanguageSwitcher />
               <Button className="shop-logout-btn" onClick={handleLogout} type="button" variant="ghost">
                 {t('common:logout')}
               </Button>

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { getSidebarRoutes, type AppUserRole } from './nav/NavRoutes';
@@ -16,8 +16,16 @@ interface MobileSidebarProps {
 
 export default function MobileSidebar({ open, onClose }: MobileSidebarProps) {
   const { t } = useTranslation(['home', 'common']);
+  const navigate = useNavigate();
   const role = useAuthStore((s) => s.user?.role) as AppUserRole | undefined;
+  const { logout } = useAuthStore();
   const routes = getSidebarRoutes(role);
+
+  const handleLogout = () => {
+    logout();
+    onClose();
+    navigate('/login');
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -63,6 +71,13 @@ export default function MobileSidebar({ open, onClose }: MobileSidebarProps) {
             </NavLink>
           ))}
         </nav>
+
+        <div className="mobile-sidebar-footer">
+          <button type="button" className="mobile-sidebar-logout" onClick={handleLogout}>
+            <span className="mobile-sidebar-logout-icon" aria-hidden="true">🚪</span>
+            <span className="mobile-sidebar-logout-label">{t('common:logout')}</span>
+          </button>
+        </div>
       </aside>
     </div>
   );

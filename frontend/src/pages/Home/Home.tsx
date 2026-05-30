@@ -75,11 +75,6 @@ export default function Home() {
           <h1>🐠 {t('common:appName')}</h1>
           <p className="header-slogan">{t('home:slogan')}</p>
         </div>
-        <div className="header-right">
-          <Button onClick={handleLogout} className="logout-btn" type="button" variant="ghost">
-            {t('common:logout')}
-          </Button>
-        </div>
       </header>
       {isMobile && (
         <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />

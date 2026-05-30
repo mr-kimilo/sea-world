@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { authApi } from '../../api/auth';
@@ -15,7 +15,9 @@ import './Login.mobile.css';
 export default function Login() {
   const { t } = useTranslation(['auth', 'common']);
   const navigate = useNavigate();
+  const location = useLocation();
   const login = useAuthStore((s) => s.login);
+  const from = (location.state as { from?: string })?.from || '/home';
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function Login() {
       if (res.data.success && res.data.data) {
         const { accessToken, refreshToken, user } = res.data.data;
         login(accessToken, refreshToken, user);
-        navigate('/');
+        navigate(from, { replace: true });
       } else {
         setError(res.data.message || t('auth:errors.loginFailed'));
       }
