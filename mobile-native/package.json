@@ -16,6 +16,7 @@
     "@capacitor/ios": "^8.4.0",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
+    "@capgo/capacitor-updater": "^8.47.9",
     "axios": "^1.17.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -25,6 +26,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@capgo/cli": "^7.125.4",
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",

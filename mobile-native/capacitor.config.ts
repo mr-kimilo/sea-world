@@ -17,6 +17,10 @@ const config: CapacitorConfig = {
     Preferences: {
       group: "com.seaworld.family",
     },
+    CapacitorUpdater: {
+      autoUpdate: true,
+      autoUpdateUrl: "https://capgo.app/api/auto_update",
+    },
   },
 };
 
