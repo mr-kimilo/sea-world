@@ -55,4 +55,19 @@ public class EmailService {
             log.error("异步发送邮件失败: {}", e.getMessage());
         }
     }
+
+    public void sendPasswordResetEmail(String toEmail, String code) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(emailProperties.getFrom());
+            message.setTo(toEmail);
+            message.setSubject("SeaWorld 密码重置");
+            message.setText(String.format(
+                "你的密码重置验证码是：%s\n\n有效期 10 分钟。\n\n如果不是你本人操作，请忽略这封邮件。", code));
+            mailSender.send(message);
+            log.info("Password reset email sent to: {}", toEmail);
+        } catch (Exception e) {
+            log.error("Failed to send password reset email to: {}", toEmail, e);
+        }
+    }
 }

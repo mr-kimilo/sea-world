@@ -52,4 +52,16 @@ public class AuthController {
         authService.resendVerification(email);
         return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.VERIFICATION_RESENT.getMessage()));
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        authService.sendPasswordResetCode(request.getEmail());
+        return ResponseEntity.ok(ApiResponse.ok("验证码已发送"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
+        return ResponseEntity.ok(ApiResponse.ok("密码重置成功"));
+    }
 }

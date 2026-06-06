@@ -207,4 +207,35 @@ public class AuthService {
                         .build())
                 .build();
     }
+
+    @Transactional
+    public void sendPasswordResetCode(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorMessages.USER_NOT_FOUND.getMessage()));
+
+        String code = String.format("%06d", (int)(Math.random() * 1000000));
+        user.setEmailVerifyToken(code);
+        user.setEmailVerifyExpire(LocalDateTime.now().plusMinutes(10));
+        userRepository.save(user);
+
+        emailService.sendPasswordResetEmail(user.getEmail(), code);
+    }
+
+    @Transactional
+    public void resetPassword(String email, String code, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorMessages.USER_NOT_FOUND.getMessage()));
+
+        if (user.getEmailVerifyToken() == null || !user.getEmailVerifyToken().equals(code)) {
+            throw new BusinessException("验证码错误");
+        }
+        if (user.getEmailVerifyExpire() == null || user.getEmailVerifyExpire().isBefore(LocalDateTime.now())) {
+            throw new BusinessException("验证码已过期");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setEmailVerifyToken(null);
+        user.setEmailVerifyExpire(null);
+        userRepository.save(user);
+    }
 }
