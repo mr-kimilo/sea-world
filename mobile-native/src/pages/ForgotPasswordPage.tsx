@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Form, Field, Button, Toast } from "vant";
+﻿import { useState } from "react";
+import { Link } from "react-router-dom";
 import { authApi } from "../api";
+import { t } from "../i18n";
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<"email" | "code">("email");
@@ -9,65 +9,59 @@ export default function ForgotPasswordPage() {
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const handleSendCode = async () => {
-    setLoading(true);
-    try {
-      await authApi.forgotPassword(email);
-      Toast.success("验证码已发送到邮箱");
-      setStep("code");
-    } catch {
-      Toast.fail("该邮箱未注册");
-    } finally {
-      setLoading(false);
-    }
+  const handleSendCode = async (e: React.FormEvent) => {
+    e.preventDefault(); setError(""); setLoading(true);
+    try { await authApi.forgotPassword(email); setMsg(t("auth.codeSent")); setStep("code"); }
+    catch { setError(t("auth.notRegistered")); }
+    finally { setLoading(false); }
   };
 
-  const handleReset = async () => {
-    if (newPassword.length < 6) {
-      Toast.fail("密码至少 6 位");
-      return;
-    }
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault(); setError("");
+    if (newPassword.length < 6) { setError(t("auth.pwdShort")); return; }
     setLoading(true);
-    try {
-      await authApi.resetPassword(email, code, newPassword);
-      Toast.success("密码重置成功");
-      navigate("/login", { replace: true });
-    } catch {
-      Toast.fail("验证码不对或已过期");
-    } finally {
-      setLoading(false);
-    }
+    try { await authApi.resetPassword(email, code, newPassword); setMsg(t("auth.resetOk")); setStep("email"); }
+    catch { setError(t("auth.codeWrong")); }
+    finally { setLoading(false); }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-header">
-        <h1>忘记密码</h1>
-        <p>{step === "email" ? "输入注册邮箱" : "输入验证码和新密码"}</p>
+        <h1>{t("auth.forgotPwd")}</h1>
+        <p>{step === "email" ? t("auth.enterEmail") : t("auth.enterCode")}</p>
       </div>
-
       {step === "email" ? (
-        <Form className="auth-form">
-          <Field label="邮箱" placeholder="注册时用的邮箱" value={email} onInput={(e) => setEmail((e.target as HTMLInputElement).value)} type="email" clearable />
-          <Button type="primary" block round loading={loading} onClick={handleSendCode} style={{ marginTop: 16 }}>
-            发送验证码
-          </Button>
-        </Form>
+        <form onSubmit={handleSendCode}>
+          <div className="auth-input-group">
+            <div className="auth-input-row">
+              <span className="auth-input-label">{t("auth.email")}</span>
+              <input type="email" placeholder={t("auth.placeholderEmailReg")} value={email} onChange={e => setEmail(e.target.value)} />
+            </div>
+          </div>
+          <button type="submit" className="auth-btn" disabled={loading}>{loading ? t("auth.sending") : t("auth.sendCode")}</button>
+        </form>
       ) : (
-        <Form className="auth-form">
-          <Field label="验证码" placeholder="6 位数字" value={code} onInput={(e) => setCode((e.target as HTMLInputElement).value)} maxlength={6} />
-          <Field label="新密码" placeholder="至少 6 位" value={newPassword} onInput={(e) => setNewPassword((e.target as HTMLInputElement).value)} type="password" clearable />
-          <Button type="primary" block round loading={loading} onClick={handleReset} style={{ marginTop: 16 }}>
-            重置密码
-          </Button>
-        </Form>
+        <form onSubmit={handleReset}>
+          <div className="auth-input-group">
+            <div className="auth-input-row">
+              <span className="auth-input-label">{t("auth.code")}</span>
+              <input placeholder={t("auth.placeholderCode")} value={code} onChange={e => setCode(e.target.value)} maxLength={6} />
+            </div>
+            <div className="auth-input-row">
+              <span className="auth-input-label">{t("auth.newPwd")}</span>
+              <input type="password" placeholder={t("auth.placeholderNewPwd")} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+            </div>
+          </div>
+          <button type="submit" className="auth-btn" disabled={loading}>{loading ? t("auth.resetting") : t("auth.resetPwd")}</button>
+        </form>
       )}
-
-      <div className="auth-links">
-        <Link to="/login">返回登录</Link>
-      </div>
+      {msg && <div className="auth-error" style={{background:"rgba(52,199,89,0.08)",color:"#34c759"}}>{msg}</div>}
+      {error && <div className="auth-error">{error}</div>}
+      <div className="auth-links"><Link to="/login">{t("auth.backLogin")}</Link></div>
     </div>
   );
 }

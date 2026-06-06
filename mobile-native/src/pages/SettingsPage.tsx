@@ -1,41 +1,43 @@
-import { useNavigate } from "react-router-dom";
-import { Button, Dialog } from "vant";
-import { useAuthStore } from "../store";
+﻿import { useAuthStore } from "../store";
+import { getLang, setLang, t } from "../i18n";
 
 export default function SettingsPage() {
   const { user, logout } = useAuthStore();
-  const nav = useNavigate();
+  const lang = getLang();
 
   const handleLogout = () => {
-    Dialog.confirm({
-      title: "退出登录",
-      message: "退出后需要重新输入密码",
-    }).then(() => {
+    if (confirm(t("settings.logoutConfirm"))) {
       logout();
-      nav("/login");
-    }).catch(() => {});
+      window.location.hash = "#/login";
+    }
   };
 
   return (
-    <div className="page">
-      <h2>⚙ 我的</h2>
+    <div>
+      <h1 className="page-title">{t("settings.title")}</h1>
 
-      <div className="settings-card">
-        <div className="user-info">
-          <span className="user-avatar">🧑</span>
-          <span className="user-email">{user?.email ?? "未登录"}</span>
+      <div className="set-card">
+        <div className="set-user">
+          <span className="set-avatar">🧑</span>
+          <span className="set-email">{user?.email ?? "未登录"}</span>
         </div>
       </div>
 
-      <div className="settings-card">
-        <h4>关于</h4>
-        <p>SeaWorld 家庭积分 · v1.0.0</p>
-        <p>帮孩子攒积分，换奖励。规则你自己定。</p>
+      <div className="set-card">
+        <h4>{t("settings.language")}</h4>
+        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+          <button className={"gender-btn" + (lang === "zh" ? " on" : "")} onClick={() => setLang("zh")}>中文</button>
+          <button className={"gender-btn" + (lang === "en" ? " on" : "")} onClick={() => setLang("en")}>English</button>
+        </div>
       </div>
 
-      <Button type="danger" round block onClick={handleLogout}>
-        退出登录
-      </Button>
+      <div className="set-card">
+        <h4>{t("settings.about")}</h4>
+        <p>{t("settings.version")}</p>
+        <p>{t("app.slogan")}</p>
+      </div>
+
+      <button className="btn-logout" onClick={handleLogout}>{t("settings.logout")}</button>
     </div>
   );
 }

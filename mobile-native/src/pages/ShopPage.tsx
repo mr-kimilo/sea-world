@@ -1,32 +1,27 @@
-import { useEffect, useState } from "react";
-import { Button, Toast } from "vant";
+﻿import { useEffect, useState } from "react";
 import { shopApi } from "../api";
+import { t } from "../i18n";
 
-type ShopItem = { id: number; name: string; points: number; imageUrl: string };
+type Item = { id: number; name: string; points: number };
 
 export default function ShopPage() {
-  const [items, setItems] = useState<ShopItem[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => { shopApi.items().then(r => setItems(r.data ?? [])).catch(() => setItems([])); }, []);
 
-  useEffect(() => {
-    shopApi.items().then(r => setItems(r.data ?? [])).catch(() => setItems([]));
-  }, []);
-
-  const handleRedeem = async (item: ShopItem) => {
-    try {
-      await shopApi.redeem("demo-child", item.id);
-      Toast.success("兑换成功");
-    } catch { Toast.fail("积分不足或兑换失败"); }
+  const redeem = async (item: Item) => {
+    try { await shopApi.redeem("demo-child", item.id); alert(t("shop.redeemOk")); }
+    catch { alert(t("shop.noPoints")); }
   };
 
   return (
-    <div className="page">
-      <h2>🎁 商店</h2>
-      {items.length === 0 && <p className="empty">暂无商品</p>}
-      {items.map((item) => (
+    <div>
+      <h1 className="page-title">{t("shop.title")}</h1>
+      {items.length === 0 && <div className="empty-state">{t("shop.empty")}</div>}
+      {items.map(item => (
         <div key={item.id} className="shop-card">
           <span className="shop-name">{item.name}</span>
-          <span className="shop-points">{item.points} 分</span>
-          <Button size="small" type="primary" round onClick={() => handleRedeem(item)}>兑换</Button>
+          <span className="shop-pts">{item.points} 分</span>
+          <button className="shop-btn" onClick={() => redeem(item)}>{t("shop.redeem")}</button>
         </div>
       ))}
     </div>

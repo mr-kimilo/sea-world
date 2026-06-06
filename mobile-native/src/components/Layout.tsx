@@ -1,21 +1,18 @@
+﻿import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TabBar from "./TabBar";
+import MobileSidebar from "./MobileSidebar";
 
 export default function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="app">
+    <div className="app-shell">
       <main className="app-main">
         <Outlet />
       </main>
-      <TabBar
-        items={[
-          { to: "/", icon: "⭐", label: "积分" },
-          { to: "/tasks", icon: "📋", label: "任务" },
-          { to: "/shop", icon: "🎁", label: "商店" },
-          { to: "/child", icon: "🧒", label: "纠正器" },
-          { to: "/settings", icon: "⚙", label: "我的" },
-        ]}
-      />
+      <TabBar onMenu={() => setSidebarOpen(true)} />
+      <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </div>
   );
 }

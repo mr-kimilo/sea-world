@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = "http://127.0.0.1:8080/api";
+const API_BASE = "http://192.168.31.168:8080/api";
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -29,7 +29,7 @@ api.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401) {
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.hash = "#/login";
     }
     return Promise.reject(err);
   }
@@ -50,12 +50,44 @@ export const authApi = {
     api.post("/auth/reset-password", { email, code, newPassword }),
 };
 
+// ——— Family API ———
+export type FamilyInfo = { id: string; name: string; createdAt: string };
+export type ChildInfo = { id: string; name: string; avatar?: string; avatarUrl?: string; familyId: string };
+
+// normalize backend avatarUrl -> avatar
+const normChild = (c: any): ChildInfo => ({ ...c, avatar: c.avatar || c.avatarUrl });
+const normChildren = (arr: any[]): ChildInfo[] => (arr ?? []).map(normChild);
+
+export const familyApi = {
+  mine: () => api.get("/families/mine"),
+  create: (name: string) => api.post("/families", { name }),
+  children: (familyId: string) =>
+    api.get(`/families/${familyId}/children`).then(res => ({ ...res, data: normChildren(res.data) })),
+  addChild: (familyId: string, name: string) =>
+    api.post(`/families/${familyId}/children`, { name }).then(res => ({ ...res, data: res.data ? normChild(res.data) : res.data })),
+  updateChild: (familyId: string, childId: string, data: { name?: string; avatar?: string; birthDate?: string }) => {
+    // Map avatar -> avatarUrl to match backend ChildRequest.avatarUrl
+    const payload: any = { ...data };
+    if (data.avatar !== undefined) { payload.avatarUrl = data.avatar; delete payload.avatar; }
+    return api.put(`/families/${familyId}/children/${childId}`, payload).then(res => ({ ...res, data: res.data ? normChild(res.data) : res.data }));
+  },
+  deleteChild: (familyId: string, childId: string) =>
+    api.delete(`/families/${familyId}/children/${childId}`),
+};
+
+// ——— Custom Category API ———
+export const categoryApi = {
+  list: () => api.get("/custom-categories"),
+  create: (name: string, icon: string) => api.post("/custom-categories", { name, icon }),
+  remove: (id: string) => api.delete(`/custom-categories/${id}`),
+};
+
 // ——— Score API ———
 export const scoreApi = {
-  list: (familyId: string, childId: string) =>
-    api.get(`/families/${familyId}/children/${childId}/scores`),
+  list: (familyId: string, childId: string, page = 0, size = 100) =>
+    api.get(`/families/${familyId}/children/${childId}/scores`, { params: { page, size } }),
   add: (familyId: string, childId: string, category: string, amount: number, description: string) =>
-    api.post(`/families/${familyId}/children/${childId}/scores`, { category, amount, description }),
+    api.post(`/families/${familyId}/children/${childId}/scores`, { category, score: amount, reason: description }),
 };
 
 // ——— Shop API ———

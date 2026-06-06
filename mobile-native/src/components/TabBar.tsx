@@ -1,29 +1,26 @@
-import { Link, useLocation } from "react-router-dom";
+﻿import { useLocation, useNavigate } from "react-router-dom";
+import { t } from "../i18n";
 
-type TabItem = {
-  to: string;
-  icon: string;
-  label: string;
-};
+interface Props { onMenu: () => void; }
 
-export default function TabBar({ items }: { items: TabItem[] }) {
-  const location = useLocation();
+export default function TabBar({ onMenu }: Props) {
+  const loc = useLocation();
+  const nav = useNavigate();
+  const active = (path: string) => loc.pathname === path;
 
   return (
-    <nav className="tabbar">
-      {items.map((item) => {
-        const active = location.pathname === item.to;
-        return (
-          <Link
-            key={item.to}
-            to={item.to}
-            className={`tabbar-item${active ? " active" : ""}`}
-          >
-            <span className="tabbar-icon">{item.icon}</span>
-            <span className="tabbar-label">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
+    <div className="nav-pill-wrap">
+      <div className="nav-pill">
+        <button className={"nav-pill-btn" + (active("/") ? " active" : "")} onClick={() => nav("/")}>
+          <span className="nav-pill-icon">🏠</span>{t("nav.home")}
+        </button>
+        <button className="nav-pill-btn" onClick={onMenu}>
+          <span className="nav-pill-icon">☰</span>{t("nav.menu")}
+        </button>
+        <button className={"nav-pill-btn" + (active("/settings") ? " active" : "")} onClick={() => nav("/settings")}>
+          <span className="nav-pill-icon">🧑</span>{t("nav.me")}
+        </button>
+      </div>
+    </div>
   );
 }

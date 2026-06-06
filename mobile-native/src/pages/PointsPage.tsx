@@ -1,88 +1,226 @@
-import { useEffect, useState } from "react";
-import { Button, Dialog, Field, Popup, Toast } from "vant";
-import { scoreApi } from "../api";
+﻿import { useEffect, useState } from "react";
+import { useAuthStore, useFamilyStore } from "../store";
+import { scoreApi, familyApi } from "../api";
+import { t } from "../i18n";
 
-type ScoreRecord = {
-  id: string;
-  category: string;
-  amount: number;
-  description: string;
-  balanceAfter: number;
-  createdAt: string;
-};
+type ScoreRecord = { id: string; category: string; score: number; reason: string };
+const CATEGORIES = [
+  { key: "intelligence", emoji: "🧠", label: "智力" },
+  { key: "physical", emoji: "💪", label: "体能" },
+  { key: "moral", emoji: "❤️", label: "品德" },
+  { key: "hygiene", emoji: "🫧", label: "卫生" },
+  { key: "handcraft", emoji: "🛠️", label: "手工" },
+];
+const QUICK_REASONS = ["认真完成作业", "主动做家务", "按时睡觉", "锻炼身体", "阅读课外书", "整理房间"];
+const COLORS: Record<string, string> = { intelligence: "#007aff", physical: "#34c759", moral: "#ff9500", hygiene: "#5ac8fa", handcraft: "#af52de", custom: "#ff3b30" };
+const AVATARS = ["🧒", "👦", "👧", "🐱", "🐶", "🦊", "🐸", "🐼"];
 
-const COLORS: Record<string, string> = {
-  STUDY: "#3b82f6", CHORE: "#10b981", BEHAVIOR: "#f59e0b", CUSTOM: "#8b5cf6",
-};
+function CategorySheet({ show, onClose, cats, selected, onSelect }: { show: boolean; onClose: () => void; cats: typeof CATEGORIES; selected: string; onSelect: (k: string) => void }) {
+  if (!show) return null;
+  return (
+    <div className="sheet-overlay" onClick={onClose}>
+      <div className="sheet-mask" />
+      <div className="sheet-body" onClick={e => e.stopPropagation()}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>选择维度</div>
+        {cats.map(c => (
+          <button key={c.key} className={"sheet-item" + (selected === c.key ? " selected" : "")} onClick={() => { onSelect(c.key); onClose(); }}>
+            <span style={{ fontSize: 20 }}>{c.emoji}</span> {c.label}
+            {selected === c.key && <span className="sheet-check">✓</span>}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ScoreStepper({ value, onChange }: { value: number; onChange: (v: number) => void }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      <button onClick={() => onChange(Math.max(-10, value - 1))}
+        style={{ width: 40, height: 40, borderRadius: 20, border: "1.5px solid var(--line)", background: "#fff", fontSize: 24, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ink)" }}>−</button>
+      <span style={{ fontSize: 36, fontWeight: 700, minWidth: 60, textAlign: "center", color: value > 0 ? "#34c759" : value < 0 ? "#ff3b30" : "#999" }}>
+        {value > 0 ? "+" + value : value}
+      </span>
+      <button onClick={() => onChange(Math.min(10, value + 1))}
+        style={{ width: 40, height: 40, borderRadius: 20, border: "1.5px solid var(--line)", background: "#fff", fontSize: 24, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--ink)" }}>+</button>
+    </div>
+  );
+}
 
 export default function PointsPage() {
+  const token = useAuthStore((s) => s.token);
+  const { selectedFamilyId, selectedChildId, selectChild, children, setFamilies, setChildren } = useFamilyStore();
   const [records, setRecords] = useState<ScoreRecord[]>([]);
-  const [balance, setBalance] = useState(0);
-  const [showAdd, setShowAdd] = useState(false);
-  const [amount, setAmount] = useState("5");
-  const [category, setCategory] = useState("CHORE");
-  const [desc, setDesc] = useState("");
+  const [score, setScore] = useState(2);
+  const [category, setCategory] = useState("moral");
+  const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showCatSheet, setShowCatSheet] = useState(false);
+  const [showAddChild, setShowAddChild] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [totalScore, setTotalScore] = useState(0);
 
-  const familyId = "demo-family";
-  const childId = "demo-child";
+  const fid = selectedFamilyId; const cid = selectedChildId;
+  const kids = fid ? children[fid] || [] : [];
+  const kid = kids.find(k => k.id === cid);
+  const curCat = CATEGORIES.find(c => c.key === category) || CATEGORIES[2];
 
-  const loadScores = async () => {
+  const load = async () => {
+    if (!token) return;
     try {
-      const res = await scoreApi.list(familyId, childId);
-      const data = res.data;
-      if (data?.content) {
-        setRecords(data.content);
-        setBalance(data.content[0]?.balanceAfter ?? 0);
+      const res = await familyApi.mine();
+      const families: any[] = res.data ?? [];
+      setFamilies(families);
+      if (families.length === 0) { setRecords([]); return; }
+
+      const store = useFamilyStore.getState();
+      const validFid = families.some((f: any) => f.id === store.selectedFamilyId)
+        ? store.selectedFamilyId : families[0].id;
+      if (validFid !== store.selectedFamilyId) {
+        useFamilyStore.getState().selectFamily(validFid);
       }
+
+      for (const f of families) {
+        try {
+          const cr = await familyApi.children(f.id);
+          const kids: any[] = cr.data ?? [];
+          setChildren(f.id, kids);
+          if (f.id === validFid && kids.length > 0) {
+            const validCid = kids.some((k: any) => k.id === store.selectedChildId)
+              ? store.selectedChildId : kids[0].id;
+            if (validCid !== store.selectedChildId) {
+              selectChild(validCid);
+            } else if (!store.selectedChildId) {
+              selectChild(kids[0].id);
+            }
+          }
+        } catch { /* skip */ }
+      }
+
+      const latest = useFamilyStore.getState();
+      if (latest.selectedFamilyId && latest.selectedChildId) {
+        loadRecords(latest.selectedFamilyId, latest.selectedChildId);
+      }
+    } catch { /* skip */ }
+  };
+  useEffect(() => { load(); }, [token]);
+
+  const loadRecords = async (fidParam?: string, cidParam?: string) => {
+    const f = fidParam ?? fid;
+    const c = cidParam ?? cid;
+    if (!f || !c) return;
+    try {
+      const res = await scoreApi.list(f, c, 0, 100);
+      const list = res.data?.content ?? [];
+      setRecords(list);
+      setTotalScore(list.reduce((s: number, r: ScoreRecord) => s + r.score, 0));
     } catch { setRecords([]); }
   };
+  useEffect(() => { loadRecords(); }, [fid, cid]);
 
-  useEffect(() => { loadScores(); }, []);
-
-  const handleAdd = async () => {
+  const handleRecord = async () => {
+    if (!fid || !cid) return;
     setLoading(true);
-    try {
-      const amt = Number(amount);
-      await scoreApi.add(familyId, childId, category, amt, desc || `${category} +${amt}`);
-      Toast.success(`+${amt} 分`);
-      setShowAdd(false);
-      loadScores();
-    } catch { Toast.fail("操作失败"); }
-    finally { setLoading(false); }
+    try { await scoreApi.add(fid, cid, category, score, reason || QUICK_REASONS[0]); setScore(2); setReason(""); loadRecords(); }
+    catch {} finally { setLoading(false); }
   };
 
+  const handleAddChild = async () => {
+    if (!fid || !newName.trim()) return;
+    try { await familyApi.addChild(fid, newName.trim()); setNewName(""); setShowAddChild(false); load(); } catch {}
+  };
+
+  if (!token) return <div className="page-padded"><div className="empty-state">请先登录</div></div>;
+
   return (
-    <div className="page points-page">
-      <div className="balance-card">
-        <p className="balance-label">当前积分</p>
-        <h2 className="balance-number">{balance}</h2>
+    <div className="page-padded">
+      {/* Child Header */}
+      <div className="apple-card" style={{ padding: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span style={{ fontSize: 48 }}>{kid?.avatar || AVATARS[kids.indexOf(kid!) % AVATARS.length] || "🧒"}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 20, fontWeight: 700 }}>{kid?.name || t("points.noChild")}</span>
+              {kid && <a href={"#/child/edit?id=" + kid.id} style={{ fontSize: 13, color: "var(--active)", textDecoration: "none" }}>编辑</a>}
+            </div>
+            <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>⭐ 总分 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 可用 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
+            </div>
+          </div>
+        </div>
+        {kids.length > 0 && (
+          <div style={{ display: "flex", gap: 8, overflowX: "auto", marginTop: 12, paddingBottom: 2 }}>
+            {kids.map(c => (
+              <button key={c.id} onClick={() => selectChild(c.id)}
+                style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 14px", borderRadius: 14, border: c.id === cid ? "2px solid var(--active)" : "2px solid transparent", background: c.id === cid ? "var(--active-bg)" : "rgba(118,118,128,0.06)", fontFamily: "inherit" }}>
+                <span style={{ fontSize: 22 }}>{c.avatar || AVATARS[0]}</span>
+                <span style={{ fontSize: 11, fontWeight: 500 }}>{c.name}</span>
+              </button>
+            ))}
+            <button onClick={() => setShowAddChild(true)} style={{ flexShrink: 0, width: 52, height: 52, borderRadius: 14, border: "1.5px dashed var(--line)", background: "none", fontSize: 22, color: "var(--active)", fontFamily: "inherit", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+          </div>
+        )}
       </div>
 
-      <div className="action-row">
-        <Button type="primary" round onClick={() => setShowAdd(true)}>加分</Button>
+      {/* Score Entry Card */}
+      <div className="apple-card">
+        {/* Category Picker */}
+        <div className="section-title">维度</div>
+        <button onClick={() => setShowCatSheet(true)}
+          style={{ width: "100%", padding: "14px 16px", border: "none", borderRadius: 10, background: "rgba(118,118,128,0.08)", fontSize: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: "inherit", textAlign: "left", color: "var(--ink)", marginBottom: 20 }}>
+          <span style={{ fontSize: 20 }}>{curCat.emoji}</span> {curCat.label}
+          <span style={{ marginLeft: "auto", color: "var(--muted)" }}>›</span>
+        </button>
+
+        {/* Score Stepper */}
+        <div className="section-title">分数</div>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, marginTop: 8 }}>
+          <ScoreStepper value={score} onChange={setScore} />
+        </div>
+
+        {/* Quick Reasons */}
+        <div className="section-title">原因</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
+          {QUICK_REASONS.map(r => (
+            <button key={r} onClick={() => setReason(reason === r ? "" : r)}
+              style={{ padding: "8px 14px", borderRadius: 20, border: reason === r ? "1.5px solid var(--active)" : "1.5px solid var(--line)", background: reason === r ? "var(--active-bg)" : "#fff", fontSize: 13, fontFamily: "inherit", color: reason === r ? "var(--active)" : "#555", fontWeight: reason === r ? 500 : 400 }}>
+              {r}
+            </button>
+          ))}
+        </div>
+        <input className="apple-input" placeholder="输入记分原因" value={reason} onChange={e => setReason(e.target.value)} style={{ marginTop: 4, marginBottom: 16 }} />
+
+        <button className="apple-btn" style={{ width: "100%" }} disabled={loading || !cid} onClick={handleRecord}>
+          {loading ? "记录中…" : "记录"}
+        </button>
       </div>
 
-      <h3>最近记录</h3>
-      {records.length === 0 && <p className="empty">暂无积分记录，点"加分"开始</p>}
-      {records.slice(0, 10).map((r) => (
-        <div key={r.id} className="record-row">
-          <span className="record-dot" style={{ background: COLORS[r.category] || "#ccc" }} />
-          <span className="record-desc">{r.description}</span>
-          <span className="record-amount" style={{ color: r.amount > 0 ? "#10b981" : "#ef4444" }}>
-            {r.amount > 0 ? "+" : ""}{r.amount}
-          </span>
+      {/* Recent Records */}
+      <div className="section-title" style={{ marginTop: 8 }}>最近记录</div>
+      {records.length === 0 && <div className="empty-state" style={{ padding: 24 }}>{t("points.noRecords")}</div>}
+      {records.slice(0, 20).map(r => (
+        <div key={r.id} className="record-item" style={{ padding: "14px 0" }}>
+          <span style={{ width: 8, height: 8, borderRadius: 4, background: COLORS[r.category] || "#ccc", flexShrink: 0 }} />
+          <span style={{ flex: 1, fontSize: 15 }}>{r.reason}</span>
+          <span style={{ fontWeight: 600, fontSize: 16, color: r.score > 0 ? "#34c759" : "#ff3b30" }}>{r.score > 0 ? "+" : ""}{r.score}</span>
         </div>
       ))}
 
-      <Popup visible={showAdd} position="bottom" round onClose={() => setShowAdd(false)}>
-        <div className="popup-form">
-          <h3>添加积分</h3>
-          <Field label="数量" value={amount} type="number" onInput={(e) => setAmount((e.target as HTMLInputElement).value)} />
-          <Field label="说明" placeholder="做了什么" value={desc} onInput={(e) => setDesc((e.target as HTMLInputElement).value)} />
-          <Button type="primary" block round loading={loading} onClick={handleAdd} style={{ marginTop: 12 }}>确认</Button>
+      <CategorySheet show={showCatSheet} onClose={() => setShowCatSheet(false)} cats={CATEGORIES} selected={category} onSelect={setCategory} />
+
+      {showAddChild && (
+        <div className="sheet-overlay" onClick={() => setShowAddChild(false)}>
+          <div className="sheet-mask" />
+          <div className="sheet-body" onClick={e => e.stopPropagation()}>
+            <div style={{ padding: "0 20px" }}>
+              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 16 }}>{t("points.addChild")}</h3>
+              <input className="apple-input" placeholder={t("points.childName")} value={newName} onChange={e => setNewName(e.target.value)} autoFocus style={{ marginBottom: 12 }} />
+              <button className="apple-btn" style={{ width: "100%" }} disabled={!newName.trim()} onClick={handleAddChild}>确认添加</button>
+            </div>
+          </div>
         </div>
-      </Popup>
+      )}
     </div>
   );
 }

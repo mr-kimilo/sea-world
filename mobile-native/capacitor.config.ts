@@ -5,7 +5,8 @@ const config: CapacitorConfig = {
   appName: "SeaWorld",
   webDir: "dist",
   server: {
-    androidScheme: "https",
+    url: "http://192.168.31.168:5178",
+    cleartext: true,
   },
   android: {
     minSdkVersion: 34,
@@ -17,10 +18,7 @@ const config: CapacitorConfig = {
     Preferences: {
       group: "com.seaworld.family",
     },
-    CapacitorUpdater: {
-      autoUpdate: true,
-      autoUpdateUrl: "https://capgo.app/api/auto_update",
-    },
+    // CapacitorUpdater 暂时禁用 — 排查白屏
   },
 };
 

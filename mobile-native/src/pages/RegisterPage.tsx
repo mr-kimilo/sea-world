@@ -1,57 +1,58 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Form, Field, Button, Toast } from "vant";
+﻿import { useState } from "react";
+import { Link } from "react-router-dom";
 import { authApi } from "../api";
 import { useAuthStore } from "../store";
+import { t } from "../i18n";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const setAuth = useAuthStore((s) => s.setAuth);
 
-  const handleRegister = async () => {
-    if (password !== confirm) {
-      Toast.fail("两次密码不一样");
-      return;
-    }
-    if (password.length < 6) {
-      Toast.fail("密码至少 6 位");
-      return;
-    }
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault(); setError("");
+    if (password !== confirm) { setError(t("auth.pwdMismatch")); return; }
+    if (password.length < 6) { setError(t("auth.pwdShort")); return; }
     setLoading(true);
     try {
       const res = await authApi.register(email, password);
       setAuth(res.data.accessToken, res.data.user);
-      navigate("/", { replace: true });
-    } catch {
-      Toast.fail("注册失败，换个邮箱试试");
-    } finally {
-      setLoading(false);
-    }
+      window.location.hash = "#/";
+    } catch { setError(t("auth.regFail")); }
+    finally { setLoading(false); }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-header">
-        <h1>注册</h1>
-        <p>加入 SeaWorld 家庭积分</p>
+        <h1>{t("auth.register")}</h1>
+        <p>{t("auth.registerTitle")}</p>
       </div>
-
-      <Form className="auth-form">
-        <Field label="邮箱" placeholder="你的邮箱" value={email} onInput={(e) => setEmail((e.target as HTMLInputElement).value)} type="email" clearable />
-        <Field label="密码" placeholder="至少 6 位" value={password} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} type="password" clearable />
-        <Field label="确认密码" placeholder="再输一次" value={confirm} onInput={(e) => setConfirm((e.target as HTMLInputElement).value)} type="password" clearable />
-        <Button type="primary" block round loading={loading} onClick={handleRegister} style={{ marginTop: 16 }}>
-          注册
-        </Button>
-      </Form>
-
-      <div className="auth-links">
-        <Link to="/login">已有账号？登录</Link>
-      </div>
+      <form onSubmit={handleRegister}>
+        <div className="auth-input-group">
+          <div className="auth-input-row">
+            <span className="auth-input-label">{t("auth.email")}</span>
+            <input type="email" placeholder={t("auth.placeholderEmailReg")} value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+          </div>
+          <div className="auth-input-row">
+            <span className="auth-input-label">{t("auth.password")}</span>
+            <input type="password" placeholder={t("auth.placeholderPwdReg")} value={password} onChange={e => setPassword(e.target.value)} />
+          </div>
+          <div className="auth-input-row">
+            <span className="auth-input-label">{t("auth.confirmPwd")}</span>
+            <input type="password" placeholder={t("auth.placeholderConfirm")} value={confirm} onChange={e => setConfirm(e.target.value)} />
+          </div>
+        </div>
+        <button type="submit" className="auth-btn" disabled={loading}>
+          {loading && <span className="spinner" />}
+          {loading ? t("auth.registering") : t("auth.registerBtn")}
+        </button>
+      </form>
+      {error && <div className="auth-error">{error}</div>}
+      <div className="auth-links"><Link to="/login">{t("auth.hasAccount")}</Link></div>
     </div>
   );
 }

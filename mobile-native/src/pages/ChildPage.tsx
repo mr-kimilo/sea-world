@@ -1,15 +1,6 @@
-import { useState, useCallback, useRef } from "react";
-import { Button, Field, Slider, Toast } from "vant";
-import {
-  calculate,
-  getItemsByAgeBand,
-  ageToBand,
-  speakText,
-  AGE_BANDS,
-  CATEGORY_LABELS,
-  type CalcResult,
-  type Category,
-} from "../utils/childCalculator";
+﻿import { useState, useCallback, useRef } from "react";
+import { calculate, getItemsByAgeBand, ageToBand, speakText, AGE_BANDS, CATEGORY_LABELS, type CalcResult, type Category } from "../utils/childCalculator";
+import { t } from "../i18n";
 
 export default function ChildPage() {
   const [amount, setAmount] = useState(100);
@@ -23,132 +14,71 @@ export default function ChildPage() {
     if (locked) return;
     const band = ageToBand(age);
     const items = getItemsByAgeBand(band);
-    const r = calculate(amount, items);
-    setResults(r);
-
-    // 3 秒锁定
+    setResults(calculate(amount, items));
     setLocked(true);
     timerRef.current = setTimeout(() => setLocked(false), 3000);
   }, [amount, age, locked]);
 
-  const handleSpeak = useCallback(
-    (r: CalcResult) => {
-      if (!("speechSynthesis" in window)) {
-        Toast("浏览器不支持语音");
-        return;
-      }
-      const text = speakText(r.item, r.count, "zh");
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "zh-CN";
-      u.rate = 1.0;
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(u);
-    },
-    []
-  );
-
-  // 按类别分组
-  const grouped: Record<Category, CalcResult[]> = {
-    drink: [],
-    food: [],
-    fruit: [],
-    toy: [],
-    clothes: [],
-    stationery: [],
+  const speak = (r: CalcResult) => {
+    if (!("speechSynthesis" in window)) return;
+    const u = new SpeechSynthesisUtterance(speakText(r.item, r.count, "zh"));
+    u.lang = "zh-CN"; u.rate = 1.0;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(u);
   };
-  for (const r of results) {
-    grouped[r.item.category].push(r);
-  }
+
+  const grouped: Record<Category, CalcResult[]> = { drink: [], food: [], fruit: [], toy: [], clothes: [], stationery: [] };
+  for (const r of results) grouped[r.item.category].push(r);
 
   const band = ageToBand(age);
+  const cats = ["drink", "food", "fruit", "stationery", "toy", "clothes"] as Category[];
 
   return (
-    <div className="page">
-      <h2>🧒 价值观纠正器</h2>
-      <p className="subtitle">
-        {amount} 块能买多少东西？
-      </p>
+    <div>
+      <h1 className="page-title">{t("calc.title")}</h1>
+      <p style={{color:"var(--muted)",fontSize:14,marginBottom:16}}>{amount} {t("calc.prompt")}</p>
 
-      {/* 输入区 */}
       <div className="calc-form">
         <div className="calc-row">
-          <label>💰 金额</label>
-          <Field
-            type="number"
-            value={String(amount)}
-            onChange={(v) => setAmount(Number(v) || 0)}
-          />
+          <label>{t("calc.amount")}</label>
+          <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value) || 0)} />
         </div>
-
         <div className="calc-row">
-          <label>🎂 年龄：{age} 岁</label>
-          <Slider
-            min={1}
-            max={15}
-            value={age}
-            onChange={(v) => setAge(v as number)}
-            barHeight={4}
-            activeColor="#f59e0b"
-          />
-          <span className="age-band">{AGE_BANDS.find((b) => b.id === band)?.label}</span>
+          <label>{t("calc.age")}: {age} 岁</label>
+          <input type="range" className="calc-slider" min={1} max={15} value={age} onChange={e => setAge(Number(e.target.value))} style={{width:"100%"}} />
+          <span className="age-tag">{AGE_BANDS.find(b => b.id === band)?.label}</span>
         </div>
-
-        <div className="calc-row gender-row">
-          <label>性别</label>
-          <div className="gender-toggle">
-            <button
-              className={gender === "boy" ? "active" : ""}
-              onClick={() => setGender("boy")}
-            >
-              👦 男孩
-            </button>
-            <button
-              className={gender === "girl" ? "active" : ""}
-              onClick={() => setGender("girl")}
-            >
-              👧 女孩
-            </button>
+        <div className="calc-row">
+          <label>{t("calc.gender")}</label>
+          <div className="gender-row">
+            <button className={"gender-btn" + (gender==="boy" ? " on" : "")} onClick={()=>setGender("boy")}>{t("calc.boy")}</button>
+            <button className={"gender-btn" + (gender==="girl" ? " on" : "")} onClick={()=>setGender("girl")}>{t("calc.girl")}</button>
           </div>
         </div>
-
-        <Button
-          type="primary"
-          round
-          block
-          loading={locked}
-          loadingText="计算中…"
-          onClick={handleCalc}
-        >
-          {locked ? "请稍等 3 秒" : "算一算"}
-        </Button>
+        <button className="calc-submit" disabled={locked} onClick={handleCalc}>
+          {locked ? "请稍等..." : "算一算"}
+        </button>
       </div>
 
-      {/* 结果 */}
       {results.length > 0 && (
         <div className="calc-results">
-          {(["food", "drink", "fruit", "stationery", "toy", "clothes"] as Category[]).map(
-            (cat) => {
-              const items = grouped[cat];
-              if (items.length === 0) return null;
-              return (
-                <div key={cat} className="calc-cat">
-                  <h4>{CATEGORY_LABELS[cat]}</h4>
-                  {items.map((r) => (
-                    <div key={r.item.id} className="calc-item" onClick={() => handleSpeak(r)}>
-                      <span className="calc-icon">{r.item.icon}</span>
-                      <span className="calc-name">{r.item.nameZh}</span>
-                      <span className="calc-price">
-                        {r.item.price} 元/{r.item.unitZh}
-                      </span>
-                      <span className="calc-count">
-                        {r.count} {r.item.unitZh}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }
-          )}
+          {cats.map(cat => {
+            const items = grouped[cat];
+            if (!items.length) return null;
+            return (
+              <div key={cat}>
+                <div className="calc-cat-title">{CATEGORY_LABELS[cat]}</div>
+                {items.map(r => (
+                  <div key={r.item.id} className="calc-item" onClick={() => speak(r)}>
+                    <span className="calc-icon">{r.item.icon}</span>
+                    <span className="calc-name">{r.item.nameZh}</span>
+                    <span className="calc-price">{r.item.price}元/{r.item.unitZh}</span>
+                    <span className="calc-qty">{r.count} {r.item.unitZh}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

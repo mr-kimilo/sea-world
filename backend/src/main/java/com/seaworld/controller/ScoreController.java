@@ -47,7 +47,7 @@ public class ScoreController {
             @PathVariable UUID familyId,
             @PathVariable UUID childId,
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
-            @RequestParam(defaultValue = "20") @Min(1) @Max(100) int size,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(200) int size,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String period) {
         Page<ScoreResponse> history = scoreService.getHistory(currentUser, familyId, childId,
