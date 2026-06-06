@@ -10,6 +10,7 @@ import ChildPage from "./pages/ChildPage";
 import SettingsPage from "./pages/SettingsPage";
 import ChildEditPage from "./pages/ChildEditPage";
 import ScoreHistoryPage from "./pages/ScoreHistoryPage";
+import OrdersPage from "./pages/OrdersPage";
 import Layout from "./components/Layout";
 import { useAuthStore } from "./store";
 import "./App.css";
@@ -43,6 +44,7 @@ export default function App() {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/child/edit" element={<ChildEditPage />} />
           <Route path="/history" element={<ScoreHistoryPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

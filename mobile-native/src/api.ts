@@ -52,7 +52,7 @@ export const authApi = {
 
 // ——— Family API ———
 export type FamilyInfo = { id: string; name: string; createdAt: string };
-export type ChildInfo = { id: string; name: string; avatar?: string; avatarUrl?: string; familyId: string };
+export type ChildInfo = { id: string; name: string; avatar?: string; avatarUrl?: string; familyId: string; totalScore?: number; availableScore?: number };
 
 // normalize backend avatarUrl -> avatar
 const normChild = (c: any): ChildInfo => ({ ...c, avatar: c.avatar || c.avatarUrl });
@@ -93,8 +93,30 @@ export const scoreApi = {
 // ——— Shop API ———
 export const shopApi = {
   items: () => api.get("/shop/items"),
-  redeem: (childId: string, itemId: number) =>
-    api.post(`/shop/children/${childId}/orders`, { items: [{ productId: itemId, quantity: 1 }] }),
+  redeem: (childId: string, itemId: string) =>
+    api.post(`/shop/children/${childId}/orders`, { itemId }),
+};
+
+// ——— Order API ———
+export const orderApi = {
+  list: (childId: string) => api.get(`/shop/children/${childId}/orders`),
+  pending: (childId: string) => api.get(`/shop/children/${childId}/orders/pending`),
+  completed: (childId: string) => api.get(`/shop/children/${childId}/orders/completed`),
+  confirm: (childId: string, orderId: string) =>
+    api.post(`/shop/children/${childId}/orders/${orderId}/confirm`),
+  cancel: (childId: string, orderId: string) =>
+    api.post(`/shop/children/${childId}/orders/${orderId}/cancel`),
+};
+
+// ——— Product Admin API ———
+export const productApi = {
+  list: () => api.get("/admin/products"),
+  detail: (id: string) => api.get(`/admin/products/${id}`),
+  create: (data: { name: string; description?: string; imageUrl?: string; price: number; rarity?: string; sortOrder?: number; allowedChildIds?: string[] }) =>
+    api.post("/admin/products", { ...data, rarity: data.rarity || "common", sortOrder: data.sortOrder || 0 }),
+  update: (id: string, data: { name?: string; description?: string; imageUrl?: string; price?: number; rarity?: string; sortOrder?: number; isActive?: boolean; allowedChildIds?: string[] }) =>
+    api.put(`/admin/products/${id}`, data),
+  remove: (id: string) => api.delete(`/admin/products/${id}`),
 };
 
 export default api;

@@ -18,6 +18,7 @@ export default function MobileSidebar({ open, onClose }: Props) {
     { to: "/history", icon: "📊", label: "积分历史" },
     { to: "/tasks", icon: "📋", label: t("sidebar.tasks") },
     { to: "/shop", icon: "🎁", label: t("sidebar.shop") },
+    { to: "/orders", icon: "📦", label: "我的订单" },
   ] : [];
 
   return (

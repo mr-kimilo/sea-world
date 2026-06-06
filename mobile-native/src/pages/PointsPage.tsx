@@ -121,7 +121,16 @@ export default function PointsPage() {
   const handleRecord = async () => {
     if (!fid || !cid) return;
     setLoading(true);
-    try { await scoreApi.add(fid, cid, category, score, reason || QUICK_REASONS[0]); setScore(2); setReason(""); loadRecords(); }
+    try {
+      await scoreApi.add(fid, cid, category, score, reason || QUICK_REASONS[0]);
+      setScore(2); setReason("");
+      // Refresh children to update totalScore/availableScore in store
+      familyApi.children(fid).then(r => {
+        const k = r.data ?? [];
+        useFamilyStore.getState().setChildren(fid, k as any);
+      }).catch(() => {});
+      loadRecords();
+    }
     catch {} finally { setLoading(false); }
   };
 
@@ -145,7 +154,7 @@ export default function PointsPage() {
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
               <span style={{ fontSize: 13, color: "var(--muted)" }}>⭐ 总分 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
-              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 可用 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 可用 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{kid?.availableScore ?? totalScore}</strong></span>
             </div>
           </div>
         </div>
