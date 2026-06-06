@@ -50,23 +50,19 @@ export const authApi = {
     api.post("/auth/reset-password", { email, code, newPassword }),
 };
 
-// ——— Points API ———
-export const pointsApi = {
-  list: () => api.get("/points"),
-  add: (childId: number, amount: number, reason: string) =>
-    api.post("/points", { childId, amount, reason }),
+// ——— Score API ———
+export const scoreApi = {
+  list: (familyId: string, childId: string) =>
+    api.get(`/families/${familyId}/children/${childId}/scores`),
+  add: (familyId: string, childId: string, category: string, amount: number, description: string) =>
+    api.post(`/families/${familyId}/children/${childId}/scores`, { category, amount, description }),
 };
 
-// ——— Tasks API ———
-export const tasksApi = {
-  list: () => api.get("/tasks"),
-  complete: (taskId: number) => api.post(`/tasks/${taskId}/complete`),
-};
-
-// ——— Rewards API ———
-export const rewardsApi = {
-  list: () => api.get("/rewards"),
-  redeem: (rewardId: number) => api.post(`/rewards/${rewardId}/redeem`),
+// ——— Shop API ———
+export const shopApi = {
+  items: () => api.get("/shop/items"),
+  redeem: (childId: string, itemId: number) =>
+    api.post(`/shop/children/${childId}/orders`, { items: [{ productId: itemId, quantity: 1 }] }),
 };
 
 export default api;
