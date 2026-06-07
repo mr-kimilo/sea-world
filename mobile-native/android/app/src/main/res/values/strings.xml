@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">SeaWorld</string>
-    <string name="title_activity_main">SeaWorld</string>
-    <string name="package_name">com.seaworld.family</string>
-    <string name="custom_url_scheme">com.seaworld.family</string>
+    <string name="app_name">HyperOne</string>
+    <string name="title_activity_main">HyperOne</string>
+    <string name="package_name">com.hyperone.family</string>
+    <string name="custom_url_scheme">com.hyperone.family</string>
 </resources>

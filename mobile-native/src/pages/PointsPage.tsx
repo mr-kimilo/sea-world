@@ -133,7 +133,7 @@ export default function PointsPage() {
       setCurrentPage(p);
     } catch { setRecords([]); }
   };
-  useEffect(() => { loadRecords(fid, cid, 0); }, [fid, cid]);
+  useEffect(() => { loadRecords(fid ?? undefined, cid ?? undefined, 0); }, [fid, cid]);
 
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(false);
@@ -243,7 +243,7 @@ export default function PointsPage() {
         </div>
       ))}
       {hasMore && (
-        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 8 }} onClick={() => loadRecords(fid, cid, currentPage + 1)}>
+        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 8 }} onClick={() => loadRecords(fid ?? undefined, cid ?? undefined, currentPage + 1)}>
           {t("points.loadMore")}
         </button>
       )}

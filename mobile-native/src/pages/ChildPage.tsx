@@ -34,7 +34,7 @@ export default function ChildPage() {
   const [gender, setGender] = useState<"boy" | "girl">("boy");
   const [results, setResults] = useState<CalcResult[]>([]);
   const [locked, setLocked] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleCalc = useCallback(() => {
     if (locked) return;

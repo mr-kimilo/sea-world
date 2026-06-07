@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuthStore, useFamilyStore } from "../store";
 import { familyApi } from "../api";
 import { t } from "../i18n";
@@ -12,12 +12,10 @@ export default function HomePage() {
 
 function Dashboard() {
   const { selectedFamilyId, selectedChildId, selectChild, children, setFamilies, setChildren } = useFamilyStore();
-  const [loaded, setLoaded] = useState(false);
 
   const fid = selectedFamilyId;
   const cid = selectedChildId;
   const kids = fid ? children[fid] || [] : [];
-  const kid = kids.find(k => k.id === cid);
 
   useEffect(() => {
     if (!fid) {
@@ -30,15 +28,11 @@ function Dashboard() {
             setChildren(f.id, (r.data ?? []) as any);
           }).catch(() => {});
         }
-        setLoaded(true);
-      }).catch(() => setLoaded(true));
+      }).catch(() => {});
     } else if (kids.length === 0 && fid) {
       familyApi.children(fid).then(r => {
         setChildren(fid, (r.data ?? []) as any);
       }).catch(() => {});
-      setLoaded(true);
-    } else {
-      setLoaded(true);
     }
   }, []);
 
