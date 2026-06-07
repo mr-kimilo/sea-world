@@ -24,6 +24,8 @@ import './styles/mobile-globals.css';
 import PortalLayout from './pages/Portal/PortalLayout';
 import PortalHome from './pages/Portal/PortalHome';
 import ChildValuePage from './pages/Portal/ChildValuePage';
+// Download
+import DownloadApp from './pages/DownloadApp/DownloadApp';
 
 /**
  * ProtectedLayout wraps authenticated pages and renders the mobile tab bar
@@ -102,6 +104,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/download" element={<DownloadApp />} />
 
         {/* Protected routes — /home 而不是 / 避免冲突 */}
         <Route
