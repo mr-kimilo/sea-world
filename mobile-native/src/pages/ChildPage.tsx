@@ -1,6 +1,32 @@
 ﻿import { useState, useCallback, useRef } from "react";
 import { calculate, getItemsByAgeBand, ageToBand, speakText, AGE_BANDS, CATEGORY_LABELS, type CalcResult, type Category } from "../utils/childCalculator";
-import { t } from "../i18n";
+import { t, getLang } from "../i18n";
+
+/** Get display name based on current language */
+function itemName(item: CalcResult["item"]) {
+  return getLang() === "zh" ? item.nameZh : item.nameEn;
+}
+function itemUnit(item: CalcResult["item"]) {
+  return getLang() === "zh" ? item.unitZh : item.unitEn;
+}
+function categoryLabel(cat: Category) {
+  return getLang() === "zh" ? CATEGORY_LABELS[cat] : (CATEGORY_LABELS_EN as Record<Category, string>)[cat] || CATEGORY_LABELS[cat];
+}
+function ageBandLabel(bandId: string) {
+  const b = AGE_BANDS.find(b => b.id === bandId);
+  if (!b) return "";
+  return getLang() === "zh" ? b.label : b.labelEn;
+}
+
+// English category labels
+const CATEGORY_LABELS_EN: Record<Category, string> = {
+  drink: "🥤 Drinks",
+  food: "🍔 Food",
+  fruit: "🍎 Fruit",
+  toy: "🎮 Toys",
+  clothes: "👕 Clothes",
+  stationery: "✏️ Stationery",
+};
 
 export default function ChildPage() {
   const [amount, setAmount] = useState(100);
@@ -21,7 +47,7 @@ export default function ChildPage() {
 
   const speak = (r: CalcResult) => {
     if (!("speechSynthesis" in window)) return;
-    const u = new SpeechSynthesisUtterance(speakText(r.item, r.count, "zh"));
+    const u = new SpeechSynthesisUtterance(speakText(r.item, r.count, getLang()));
     u.lang = "zh-CN"; u.rate = 1.0;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(u);
@@ -44,9 +70,9 @@ export default function ChildPage() {
           <input type="number" value={amount} onChange={e => setAmount(Number(e.target.value) || 0)} />
         </div>
         <div className="calc-row">
-          <label>{t("calc.age")}: {age} 岁</label>
+          <label>{t("calc.age")}: {age} {t("calc.yearOld")}</label>
           <input type="range" className="calc-slider" min={1} max={15} value={age} onChange={e => setAge(Number(e.target.value))} style={{width:"100%"}} />
-          <span className="age-tag">{AGE_BANDS.find(b => b.id === band)?.label}</span>
+          <span className="age-tag">{ageBandLabel(band)}</span>
         </div>
         <div className="calc-row">
           <label>{t("calc.gender")}</label>
@@ -56,7 +82,7 @@ export default function ChildPage() {
           </div>
         </div>
         <button className="calc-submit" disabled={locked} onClick={handleCalc}>
-          {locked ? "请稍等..." : "算一算"}
+          {locked ? t("calc.waiting") : t("calc.calc")}
         </button>
       </div>
 
@@ -67,13 +93,13 @@ export default function ChildPage() {
             if (!items.length) return null;
             return (
               <div key={cat}>
-                <div className="calc-cat-title">{CATEGORY_LABELS[cat]}</div>
+                <div className="calc-cat-title">{categoryLabel(cat)}</div>
                 {items.map(r => (
                   <div key={r.item.id} className="calc-item" onClick={() => speak(r)}>
                     <span className="calc-icon">{r.item.icon}</span>
-                    <span className="calc-name">{r.item.nameZh}</span>
-                    <span className="calc-price">{r.item.price}元/{r.item.unitZh}</span>
-                    <span className="calc-qty">{r.count} {r.item.unitZh}</span>
+                    <span className="calc-name">{itemName(r.item)}</span>
+                    <span className="calc-price">{r.item.price}{t("calc.currency")}/{itemUnit(r.item)}</span>
+                    <span className="calc-qty">{r.count} {itemUnit(r.item)}</span>
                   </div>
                 ))}
               </div>

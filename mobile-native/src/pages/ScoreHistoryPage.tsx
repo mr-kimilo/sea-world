@@ -1,14 +1,15 @@
 ﻿import { useEffect, useState } from "react";
 import { useFamilyStore } from "../store";
 import { scoreApi, categoryApi } from "../api";
+import { t } from "../i18n";
 
 type ScoreRecord = { id: string; category: string; score: number; reason: string; createdAt: string };
 const CATS = [
-  { key: "intelligence", emoji: "\uD83E\uDDE0", label: "智力" },
-  { key: "physical", emoji: "\uD83D\uDCAA", label: "体能" },
-  { key: "moral", emoji: "\u2764\uFE0F", label: "品德" },
-  { key: "hygiene", emoji: "\uD83E\uDEA7", label: "卫生" },
-  { key: "handcraft", emoji: "\uD83D\uDEE0\uFE0F", label: "手工" },
+  { key: "intelligence", emoji: "\uD83E\uDDE0", label: t("points.categoryLabels.intelligence") },
+  { key: "physical", emoji: "\uD83D\uDCAA", label: t("points.categoryLabels.physical") },
+  { key: "moral", emoji: "\u2764\uFE0F", label: t("points.categoryLabels.moral") },
+  { key: "hygiene", emoji: "\uD83E\uDEA7", label: t("points.categoryLabels.hygiene") },
+  { key: "handcraft", emoji: "\uD83D\uDEE0\uFE0F", label: t("points.categoryLabels.handcraft") },
 ];
 const COLORS: Record<string, string> = { intelligence: "#007aff", physical: "#34c759", moral: "#ff9500", hygiene: "#5ac8fa", handcraft: "#af52de" };
 
@@ -18,9 +19,9 @@ function FilterSheet({ show, onClose, cats, selected, onSelect }: { show: boolea
     <div className="sheet-overlay" onClick={onClose}>
       <div className="sheet-mask" />
       <div className="sheet-body" onClick={e => e.stopPropagation()}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>选择维度</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>{t("history.selectDim")}</div>
         <button className={"sheet-item" + (selected === "all" ? " selected" : "")} onClick={() => { onSelect("all"); onClose(); }}>
-          <span style={{ fontSize: 20 }}>📋</span> 全部
+          <span style={{ fontSize: 20 }}>📋</span> {t("history.all")}
           {selected === "all" && <span className="sheet-check">✓</span>}
         </button>
         {cats.map(c => (
@@ -54,7 +55,7 @@ export default function ScoreHistoryPage() {
   }, [fid, cid]);
 
   const filtered = filterCat === "all" ? records : records.filter(r => r.category === filterCat);
-  const curLabel = filterCat === "all" ? "全部" : CATS.find(c => c.key === filterCat)?.label || filterCat;
+  const curLabel = filterCat === "all" ? t("history.all") : CATS.find(c => c.key === filterCat)?.label || filterCat;
   const totalPoints = filtered.reduce((s, r) => s + r.score, 0);
 
   const formatTime = (ts: string) => {
@@ -62,10 +63,10 @@ export default function ScoreHistoryPage() {
     const d = new Date(ts);
     const now = new Date();
     const diff = now.getTime() - d.getTime();
-    if (diff < 60000) return "刚刚";
-    if (diff < 3600000) return Math.floor(diff / 60000) + "分钟前";
-    if (diff < 86400000) return Math.floor(diff / 3600000) + "小时前";
-    if (diff < 172800000) return "昨天";
+    if (diff < 60000) return t("history.justNow");
+    if (diff < 3600000) return Math.floor(diff / 60000) + t("history.minutesAgo");
+    if (diff < 86400000) return Math.floor(diff / 3600000) + t("history.hoursAgo");
+    if (diff < 172800000) return t("history.yesterday");
     return d.toLocaleDateString("zh-CN", { month: "short", day: "numeric" });
   };
 
@@ -74,7 +75,7 @@ export default function ScoreHistoryPage() {
     try { await categoryApi.create(newCatName.trim(), newCatIcon); setNewCatName(""); setNewCatIcon("⭐"); categoryApi.list().then(res => setCats(res.data ?? [])); } catch {}
   };
   const handleDel = async (id: string) => {
-    if (!confirm("删除？")) return;
+    if (!confirm(t("history.delete"))) return;
     try { await categoryApi.remove(id); categoryApi.list().then(res => setCats(res.data ?? [])); } catch {}
   };
 
@@ -93,8 +94,8 @@ export default function ScoreHistoryPage() {
       )}
 
       <div className="segmented">
-        <button className={tab === "history" ? "on" : ""} onClick={() => setTab("history")}>积分历史</button>
-        <button className={tab === "dimensions" ? "on" : ""} onClick={() => setTab("dimensions")}>定义积分维度</button>
+        <button className={tab === "history" ? "on" : ""} onClick={() => setTab("history")}>{t("history.title")}</button>
+        <button className={tab === "dimensions" ? "on" : ""} onClick={() => setTab("dimensions")}>{t("history.dimensions")}</button>
       </div>
 
       {tab === "history" ? (
@@ -105,15 +106,15 @@ export default function ScoreHistoryPage() {
               📋 {curLabel} <span style={{ color: "var(--muted)", fontSize: 13 }}>›</span>
             </button>
             <span style={{ fontSize: 13, color: "var(--muted)" }}>
-              {filtered.length} 条 · <span style={{ color: totalPoints >= 0 ? "#34c759" : "#ff3b30", fontWeight: 600 }}>{totalPoints >= 0 ? "+" : ""}{totalPoints}</span>
+              {filtered.length} {t("history.items")} · <span style={{ color: totalPoints >= 0 ? "#34c759" : "#ff3b30", fontWeight: 600 }}>{totalPoints >= 0 ? "+" : ""}{totalPoints}</span>
             </span>
           </div>
 
           {filtered.length === 0 && (
             <div style={{ textAlign: "center", padding: 48, color: "var(--muted)" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
-              <div style={{ fontSize: 15 }}>暂无积分记录</div>
-              <div style={{ fontSize: 13, marginTop: 4 }}>去首页为孩子记录积分吧</div>
+              <div style={{ fontSize: 15 }}>{t("history.noRecords")}</div>
+              <div style={{ fontSize: 13, marginTop: 4 }}>{t("history.goRecord")}</div>
             </div>
           )}
           {filtered.map(r => (
@@ -130,18 +131,18 @@ export default function ScoreHistoryPage() {
       ) : (
         <>
           <div className="apple-card">
-            <div className="section-title">新增维度</div>
+            <div className="section-title">{t("history.newDim")}</div>
             <div style={{ display: "flex", gap: 8 }}>
-              <input className="apple-input" placeholder="名称" value={newCatName} onChange={e => setNewCatName(e.target.value)} style={{ flex: 1 }} />
-              <input className="apple-input" placeholder="图标" value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width: 56, textAlign: "center" }} />
-              <button className="apple-btn" style={{ padding: "10px 16px", fontSize: 14 }} onClick={handleAdd}>添加</button>
+              <input className="apple-input" placeholder={t("history.dimName")} value={newCatName} onChange={e => setNewCatName(e.target.value)} style={{ flex: 1 }} />
+              <input className="apple-input" placeholder={t("history.dimIcon")} value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width: 56, textAlign: "center" }} />
+              <button className="apple-btn" style={{ padding: "10px 16px", fontSize: 14 }} onClick={handleAdd}>{t("history.add")}</button>
             </div>
           </div>
 
           {cats.length === 0 && (
             <div style={{ textAlign: "center", padding: 32, color: "var(--muted)" }}>
               <div style={{ fontSize: 36, marginBottom: 8 }}>🏷️</div>
-              <div style={{ fontSize: 14 }}>暂无自定义维度</div>
+              <div style={{ fontSize: 14 }}>{t("history.noCustomDim")}</div>
             </div>
           )}
           {cats.map(c => (

@@ -1,17 +1,17 @@
 ﻿import { useEffect, useState } from "react";
 import { useAuthStore, useFamilyStore } from "../store";
 import { scoreApi, familyApi } from "../api";
-import { t } from "../i18n";
+import { t, ta } from "../i18n";
 
 type ScoreRecord = { id: string; category: string; score: number; reason: string };
 const CATEGORIES = [
-  { key: "intelligence", emoji: "🧠", label: "智力" },
-  { key: "physical", emoji: "💪", label: "体能" },
-  { key: "moral", emoji: "❤️", label: "品德" },
-  { key: "hygiene", emoji: "🫧", label: "卫生" },
-  { key: "handcraft", emoji: "🛠️", label: "手工" },
+  { key: "intelligence", emoji: "🧠", label: t("points.categoryLabels.intelligence") },
+  { key: "physical", emoji: "💪", label: t("points.categoryLabels.physical") },
+  { key: "moral", emoji: "❤️", label: t("points.categoryLabels.moral") },
+  { key: "hygiene", emoji: "🫧", label: t("points.categoryLabels.hygiene") },
+  { key: "handcraft", emoji: "🛠️", label: t("points.categoryLabels.handcraft") },
 ];
-const QUICK_REASONS = ["认真完成作业", "主动做家务", "按时睡觉", "锻炼身体", "阅读课外书", "整理房间"];
+const QUICK_REASONS = ta("points.quickReasons");
 const COLORS: Record<string, string> = { intelligence: "#007aff", physical: "#34c759", moral: "#ff9500", hygiene: "#5ac8fa", handcraft: "#af52de", custom: "#ff3b30" };
 const AVATARS = ["🧒", "👦", "👧", "🐱", "🐶", "🦊", "🐸", "🐼"];
 
@@ -21,7 +21,7 @@ function CategorySheet({ show, onClose, cats, selected, onSelect }: { show: bool
     <div className="sheet-overlay" onClick={onClose}>
       <div className="sheet-mask" />
       <div className="sheet-body" onClick={e => e.stopPropagation()}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>选择维度</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>{t("points.selectCategory")}</div>
         {cats.map(c => (
           <button key={c.key} className={"sheet-item" + (selected === c.key ? " selected" : "")} onClick={() => { onSelect(c.key); onClose(); }}>
             <span style={{ fontSize: 20 }}>{c.emoji}</span> {c.label}
@@ -139,7 +139,7 @@ export default function PointsPage() {
     try { await familyApi.addChild(fid, newName.trim()); setNewName(""); setShowAddChild(false); load(); } catch {}
   };
 
-  if (!token) return <div className="page-padded"><div className="empty-state">请先登录</div></div>;
+  if (!token) return <div className="page-padded"><div className="empty-state">{t("points.notLoggedIn")}</div></div>;
 
   return (
     <div className="page-padded">
@@ -150,11 +150,11 @@ export default function PointsPage() {
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontSize: 20, fontWeight: 700 }}>{kid?.name || t("points.noChild")}</span>
-              {kid && <a href={"#/child/edit?id=" + kid.id} style={{ fontSize: 13, color: "var(--active)", textDecoration: "none" }}>编辑</a>}
+              {kid && <a href={"#/child/edit?id=" + kid.id} style={{ fontSize: 13, color: "var(--active)", textDecoration: "none" }}>{t("points.editChild")}</a>}
             </div>
             <div style={{ display: "flex", gap: 20, marginTop: 4 }}>
-              <span style={{ fontSize: 13, color: "var(--muted)" }}>⭐ 总分 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
-              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 可用 <strong style={{ color: "var(--ink)", fontSize: 18 }}>{kid?.availableScore ?? totalScore}</strong></span>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>⭐ {t("points.totalScore")} <strong style={{ color: "var(--ink)", fontSize: 18 }}>{totalScore}</strong></span>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 {t("points.available")} <strong style={{ color: "var(--ink)", fontSize: 18 }}>{kid?.availableScore ?? totalScore}</strong></span>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ export default function PointsPage() {
       {/* Score Entry Card */}
       <div className="apple-card">
         {/* Category Picker */}
-        <div className="section-title">维度</div>
+        <div className="section-title">{t("points.category")}</div>
         <button onClick={() => setShowCatSheet(true)}
           style={{ width: "100%", padding: "14px 16px", border: "none", borderRadius: 10, background: "rgba(118,118,128,0.08)", fontSize: 16, display: "flex", alignItems: "center", gap: 8, fontFamily: "inherit", textAlign: "left", color: "var(--ink)", marginBottom: 20 }}>
           <span style={{ fontSize: 20 }}>{curCat.emoji}</span> {curCat.label}
@@ -183,13 +183,13 @@ export default function PointsPage() {
         </button>
 
         {/* Score Stepper */}
-        <div className="section-title">分数</div>
+        <div className="section-title">{t("points.score")}</div>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 20, marginTop: 8 }}>
           <ScoreStepper value={score} onChange={setScore} />
         </div>
 
         {/* Quick Reasons */}
-        <div className="section-title">原因</div>
+        <div className="section-title">{t("points.reason")}</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 8 }}>
           {QUICK_REASONS.map(r => (
             <button key={r} onClick={() => setReason(reason === r ? "" : r)}
@@ -198,15 +198,15 @@ export default function PointsPage() {
             </button>
           ))}
         </div>
-        <input className="apple-input" placeholder="输入记分原因" value={reason} onChange={e => setReason(e.target.value)} style={{ marginTop: 4, marginBottom: 16 }} />
+        <input className="apple-input" placeholder={t("points.reasonPlaceholder")} value={reason} onChange={e => setReason(e.target.value)} style={{ marginTop: 4, marginBottom: 16 }} />
 
         <button className="apple-btn" style={{ width: "100%" }} disabled={loading || !cid} onClick={handleRecord}>
-          {loading ? "记录中…" : "记录"}
+          {loading ? t("points.recording") : t("points.record")}
         </button>
       </div>
 
       {/* Recent Records */}
-      <div className="section-title" style={{ marginTop: 8 }}>最近记录</div>
+      <div className="section-title" style={{ marginTop: 8 }}>{t("points.recentRecords")}</div>
       {records.length === 0 && <div className="empty-state" style={{ padding: 24 }}>{t("points.noRecords")}</div>}
       {records.slice(0, 20).map(r => (
         <div key={r.id} className="record-item" style={{ padding: "14px 0" }}>
@@ -225,7 +225,7 @@ export default function PointsPage() {
             <div style={{ padding: "0 20px" }}>
               <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 16 }}>{t("points.addChild")}</h3>
               <input className="apple-input" placeholder={t("points.childName")} value={newName} onChange={e => setNewName(e.target.value)} autoFocus style={{ marginBottom: 12 }} />
-              <button className="apple-btn" style={{ width: "100%" }} disabled={!newName.trim()} onClick={handleAddChild}>确认添加</button>
+              <button className="apple-btn" style={{ width: "100%" }} disabled={!newName.trim()} onClick={handleAddChild}>{t("points.confirmAddChild")}</button>
             </div>
           </div>
         </div>

@@ -1,1 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="#f59e0b"/><text x="50" y="68" text-anchor="middle" font-size="60">??</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c4a6e"/>
+      <stop offset="40%" stop-color="#0369a1"/>
+      <stop offset="70%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#fde047"/>
+      <stop offset="100%" stop-color="#facc15"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background rounded rect -->
+  <rect x="32" y="32" width="448" height="448" rx="96" ry="96" fill="url(#ocean)"/>
+
+  <!-- Ocean wave accents -->
+  <path d="M32 320 Q120 280 200 320 Q280 360 360 320 Q440 280 480 320 L480 480 L32 480 Z" fill="rgba(255,255,255,0.08)"/>
+  <path d="M32 370 Q100 340 180 370 Q260 400 340 370 Q420 340 480 370 L480 480 L32 480 Z" fill="rgba(255,255,255,0.06)"/>
+
+  <!-- Lightning bolt with glow -->
+  <g filter="url(#glow)">
+    <polygon points="288,72 208,260 272,260 240,440 368,228 296,228 336,72" fill="url(#bolt)" stroke="#eab308" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+</svg>

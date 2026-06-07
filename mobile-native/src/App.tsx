@@ -11,7 +11,9 @@ import SettingsPage from "./pages/SettingsPage";
 import ChildEditPage from "./pages/ChildEditPage";
 import ScoreHistoryPage from "./pages/ScoreHistoryPage";
 import OrdersPage from "./pages/OrdersPage";
+import ErrorPage from "./pages/ErrorPage";
 import Layout from "./components/Layout";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { useAuthStore } from "./store";
 import "./App.css";
 
@@ -23,17 +25,20 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
+    <ErrorBoundary>
     <HashRouter>
       <Routes>
-        {/* 认证页面（无 TabBar） */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        {/* 错误页面（无 TabBar） */}
+        <Route path="/error" element={<ErrorPage />} />
 
-        {/* 公开页面（有 TabBar，无需登录） */}
+        {/* 公开页面 + 认证页面（都有 TabBar） */}
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/child" element={<ChildPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
 
         {/* 需登录页面（有 TabBar） */}
@@ -41,7 +46,6 @@ export default function App() {
           <Route path="/points" element={<PointsPage />} />
           <Route path="/tasks" element={<TasksPage />} />
           <Route path="/shop" element={<ShopPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/child/edit" element={<ChildEditPage />} />
           <Route path="/history" element={<ScoreHistoryPage />} />
           <Route path="/orders" element={<OrdersPage />} />
@@ -50,5 +54,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </HashRouter>
+    </ErrorBoundary>
   );
 }

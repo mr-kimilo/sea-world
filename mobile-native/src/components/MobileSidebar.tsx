@@ -15,10 +15,10 @@ export default function MobileSidebar({ open, onClose }: Props) {
 
   const authRoutes = loggedIn ? [
     { to: "/points", icon: "⭐", label: t("sidebar.points") },
-    { to: "/history", icon: "📊", label: "积分历史" },
+    { to: "/history", icon: "📊", label: t("sidebar.history") },
     { to: "/tasks", icon: "📋", label: t("sidebar.tasks") },
     { to: "/shop", icon: "🎁", label: t("sidebar.shop") },
-    { to: "/orders", icon: "📦", label: "我的订单" },
+    { to: "/orders", icon: "📦", label: t("sidebar.orders") },
   ] : [];
 
   return (
@@ -27,8 +27,8 @@ export default function MobileSidebar({ open, onClose }: Props) {
       <aside className="sidebar-panel">
         <div className="sidebar-header">
           <div className="sidebar-brand">
-            <span className="sidebar-logo">🐠</span>
-            <span className="sidebar-name">SeaWorld</span>
+            <span className="sidebar-logo">🌐</span>
+            <span className="sidebar-name">{t("sidebar.brandName")}</span>
           </div>
           <button className="sidebar-close" onClick={onClose}>✕</button>
         </div>

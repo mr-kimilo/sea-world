@@ -33,11 +33,11 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   stationery: "✏️ 文具",
 };
 
-export const AGE_BANDS: { id: AgeBand; label: string; min: number; max: number }[] = [
-  { id: "0-6", label: "0-6 岁 · 基础认知", min: 0, max: 6 },
-  { id: "6-9", label: "6-9 岁 · 探索期", min: 6, max: 9 },
-  { id: "9-12", label: "9-12 岁 · 兴趣期", min: 9, max: 12 },
-  { id: "12-15", label: "12-15 岁 · 独立期", min: 12, max: 15 },
+export const AGE_BANDS: { id: AgeBand; label: string; labelEn: string; min: number; max: number }[] = [
+  { id: "0-6", label: "0-6 岁 · 基础认知", labelEn: "0-6 yr · Basics", min: 0, max: 6 },
+  { id: "6-9", label: "6-9 岁 · 探索期", labelEn: "6-9 yr · Explorer", min: 6, max: 9 },
+  { id: "9-12", label: "9-12 岁 · 兴趣期", labelEn: "9-12 yr · Growth", min: 9, max: 12 },
+  { id: "12-15", label: "12-15 岁 · 独立期", labelEn: "12-15 yr · Independent", min: 12, max: 15 },
 ];
 
 export const ALL_ITEMS: ShopItem[] = [
@@ -169,7 +169,7 @@ export function calculate(amount: number, items: ShopItem[]): CalcResult[] {
 }
 
 /** 生成语音文本 */
-export function speakText(item: ShopItem, count: number, lang: "zh" | "en"): string {
+export function speakText(item: ShopItem, count: number, lang: string): string {
   if (lang === "zh") {
     return `${count}${item.unitZh}${item.nameZh}`;
   }

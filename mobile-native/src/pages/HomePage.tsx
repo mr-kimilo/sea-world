@@ -9,6 +9,11 @@ export default function HomePage() {
 function Dashboard() {
   return (
     <div>
+      <div className="landing-hero" style={{ marginBottom: 24 }}>
+        <span className="landing-emoji" style={{ fontSize: 48 }}>🌐</span>
+        <h1 style={{ fontSize: 28 }}>HyperOne</h1>
+        <p style={{ color: "var(--muted)", fontSize: 12, marginTop: 2 }}>{t("home.subtitle")}</p>
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <a href="#/points" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
           <div className="feature-card">
@@ -31,11 +36,15 @@ function Dashboard() {
 
 function Landing() {
   return (
-    <div>
-      <h1 className="page-title" style={{ fontSize: 24 }}>🐠 SeaWorld</h1>
-      <p style={{ color: "var(--muted)", fontSize: 14, marginBottom: 20 }}>
-        {t("app.slogan")}
-      </p>
+    <div className="landing-page-inline">
+      <div className="landing-hero">
+        <span className="landing-emoji">🌐</span>
+        <h1>HyperOne</h1>
+        <p style={{ color: "var(--muted)", fontSize: 13, marginTop: 2 }}>{t("home.subtitle")}</p>
+        <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 4 }}>
+          {t("app.slogan")}
+        </p>
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <a href="#/login" style={{ textDecoration: "none", color: "inherit" }}>
           <div className="feature-card">

@@ -4,7 +4,7 @@ import { useFamilyStore } from "../store";
 import { t } from "../i18n";
 
 type Product = { id: string; name: string; description?: string; imageUrl?: string; price: number; rarity: string; isActive: boolean; allowedChildIds?: string[] };
-const RARITY_LABELS: Record<string, string> = { common: "普通", rare: "稀有", epic: "史诗", legendary: "传说" };
+const RARITY_LABELS: Record<string, string> = { common: t("shop.rarity.common"), rare: t("shop.rarity.rare"), epic: t("shop.rarity.epic"), legendary: t("shop.rarity.legendary") };
 
 export default function ShopPage() {
   const { selectedFamilyId, children, selectedChildId } = useFamilyStore();
@@ -157,17 +157,17 @@ export default function ShopPage() {
           <div className="sheet-body" onClick={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} style={{ overscrollBehavior: "contain" }}>
             <div style={{ padding: "20px 20px 28px", textAlign: "center" }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>🛒</div>
-              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>确认购买</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>{t("shop.buyConfirm")}</h3>
               <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 4 }}>
-                确定要购买 <strong style={{ color: "var(--ink)" }}>{buyTarget.name}</strong> 吗？
+                {t("shop.buyConfirmDesc", { name: buyTarget.name })}
               </p>
               <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 20 }}>
-                将暂扣 <strong style={{ color: "#ff9500" }}>{buyTarget.price}</strong> 积分，确认消费后真实扣除。
+                {t("shop.buyPointsNote", { price: buyTarget.price })}
               </p>
               <div style={{ display: "flex", gap: 10 }}>
                 <button className="apple-btn secondary" style={{ flex: 1 }} onClick={() => setBuyTarget(null)} disabled={redeeming}>{t("shop.cancel")}</button>
                 <button className="apple-btn" style={{ flex: 1 }} onClick={handleBuy} disabled={redeeming}>
-                  {redeeming ? "…" : "确认购买"}
+                  {redeeming ? "…" : t("shop.buyConfirm")}
                 </button>
               </div>
             </div>
@@ -182,13 +182,13 @@ export default function ShopPage() {
           <div className="sheet-body" onClick={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} style={{ overscrollBehavior: "contain" }}>
             <div style={{ padding: "20px 20px 28px", textAlign: "center" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>✅</div>
-              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>操作成功</h3>
+              <h3 style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>{t("shop.redeemOk")}</h3>
               <p style={{ fontSize: 14, color: "var(--muted)", marginBottom: 20 }}>
-                购买成功，积分已暂扣
+                {t("shop.redeemOkDesc")}
               </p>
               <div style={{ display: "flex", gap: 10 }}>
-                <button className="apple-btn secondary" style={{ flex: 1 }} onClick={() => setBuySuccess(null)}>取消</button>
-                <button className="apple-btn" style={{ flex: 1 }} onClick={() => setBuySuccess(null)}>确认</button>
+                <button className="apple-btn secondary" style={{ flex: 1 }} onClick={() => setBuySuccess(null)}>{t("shop.cancel")}</button>
+                <button className="apple-btn" style={{ flex: 1 }} onClick={() => setBuySuccess(null)}>{t("shop.confirmConsume")}</button>
               </div>
             </div>
           </div>

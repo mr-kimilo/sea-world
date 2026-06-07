@@ -5,21 +5,56 @@ import { t } from "../i18n";
 
 type Order = { id: string; childId: string; itemId: string; itemName: string; itemImageUrl?: string; cost: number; status: string; purchasedAt: string; completedAt?: string };
 
-const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  PENDING: { label: "待确认", color: "#ff9500", bg: "#fff3e0" },
-  COMPLETED: { label: "已完成", color: "#34c759", bg: "#e8f8ed" },
-  CANCELLED: { label: "已取消", color: "#ff3b30", bg: "#ffeaea" },
+const getStatusLabel = (status: string) => t(`shop.orderStatus.${status}`) || status;
+const STATUS_COLORS: Record<string, { color: string; bg: string }> = {
+  PENDING: { color: "#ff9500", bg: "#fff3e0" },
+  COMPLETED: { color: "#34c759", bg: "#e8f8ed" },
+  CANCELLED: { color: "#ff3b30", bg: "#ffeaea" },
 };
 
 export default function OrdersPage() {
-  const { selectedFamilyId, children, selectedChildId, selectChild } = useFamilyStore();
+  const { selectedFamilyId, selectedChildId, selectChild, families, setFamilies, children, setChildren } = useFamilyStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
 
   const fid = selectedFamilyId;
   const cid = selectedChildId;
   const kids = fid ? children[fid] || [] : [];
+
+  // Auto-load families & children if not loaded yet
+  useEffect(() => {
+    if (fid || initializing) return;
+    setInitializing(true);
+    familyApi.mine()
+      .then(res => {
+        const families: any[] = res.data ?? [];
+        setFamilies(families);
+        if (families.length === 0) return;
+        const firstFid = families[0].id;
+        // If store already has a selectedFamilyId, use it
+        const activeFid = useFamilyStore.getState().selectedFamilyId || firstFid;
+        if (activeFid !== firstFid && !families.some((f: any) => f.id === activeFid)) {
+          useFamilyStore.getState().selectFamily(firstFid);
+        }
+        return familyApi.children(activeFid || firstFid);
+      })
+      .then(res => {
+        if (!res) return;
+        const kids: any[] = res.data ?? [];
+        const currentFid = useFamilyStore.getState().selectedFamilyId || families[0]?.id;
+        if (currentFid) {
+          setChildren(currentFid, kids);
+          const store = useFamilyStore.getState();
+          if (kids.length > 0 && !store.selectedChildId) {
+            selectChild(kids[0].id);
+          }
+        }
+      })
+      .catch(() => {})
+      .finally(() => setInitializing(false));
+  }, []);
 
   // Lock body scroll when sheet open
   useEffect(() => {
@@ -78,7 +113,11 @@ export default function OrdersPage() {
     return (
       <div className="page-padded">
         <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>{t("shop.ordersTitle")}</h2>
-        <div className="empty-state" style={{ padding: 48, textAlign: "center", color: "var(--muted)" }}>📋<br/>{t("shop.noChildHint")}</div>
+        {initializing || !fid ? (
+          <div style={{ textAlign: "center", padding: 48, color: "var(--muted)" }}>{t("shop.loading")}</div>
+        ) : (
+          <div className="empty-state" style={{ padding: 48, textAlign: "center", color: "var(--muted)" }}>📋<br/>{t("shop.noChildHint")}</div>
+        )}
       </div>
     );
   }
@@ -125,7 +164,7 @@ export default function OrdersPage() {
       )}
 
       {orders.map(order => {
-        const st = STATUS_MAP[order.status] || { label: order.status, color: "#999", bg: "#f0f0f0" };
+        const stColor = STATUS_COLORS[order.status] || { color: "#999", bg: "#f0f0f0" };
         return (
           <div key={order.id} className="apple-card" style={{ padding: 14, marginBottom: 10 }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
@@ -135,7 +174,7 @@ export default function OrdersPage() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: 15, fontWeight: 600 }}>{order.itemName}</span>
-                  <span style={{ fontSize: 11, padding: "3px 8px", borderRadius: 10, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
+                  <span style={{ fontSize: 11, padding: "3px 8px", borderRadius: 10, background: stColor.bg, color: stColor.color, fontWeight: 600 }}>{getStatusLabel(order.status)}</span>
                 </div>
                 <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
                   {t("shop.points")}: <strong>{order.cost}</strong>

@@ -19,7 +19,7 @@ export default function SettingsPage() {
       <div className="set-card">
         <div className="set-user">
           <span className="set-avatar">🧑</span>
-          <span className="set-email">{user?.email ?? "未登录"}</span>
+          <span className="set-email">{user?.email ?? t("settings.notLoggedIn")}</span>
         </div>
       </div>
 

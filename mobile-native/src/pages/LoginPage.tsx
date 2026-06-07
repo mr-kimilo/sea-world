@@ -29,7 +29,7 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-header">
-        <h1>SeaWorld</h1>
+        <h1>🌐 HyperOne</h1>
         <p>{t("auth.loginTitle")}</p>
       </div>
       <form onSubmit={handleLogin}>
