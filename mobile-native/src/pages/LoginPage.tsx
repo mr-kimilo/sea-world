@@ -29,7 +29,8 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-header">
-        <h1>🌐 HyperOne</h1>
+        <img src="/favicon.svg" alt="HyperOne" style={{ width: 48, height: 48, display: "block", margin: "0 auto 8px" }} />
+        <h1>HyperOne</h1>
         <p>{t("auth.loginTitle")}</p>
       </div>
       <form onSubmit={handleLogin}>

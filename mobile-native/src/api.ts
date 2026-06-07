@@ -8,18 +8,20 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// 请求拦截器：自动带 token
+// 请求拦截器：自动带 token + 日志
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  console.log(`[API] ➡ ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`, config.data || "");
   return config;
 });
 
 // 响应拦截器
 api.interceptors.response.use(
   (res) => {
+    console.log(`[API] ✅ ${res.status} ${res.config.method?.toUpperCase()} ${res.config.baseURL}${res.config.url}`);
     // 后端统一包装 ApiResponse { data, message }
     if (res.data && typeof res.data === "object" && "data" in res.data) {
       return { ...res, data: res.data.data };
@@ -27,6 +29,7 @@ api.interceptors.response.use(
     return res;
   },
   (err) => {
+    console.warn(`[API] ❌ ${err.response?.status || "NETWORK"} ${err.config?.method?.toUpperCase()} ${err.config?.baseURL}${err.config?.url}`, err.message);
     if (err.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.hash = "#/login";

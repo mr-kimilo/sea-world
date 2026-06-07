@@ -14,6 +14,7 @@ import com.seaworld.repository.CustomScoreCategoryRepository;
 import com.seaworld.repository.ScoreRecordRepository;
 import com.seaworld.util.ErrorMessages;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScoreService {
 
-    private static final int MAX_DAILY_SCORE = 10;
+    @Value("${app.score.max-daily-score:10}")
+    private int maxDailyScore;
 
     private final ScoreRecordRepository scoreRecordRepository;
     private final ChildRepository childRepository;
@@ -177,16 +179,16 @@ public class ScoreService {
         LocalDate today = LocalDate.now();
         if (score > 0) {
             int dailyPositive = scoreRecordRepository.sumPositiveScoreByChildIdAndDate(childId, today);
-            if (dailyPositive + score > MAX_DAILY_SCORE) {
+            if (dailyPositive + score > maxDailyScore) {
                 throw new BusinessException(
-                        ErrorMessages.DAILY_POSITIVE_LIMIT_EXCEEDED.format(MAX_DAILY_SCORE),
+                        ErrorMessages.DAILY_POSITIVE_LIMIT_EXCEEDED.format(maxDailyScore),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
         } else if (score < 0) {
             int dailyNegative = scoreRecordRepository.sumNegativeScoreByChildIdAndDate(childId, today);
-            if (dailyNegative + Math.abs(score) > MAX_DAILY_SCORE) {
+            if (dailyNegative + Math.abs(score) > maxDailyScore) {
                 throw new BusinessException(
-                        ErrorMessages.DAILY_NEGATIVE_LIMIT_EXCEEDED.format(MAX_DAILY_SCORE),
+                        ErrorMessages.DAILY_NEGATIVE_LIMIT_EXCEEDED.format(maxDailyScore),
                         HttpStatus.UNPROCESSABLE_ENTITY);
             }
         }

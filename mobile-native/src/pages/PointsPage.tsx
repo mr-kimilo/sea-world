@@ -59,11 +59,25 @@ export default function PointsPage() {
   const [showAddChild, setShowAddChild] = useState(false);
   const [newName, setNewName] = useState("");
   const [totalScore, setTotalScore] = useState(0);
+  // Local active child ID — synced from store via useEffect
+  const [activeChildId, setActiveChildId] = useState<string | null>(null);
 
-  const fid = selectedFamilyId; const cid = selectedChildId;
+  const fid = selectedFamilyId;
+  const cid = activeChildId ?? selectedChildId;
   const kids = fid ? children[fid] || [] : [];
   const kid = kids.find(k => k.id === cid);
   const curCat = CATEGORIES.find(c => c.key === category) || CATEGORIES[2];
+
+  // Sync local activeChildId from store — runs on mount and when store changes
+  useEffect(() => {
+    if (selectedChildId && selectedChildId !== activeChildId) {
+      setActiveChildId(selectedChildId);
+    } else if (!activeChildId && kids.length > 0) {
+      const firstId = kids[0].id;
+      setActiveChildId(firstId);
+      if (!selectedChildId) selectChild(firstId);
+    }
+  }, [selectedChildId, kids.length]);
 
   const load = async () => {
     if (!token) return;
@@ -99,39 +113,52 @@ export default function PointsPage() {
 
       const latest = useFamilyStore.getState();
       if (latest.selectedFamilyId && latest.selectedChildId) {
-        loadRecords(latest.selectedFamilyId, latest.selectedChildId);
+        loadRecords(latest.selectedFamilyId, latest.selectedChildId, 0);
       }
     } catch { /* skip */ }
   };
   useEffect(() => { load(); }, [token]);
 
-  const loadRecords = async (fidParam?: string, cidParam?: string) => {
-    const f = fidParam ?? fid;
-    const c = cidParam ?? cid;
+  const loadRecords = async (fidOverride?: string, cidOverride?: string, page?: number) => {
+    const f = fidOverride ?? fid;
+    const c = cidOverride ?? cid;
     if (!f || !c) return;
     try {
-      const res = await scoreApi.list(f, c, 0, 100);
+      const p = page ?? 0;
+      const res = await scoreApi.list(f, c, p, 10);
       const list = res.data?.content ?? [];
-      setRecords(list);
+      setRecords(prev => p === 0 ? list : [...prev, ...list]);
       setTotalScore(list.reduce((s: number, r: ScoreRecord) => s + r.score, 0));
+      setHasMore(!res.data?.last && list.length === 10);
+      setCurrentPage(p);
     } catch { setRecords([]); }
   };
-  useEffect(() => { loadRecords(); }, [fid, cid]);
+  useEffect(() => { loadRecords(fid, cid, 0); }, [fid, cid]);
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
 
   const handleRecord = async () => {
-    if (!fid || !cid) return;
+    const currentFid = fid;
+    const currentCid = cid;
+    if (!currentFid || !currentCid) return;
     setLoading(true);
     try {
-      await scoreApi.add(fid, cid, category, score, reason || QUICK_REASONS[0]);
+      await scoreApi.add(currentFid, currentCid, category, score, reason || QUICK_REASONS[0]);
       setScore(2); setReason("");
-      // Refresh children to update totalScore/availableScore in store
-      familyApi.children(fid).then(r => {
-        const k = r.data ?? [];
-        useFamilyStore.getState().setChildren(fid, k as any);
-      }).catch(() => {});
-      loadRecords();
+      // Fire-and-forget: refresh children, then reload records
+      familyApi.children(currentFid)
+        .then(r => {
+          const k = r.data ?? [];
+          useFamilyStore.getState().setChildren(currentFid, k as any);
+        })
+        .catch(() => {});
+      loadRecords(currentFid, currentCid, 0);
     }
-    catch {} finally { setLoading(false); }
+    catch (e: any) {
+      const msg = e?.response?.data?.message || e?.message || t("points.saveFailed");
+      alert(msg);
+    } finally { setLoading(false); }
   };
 
   const handleAddChild = async () => {
@@ -161,7 +188,7 @@ export default function PointsPage() {
         {kids.length > 0 && (
           <div style={{ display: "flex", gap: 8, overflowX: "auto", marginTop: 12, paddingBottom: 2 }}>
             {kids.map(c => (
-              <button key={c.id} onClick={() => selectChild(c.id)}
+              <button key={c.id} onClick={() => { selectChild(c.id); setActiveChildId(c.id); }}
                 style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 14px", borderRadius: 14, border: c.id === cid ? "2px solid var(--active)" : "2px solid transparent", background: c.id === cid ? "var(--active-bg)" : "rgba(118,118,128,0.06)", fontFamily: "inherit" }}>
                 <span style={{ fontSize: 22 }}>{c.avatar || AVATARS[0]}</span>
                 <span style={{ fontSize: 11, fontWeight: 500 }}>{c.name}</span>
@@ -208,13 +235,18 @@ export default function PointsPage() {
       {/* Recent Records */}
       <div className="section-title" style={{ marginTop: 8 }}>{t("points.recentRecords")}</div>
       {records.length === 0 && <div className="empty-state" style={{ padding: 24 }}>{t("points.noRecords")}</div>}
-      {records.slice(0, 20).map(r => (
+      {records.map(r => (
         <div key={r.id} className="record-item" style={{ padding: "14px 0" }}>
           <span style={{ width: 8, height: 8, borderRadius: 4, background: COLORS[r.category] || "#ccc", flexShrink: 0 }} />
           <span style={{ flex: 1, fontSize: 15 }}>{r.reason}</span>
           <span style={{ fontWeight: 600, fontSize: 16, color: r.score > 0 ? "#34c759" : "#ff3b30" }}>{r.score > 0 ? "+" : ""}{r.score}</span>
         </div>
       ))}
+      {hasMore && (
+        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 8 }} onClick={() => loadRecords(fid, cid, currentPage + 1)}>
+          {t("points.loadMore")}
+        </button>
+      )}
 
       <CategorySheet show={showCatSheet} onClose={() => setShowCatSheet(false)} cats={CATEGORIES} selected={category} onSelect={setCategory} />
 

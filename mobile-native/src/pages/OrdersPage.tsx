@@ -15,6 +15,7 @@ const STATUS_COLORS: Record<string, { color: string; bg: string }> = {
 export default function OrdersPage() {
   const { selectedFamilyId, selectedChildId, selectChild, families, setFamilies, children, setChildren } = useFamilyStore();
   const [orders, setOrders] = useState<Order[]>([]);
+  const [displayCount, setDisplayCount] = useState(10);
   const [loading, setLoading] = useState(false);
   const [initializing, setInitializing] = useState(false);
   const [cancelTarget, setCancelTarget] = useState<Order | null>(null);
@@ -79,7 +80,7 @@ export default function OrdersPage() {
     } catch { setOrders([]); }
     finally { setLoading(false); }
   };
-  useEffect(() => { load(); }, [cid]);
+  useEffect(() => { setDisplayCount(10); load(); }, [cid]);
 
   const handleConfirm = async (order: Order) => {
     try {
@@ -163,7 +164,7 @@ export default function OrdersPage() {
         </div>
       )}
 
-      {orders.map(order => {
+      {orders.slice(0, displayCount).map(order => {
         const stColor = STATUS_COLORS[order.status] || { color: "#999", bg: "#f0f0f0" };
         return (
           <div key={order.id} className="apple-card" style={{ padding: 14, marginBottom: 10 }}>
@@ -193,6 +194,11 @@ export default function OrdersPage() {
           </div>
         );
       })}
+      {orders.length > displayCount && (
+        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 8 }} onClick={() => setDisplayCount(prev => prev + 10)}>
+          {t("shop.loadMore")}
+        </button>
+      )}
 
       {/* Cancel Confirm Sheet */}
       {cancelTarget && (

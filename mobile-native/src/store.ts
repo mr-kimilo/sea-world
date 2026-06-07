@@ -17,13 +17,20 @@ type AuthStore = {
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   token: localStorage.getItem("token"),
-  user: null,
+  user: (() => {
+    try {
+      const raw = localStorage.getItem("user");
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  })(),
   setAuth: (token, user) => {
     localStorage.setItem("token", token);
+    if (user) localStorage.setItem("user", JSON.stringify(user));
     set({ token, user });
   },
   logout: () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     set({ token: null, user: null });
   },
   isLoggedIn: () => !!get().token,

@@ -9,6 +9,7 @@ const RARITY_LABELS: Record<string, string> = { common: t("shop.rarity.common"),
 export default function ShopPage() {
   const { selectedFamilyId, children, selectedChildId } = useFamilyStore();
   const [items, setItems] = useState<Product[]>([]);
+  const [displayCount, setDisplayCount] = useState(10);
   const [selCid, setSelCid] = useState(selectedChildId || "");
   const [redeeming, setRedeeming] = useState(false);
 
@@ -122,7 +123,7 @@ export default function ShopPage() {
 
       {items.length === 0 && <div className="empty-state" style={{ padding: 48, textAlign: "center", color: "var(--muted)" }}>🎁<br/>{t("shop.empty")}</div>}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {items.filter(p => p.isActive).map(item => (
+        {items.filter(p => p.isActive).slice(0, displayCount).map(item => (
           <div key={item.id} className="apple-card" style={{ padding: 16 }}>
             <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
               <div style={{ width: 72, height: 72, borderRadius: 14, background: "rgba(118,118,128,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36, flexShrink: 0 }}>
@@ -149,6 +150,11 @@ export default function ShopPage() {
           </div>
         ))}
       </div>
+      {items.filter(p => p.isActive).length > displayCount && (
+        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 12 }} onClick={() => setDisplayCount(prev => prev + 10)}>
+          {t("shop.loadMore")}
+        </button>
+      )}
 
       {/* Buy Confirmation Sheet */}
       {buyTarget && (
