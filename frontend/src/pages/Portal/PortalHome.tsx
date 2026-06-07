@@ -55,13 +55,6 @@ export default function PortalHome() {
           </button>
         ))}
       </div>
-
-      {/* Download App Button */}
-      <div className="portal-download-area">
-        <button className="portal-download-btn" onClick={() => navigate('/download')}>
-          📲 下载 App
-        </button>
-      </div>
     </div>
   );
 }

@@ -1,8 +1,8 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.seaworld.family",
-  appName: "SeaWorld",
+  appId: "com.hyperone.family",
+  appName: "HyperOne",
   webDir: "dist",
   server: {
     url: "http://192.168.31.168:5178",
@@ -16,7 +16,7 @@ const config: CapacitorConfig = {
   },
   plugins: {
     Preferences: {
-      group: "com.seaworld.family",
+      group: "com.hyperone.family",
     },
     // CapacitorUpdater 暂时禁用 — 排查白屏
   },

@@ -27,6 +27,12 @@ const NAV_ITEMS = [
     label: { zh: '金钱价值观纠正', en: 'Money Value' },
     i18nKey: 'portal.moneyValue',
   },
+  {
+    path: '/portal/download',
+    icon: '📲',
+    label: { zh: '下载 App', en: 'Download App' },
+    i18nKey: 'portal.downloadApp',
+  },
 ];
 
 export default function PortalLayout() {

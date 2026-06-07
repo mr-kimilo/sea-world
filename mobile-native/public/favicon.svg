@@ -7,9 +7,9 @@
       <stop offset="100%" stop-color="#38bdf8"/>
     </linearGradient>
     <linearGradient id="bolt" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#fef08a"/>
-      <stop offset="50%" stop-color="#fde047"/>
-      <stop offset="100%" stop-color="#facc15"/>
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#f0f4ff"/>
+      <stop offset="100%" stop-color="#e0e7ff"/>
     </linearGradient>
     <filter id="glow">
       <feGaussianBlur stdDeviation="4" result="blur"/>
@@ -29,6 +29,6 @@
 
   <!-- Lightning bolt with glow -->
   <g filter="url(#glow)">
-    <polygon points="288,72 208,260 272,260 240,440 368,228 296,228 336,72" fill="url(#bolt)" stroke="#eab308" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="288,72 208,260 272,260 240,440 368,228 296,228 336,72" fill="url(#bolt)" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linejoin="round"/>
   </g>
 </svg>

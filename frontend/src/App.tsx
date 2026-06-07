@@ -98,13 +98,13 @@ function App() {
           <Route index element={<PortalHome />} />
           <Route path="under-sea" element={<Navigate to="/home" replace />} />
           <Route path="child-value" element={<ChildValuePage />} />
+          <Route path="download" element={<DownloadApp />} />
         </Route>
 
         {/* Auth pages (public) */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/download" element={<DownloadApp />} />
 
         {/* Protected routes — /home 而不是 / 避免冲突 */}
         <Route

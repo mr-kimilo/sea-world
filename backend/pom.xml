@@ -14,8 +14,8 @@
     <groupId>com.seaworld</groupId>
     <artifactId>sea-world</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sea-world</name>
-    <description>海底世界 - 家庭积分管理系统</description>
+    <name>HyperOne</name>
+    <description>超体 - 统一家庭数字入口</description>
 
     <properties>
         <java.version>21</java.version>

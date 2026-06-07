@@ -1,5 +1,5 @@
 {
-  "appName": "Sea World",
+  "appName": "HyperOne",
   "loading": "Loading...",
   "submit": "Submit",
   "cancel": "Cancel",
@@ -33,7 +33,7 @@
   },
   "pwa": {
     "bannerAria": "Install to home screen",
-    "bannerTitle": "Install Sea World",
+    "bannerTitle": "Install HyperOne",
     "bannerBodyChromium": "Add to your home screen for quick access and a more app-like experience.",
     "bannerBodyIos": "In Safari: tap Share → scroll to “Add to Home Screen” → Add.",
     "bannerBodyAndroidOther": "Open the browser menu (⋮), then choose “Install app”, “Add to Home screen”, or “Add to Home” (wording varies by browser). In Samsung Internet you can also use “Add page to” → “Home screen”.",

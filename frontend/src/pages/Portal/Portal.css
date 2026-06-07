@@ -225,38 +225,6 @@
   font-weight: 600;
 }
 
-/* ── Download App Button ── */
-.portal-download-area {
-  text-align: center;
-  margin-top: 32px;
-}
-
-.portal-download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 32px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s;
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-}
-
-.portal-download-btn:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
-}
-
-.portal-download-btn:active {
-  transform: translateY(0);
-}
-
 /* ── Child Value 页面 ── */
 .child-value-page {
   min-height: 100%;

@@ -1,5 +1,5 @@
 {
-  "appName": "海底世界",
+  "appName": "超体",
   "loading": "加载中...",
   "submit": "提交",
   "cancel": "取消",
@@ -33,7 +33,7 @@
   },
   "pwa": {
     "bannerAria": "安装到主屏幕",
-    "bannerTitle": "安装「海底世界」",
+    "bannerTitle": "安装「超体」",
     "bannerBodyChromium": "添加到主屏幕后，可从桌面一键打开，体验更接近原生应用。",
     "bannerBodyIos": "在 Safari 中：点底部「分享」→ 向下滑动找到「添加到主屏幕」→ 点「添加」。",
     "bannerBodyAndroidOther": "点浏览器右上角菜单（⋮），选择「安装应用」「添加到主屏幕」或「添加到桌面」（名称因浏览器而异）。三星浏览器也可在菜单中选「添加页面至」→「主屏幕」。",

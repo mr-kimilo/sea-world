@@ -1,11 +1,11 @@
 {
-  "name": "海底世界 - 儿童积分管理系统",
-  "short_name": "海底世界",
-  "description": "专为家庭设计的儿童积分管理应用，通过趣味化的积分奖励机制培养孩子良好习惯",
+  "name": "超体 - 家庭积分管理系统",
+  "short_name": "超体",
+  "description": "统一家庭数字入口 — 积分管理 · 金钱教育，培养孩子良好习惯",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1890ff",
+  "theme_color": "#0c4a6e",
   "orientation": "portrait-primary",
   "icons": [
     {
