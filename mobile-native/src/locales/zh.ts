@@ -8,7 +8,7 @@ export default {
     start: "开始使用",
     subtitle: "超体",
   },
-  nav: { home: "首页", menu: "菜单", me: "我的" },
+  nav: { home: "首页", points: "积分", tasks: "任务", shop: "商店", me: "我的" },
   auth: {
     login: "登录",
     register: "注册",
@@ -177,7 +177,7 @@ export default {
   sidebar: {
     home: "首页",
     corrector: "价值观纠正器",
-    points: "积分管理",
+    points: "积分中心",
     history: "积分历史",
     orders: "我的订单",
     tasks: "孩子任务",
@@ -185,6 +185,7 @@ export default {
     logout: "退出登录",
     login: "登录",
     brandName: "HyperOne",
+    more: "更多功能",
   },
   tasks: { title: "任务", empty: "任务功能后端开发中，MVP2 上线" },
   childEdit: {

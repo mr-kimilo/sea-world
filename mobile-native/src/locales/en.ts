@@ -10,7 +10,7 @@ const en: typeof zh = {
     start: "Get Started",
     subtitle: "HyperOne",
   },
-  nav: { home: "Home", menu: "Menu", me: "Me" },
+  nav: { home: "Home", points: "Points", tasks: "Tasks", shop: "Shop", me: "Me" },
   auth: {
     login: "Login",
     register: "Register",
@@ -179,7 +179,7 @@ const en: typeof zh = {
   sidebar: {
     home: "Home",
     corrector: "Corrector",
-    points: "Points",
+    points: "Points Hub",
     history: "History",
     orders: "My Orders",
     tasks: "Tasks",
@@ -187,6 +187,7 @@ const en: typeof zh = {
     logout: "Logout",
     login: "Login",
     brandName: "HyperOne",
+    more: "More",
   },
   tasks: { title: "Tasks", empty: "Tasks coming in MVP2" },
   childEdit: {
