@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_BASE = "http://192.168.31.168:8080/api";
+const API_BASE = import.meta.env.VITE_API_URL || "http://192.168.31.168:8080/api";
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 5000,
+  timeout: 60000,
   headers: { "Content-Type": "application/json" },
 });
 
@@ -57,8 +57,24 @@ export const authApi = {
 export type FamilyInfo = { id: string; name: string; createdAt: string };
 export type ChildInfo = { id: string; name: string; avatar?: string; avatarUrl?: string; familyId: string; totalScore?: number; availableScore?: number };
 
-// normalize backend avatarUrl -> avatar
-const normChild = (c: any): ChildInfo => ({ ...c, avatar: c.avatar || c.avatarUrl });
+// 兼容 web 端的 avatar ID（如 "rabbit"、"cat"）→ emoji 映射
+const AVATAR_ID_MAP: Record<string, string> = {
+  fish: "🐟", star: "⭐", rabbit: "🐰", dragon: "🐲",
+  penguin: "🐧", cat: "🐱", dog: "🐶", panda: "🐼",
+};
+
+// normalize backend avatarUrl -> avatar（支援 emoji 和文字 ID）
+const resolveAvatar = (avatarUrl?: string | null): string | undefined => {
+  if (!avatarUrl) return undefined;
+  // 如果已經是 emoji，直接使用
+  if (/[\u{1F000}-\u{1FFFF}]/u.test(avatarUrl)) return avatarUrl;
+  // 如果是 web 端的文字 ID，映射為 emoji
+  if (AVATAR_ID_MAP[avatarUrl]) return AVATAR_ID_MAP[avatarUrl];
+  // 否則原樣返回（可能是 URL 或其他）
+  return avatarUrl;
+};
+
+const normChild = (c: any): ChildInfo => ({ ...c, avatar: resolveAvatar(c.avatar || c.avatarUrl) });
 const normChildren = (arr: any[]): ChildInfo[] => (arr ?? []).map(normChild);
 
 export const familyApi = {
