@@ -1,107 +1,137 @@
-﻿import { useState } from "react";
-import { NavLink } from "react-router-dom";
+﻿import { useState, useEffect } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store";
 import { t } from "../i18n";
 
 interface Props { open: boolean; onClose: () => void; }
 
 export default function MobileSidebar({ open, onClose }: Props) {
-  const { token, logout } = useAuthStore();
+  const { token, user, logout } = useAuthStore();
   const loggedIn = !!token;
+  const location = useLocation();
   const [pointsOpen, setPointsOpen] = useState(true);
   const [moreOpen, setMoreOpen] = useState(false);
 
-  const subRoutes = [
-    { to: "/points", icon: "⚡", label: t("points.record") },
-    { to: "/history", icon: "📊", label: t("sidebar.history") },
-    { to: "/shop", icon: "🎁", label: t("sidebar.shop") },
-    { to: "/orders", icon: "📦", label: t("sidebar.orders") },
-  ];
+  // Close sidebar on route change
+  useEffect(() => {
+    if (open) onClose();
+  }, [location.pathname]);
 
-  const moreRoutes = [
-    { to: "#", icon: "👶", label: "孩子管理" },
-    { to: "#", icon: "📈", label: "数据洞察" },
-    { to: "#", icon: "⚙️", label: "家庭设置" },
+  const handleLogout = () => {
+    logout();
+    window.location.hash = "#/";
+  };
+
+  const mainNavItems = [
+    { to: "/", icon: "🏠", label: t("sidebar.home") },
+    { to: "/points", icon: "⭐", label: t("sidebar.points") },
+    { to: "/tasks", icon: "📋", label: t("sidebar.tasks") },
+    { to: "/shop", icon: "🎁", label: t("sidebar.shop") },
+    { to: "/child", icon: "🧒", label: t("sidebar.corrector") },
   ];
 
   return (
     <div className={"sidebar-root" + (open ? " open" : "")} aria-hidden={!open}>
-      <div className="sidebar-backdrop" onClick={onClose} />
-      <aside className="sidebar-panel">
-        <div className="sidebar-header">
-          <div className="sidebar-brand">
-            <img src="/favicon.svg" alt="HyperOne" className="sidebar-logo" style={{ width: 32, height: 32 }} />
-            <span className="sidebar-name">{t("sidebar.brandName")}</span>
+      {/* Gradient backdrop */}
+      <div className="sidebar-backdrop-v2" onClick={onClose} />
+
+      {/* Panel */}
+      <aside className="sidebar-panel-v2">
+        {/* ── Header: Ocean Wave + User Info ── */}
+        <div className="sidebar-header-v2">
+          <div className="sidebar-header-wave" aria-hidden="true" />
+          <div className="sidebar-header-close">
+            <button className="sidebar-close-btn" onClick={onClose}>✕</button>
           </div>
-          <button className="sidebar-close" onClick={onClose}>✕</button>
+          {loggedIn && user ? (
+            <div className="sidebar-user-v2">
+              <div className="sidebar-user-avatar-v2">
+                {user.name?.charAt(0) || "👤"}
+              </div>
+              <div className="sidebar-user-info-v2">
+                <div className="sidebar-user-name-v2">{user.name}</div>
+                <div className="sidebar-user-role-v2">家长</div>
+                <div className="sidebar-user-email-v2">{user.email}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="sidebar-user-v2">
+              <div className="sidebar-user-avatar-v2">👤</div>
+              <div className="sidebar-user-info-v2">
+                <div className="sidebar-user-name-v2" style={{ opacity: 0.5 }}>{t("sidebar.guest")}</div>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ── 一级导航 ── */}
-        <nav className="sidebar-nav">
-          {/* 首页 */}
-          <NavLink to="/" className={({ isActive }) => "sidebar-link" + (isActive ? " active" : "")} onClick={onClose}>
-            <span className="sidebar-link-icon">🏠</span>
-            <span>{t("sidebar.home")}</span>
-          </NavLink>
-
-          {/* 积分中心（可折叠 — 标题不跳转） */}
-          {loggedIn && (
-            <>
-              <button className="sidebar-collapse-btn" onClick={() => setPointsOpen(!pointsOpen)}>
-                <span className="sidebar-link-icon" style={{ fontSize: 20 }}>⭐</span>
-                <span style={{ fontWeight: 600, flex: 1, textAlign: "left" }}>{t("sidebar.points")}</span>
-                <span className={"collapse-arrow" + (pointsOpen ? " open" : "")}>▶</span>
-              </button>
-              {pointsOpen && (
-                <div style={{ paddingLeft: 20 }}>
-                  {subRoutes.map((r) => (
-                    <NavLink key={r.to} to={r.to} className={({ isActive }) => "sidebar-link" + (isActive ? " active" : "")} onClick={onClose}>
-                      <span className="sidebar-link-icon">{r.icon}</span>
-                      <span>{r.label}</span>
-                    </NavLink>
-                  ))}
-                </div>
+        {/* ── Navigation ── */}
+        <nav className="sidebar-nav-v2">
+          {mainNavItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                "sidebar-nav-item-v2" + (isActive ? " active" : "")
+              }
+              onClick={onClose}
+            >
+              <span className="sidebar-nav-icon-v2">{item.icon}</span>
+              <span className="sidebar-nav-label-v2">{item.label}</span>
+              {item.to === "/child" && (
+                <span className="sidebar-nav-badge-v2">3</span>
               )}
-            </>
-          )}
-
-          {/* 价值观纠正器 */}
-          <NavLink to="/child" className={({ isActive }) => "sidebar-link" + (isActive ? " active" : "")} onClick={onClose}>
-            <span className="sidebar-link-icon">🧒</span>
-            <span>{t("sidebar.corrector")}</span>
-          </NavLink>
+              <span className="sidebar-nav-arrow-v2">›</span>
+            </NavLink>
+          ))}
         </nav>
 
-        {/* ── 扩展预留区 ── */}
+        {/* ── Secondary Section ── */}
         {loggedIn && (
-          <div className="sidebar-nav" style={{ marginTop: 2 }}>
-            <button className="sidebar-collapse-btn" onClick={() => setMoreOpen(!moreOpen)}>
-              <span className="sidebar-link-icon" style={{ fontSize: 16 }}>📂</span>
-              <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600, flex: 1, textAlign: "left" }}>{t("sidebar.more")}</span>
-              <span className={"collapse-arrow" + (moreOpen ? " open" : "")}>▶</span>
-            </button>
-            {moreOpen && (
-              <div style={{ paddingLeft: 20 }}>
-                {moreRoutes.map((r, i) => (
-                  <div key={i} className="sidebar-link" style={{ opacity: 0.4, cursor: "default" }}>
-                    <span className="sidebar-link-icon">{r.icon}</span>
-                    <span>{r.label} <span style={{ fontSize: 10, color: "var(--muted)" }}>soon</span></span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <>
+            <div className="sidebar-divider-v2" />
+
+            <div className="sidebar-nav-v2" style={{ paddingTop: 0, paddingBottom: 0 }}>
+              <button className="sidebar-section-toggle-v2" onClick={() => setPointsOpen(!pointsOpen)}>
+                <span>📂</span>
+                <span style={{ flex: 1, textAlign: "left" }}>{t("sidebar.more")}</span>
+                <span style={{ transform: pointsOpen ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.15s" }}>›</span>
+              </button>
+              {pointsOpen && (
+                <div className="sidebar-section-children-v2">
+                  <NavLink to="/history" className={({ isActive }) => "sidebar-nav-item-v2" + (isActive ? " active" : "")} onClick={onClose}>
+                    <span className="sidebar-nav-icon-v2">📊</span>
+                    <span className="sidebar-nav-label-v2">{t("sidebar.history")}</span>
+                  </NavLink>
+                  <NavLink to="/orders" className={({ isActive }) => "sidebar-nav-item-v2" + (isActive ? " active" : "")} onClick={onClose}>
+                    <span className="sidebar-nav-icon-v2">📦</span>
+                    <span className="sidebar-nav-label-v2">{t("sidebar.orders")}</span>
+                  </NavLink>
+                  <NavLink to="/settings" className={({ isActive }) => "sidebar-nav-item-v2" + (isActive ? " active" : "")} onClick={onClose}>
+                    <span className="sidebar-nav-icon-v2">⚙️</span>
+                    <span className="sidebar-nav-label-v2">{t("sidebar.settings")}</span>
+                  </NavLink>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
-        {/* ── 底部 ── */}
-        <div className="sidebar-footer">
+        {/* ── Footer ── */}
+        <div className="sidebar-footer-v2">
           {loggedIn ? (
-            <button className="sidebar-logout" onClick={() => { logout(); onClose(); window.location.hash = "#/"; }}>
-              <span>🚪</span> <span>{t("sidebar.logout")}</span>
+            <button className="sidebar-footer-item-v2 danger" onClick={handleLogout}>
+              <span>🚪</span>
+              <span>{t("sidebar.logout")}</span>
             </button>
           ) : (
-            <a href="#/login" className="sidebar-logout" style={{ textDecoration: "none", justifyContent: "center" }} onClick={onClose}>
-              {t("sidebar.login")}
+            <a
+              href="#/login"
+              className="sidebar-footer-item-v2"
+              style={{ textDecoration: "none" }}
+              onClick={onClose}
+            >
+              <span>🔑</span>
+              <span>{t("sidebar.login")}</span>
             </a>
           )}
         </div>

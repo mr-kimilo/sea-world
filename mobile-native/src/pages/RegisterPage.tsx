@@ -8,6 +8,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -26,33 +27,43 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-header">
-        <h1>{t("auth.register")}</h1>
-        <p>{t("auth.registerTitle")}</p>
+    <div className="login-v2">
+      <div className="ocean-bg" aria-hidden="true">
+        <div className="ocean-bubbles" aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, i) => (<div key={i} className="ocean-bubble" />))}
+        </div>
       </div>
-      <form onSubmit={handleRegister}>
-        <div className="auth-input-group">
-          <div className="auth-input-row">
-            <span className="auth-input-label">{t("auth.email")}</span>
-            <input type="email" placeholder={t("auth.placeholderEmailReg")} value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
+
+      <div className="login-logo-v2">
+        <span className="login-fish-v2">🐠</span>
+        <h1 className="login-title-v2">{t("auth.register")}</h1>
+        <p className="login-subtitle-v2">{t("auth.registerTitle")}</p>
+      </div>
+
+      <form className="login-form-v2" onSubmit={handleRegister}>
+        <div className="login-input-group-v2">
+          <div className="login-input-wrap-v2">
+            <span className="login-input-icon-v2">📧</span>
+            <input className="login-input-v2" type="email" placeholder={t("auth.placeholderEmailReg")} value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" />
           </div>
-          <div className="auth-input-row">
-            <span className="auth-input-label">{t("auth.password")}</span>
-            <input type="password" placeholder={t("auth.placeholderPwdReg")} value={password} onChange={e => setPassword(e.target.value)} />
+          <div className="login-input-wrap-v2">
+            <span className="login-input-icon-v2">🔒</span>
+            <input className="login-input-v2" type={showPwd ? "text" : "password"} placeholder={t("auth.placeholderPwdReg")} value={password} onChange={e => setPassword(e.target.value)} />
+            <button type="button" className="login-pwd-toggle-v2" onClick={() => setShowPwd(!showPwd)}>{showPwd ? "🙈" : "👁"}</button>
           </div>
-          <div className="auth-input-row">
-            <span className="auth-input-label">{t("auth.confirmPwd")}</span>
-            <input type="password" placeholder={t("auth.placeholderConfirm")} value={confirm} onChange={e => setConfirm(e.target.value)} />
+          <div className="login-input-wrap-v2">
+            <span className="login-input-icon-v2">✓</span>
+            <input className="login-input-v2" type={showPwd ? "text" : "password"} placeholder={t("auth.placeholderConfirm")} value={confirm} onChange={e => setConfirm(e.target.value)} />
           </div>
         </div>
-        <button type="submit" className="auth-btn" disabled={loading}>
+        <button type="submit" className="login-submit-v2" disabled={loading}>
           {loading && <span className="spinner" />}
-          {loading ? t("auth.registering") : t("auth.registerBtn")}
+          {loading ? t("auth.registering") : `🚀 ${t("auth.registerBtn")}`}
         </button>
       </form>
-      {error && <div className="auth-error">{error}</div>}
-      <div className="auth-links"><Link to="/login">{t("auth.hasAccount")}</Link></div>
+      {error && <div className="login-error-v2">{error}</div>}
+      <div className="login-links-v2"><Link to="/login" className="login-link-v2">{t("auth.hasAccount")}</Link></div>
+      <div className="ocean-wave" aria-hidden="true" />
     </div>
   );
 }

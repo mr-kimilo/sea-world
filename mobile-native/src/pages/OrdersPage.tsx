@@ -4,12 +4,10 @@ import { useFamilyStore } from "../store";
 import { t } from "../i18n";
 
 type Order = { id: string; childId: string; itemId: string; itemName: string; itemImageUrl?: string; cost: number; status: string; purchasedAt: string; completedAt?: string };
-
-const getStatusLabel = (status: string) => t(`shop.orderStatus.${status}`) || status;
 const STATUS_COLORS: Record<string, { color: string; bg: string }> = {
-  PENDING: { color: "#ff9500", bg: "#fff3e0" },
-  COMPLETED: { color: "#34c759", bg: "#e8f8ed" },
-  CANCELLED: { color: "#ff3b30", bg: "#ffeaea" },
+  PENDING: { color: "#FF8C00", bg: "rgba(255,140,0,0.15)" },
+  COMPLETED: { color: "#2D6A4F", bg: "rgba(45,106,79,0.15)" },
+  CANCELLED: { color: "#E53E3E", bg: "rgba(229,62,62,0.12)" },
 };
 
 export default function OrdersPage() {
@@ -24,7 +22,6 @@ export default function OrdersPage() {
   const cid = selectedChildId;
   const kids = fid ? children[fid] || [] : [];
 
-  // Auto-load families & children if not loaded yet
   useEffect(() => {
     if (fid || initializing) return;
     setInitializing(true);
@@ -34,7 +31,6 @@ export default function OrdersPage() {
         setFamilies(families);
         if (families.length === 0) return;
         const firstFid = families[0].id;
-        // If store already has a selectedFamilyId, use it
         const activeFid = useFamilyStore.getState().selectedFamilyId || firstFid;
         if (activeFid !== firstFid && !families.some((f: any) => f.id === activeFid)) {
           useFamilyStore.getState().selectFamily(firstFid);
@@ -43,21 +39,18 @@ export default function OrdersPage() {
       })
       .then(res => {
         if (!res) return;
-        const kids: any[] = res.data ?? [];
+        const kidsData: any[] = res.data ?? [];
         const currentFid = useFamilyStore.getState().selectedFamilyId || families[0]?.id;
         if (currentFid) {
-          setChildren(currentFid, kids);
+          setChildren(currentFid, kidsData);
           const store = useFamilyStore.getState();
-          if (kids.length > 0 && !store.selectedChildId) {
-            selectChild(kids[0].id);
-          }
+          if (kidsData.length > 0 && !store.selectedChildId) selectChild(kidsData[0].id);
         }
       })
       .catch(() => {})
       .finally(() => setInitializing(false));
   }, []);
 
-  // Lock body scroll when sheet open
   useEffect(() => {
     document.body.style.overflow = cancelTarget ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -74,51 +67,43 @@ export default function OrdersPage() {
   const load = async () => {
     if (!cid) { setOrders([]); return; }
     setLoading(true);
-    try {
-      const res = await orderApi.list(cid);
-      setOrders((res.data ?? []) as Order[]);
-    } catch { setOrders([]); }
+    try { const res = await orderApi.list(cid); setOrders((res.data ?? []) as Order[]); }
+    catch { setOrders([]); }
     finally { setLoading(false); }
   };
   useEffect(() => { setDisplayCount(10); load(); }, [cid]);
 
   const handleConfirm = async (order: Order) => {
-    try {
-      await orderApi.confirm(order.childId, order.id);
-      refreshChildren();
-      load();
-    } catch { alert(t("shop.confirmFailed")); }
-  };
-
-  const openCancelConfirm = (order: Order) => {
-    setCancelTarget(order);
+    try { await orderApi.confirm(order.childId, order.id); refreshChildren(); load(); }
+    catch { alert(t("shop.confirmFailed")); }
   };
 
   const handleCancel = async () => {
     if (!cancelTarget) return;
-    try {
-      await orderApi.cancel(cancelTarget.childId, cancelTarget.id);
-      setCancelTarget(null);
-      refreshChildren();
-      load();
-    } catch { alert(t("shop.cancelFailed")); }
+    try { await orderApi.cancel(cancelTarget.childId, cancelTarget.id); setCancelTarget(null); refreshChildren(); load(); }
+    catch { alert(t("shop.cancelFailed")); }
   };
 
   const formatTime = (ts: string) => {
     if (!ts) return "";
     const d = new Date(ts);
-    return d.toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    return d.toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
   };
 
   if (!cid || kids.length === 0) {
     return (
-      <div className="page-padded">
-        <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>{t("shop.ordersTitle")}</h2>
-        {initializing || !fid ? (
-          <div style={{ textAlign: "center", padding: 48, color: "var(--muted)" }}>{t("shop.loading")}</div>
-        ) : (
-          <div className="empty-state" style={{ padding: 48, textAlign: "center", color: "var(--muted)" }}>📋<br/>{t("shop.noChildHint")}</div>
-        )}
+      <div className="home-v2">
+        <div className="ocean-bg" aria-hidden="true">
+          <div className="ocean-bubbles" aria-hidden="true">
+            {Array.from({ length: 10 }).map((_, i) => (<div key={i} className="ocean-bubble" />))}
+          </div>
+        </div>
+        <nav className="home-nav-v2"><span className="home-nav-title">📦 {t("shop.ordersTitle")}</span></nav>
+        <div style={{ position: "relative", zIndex: 1, textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)" }}>
+          <div style={{ fontSize: 48, marginBottom: 8 }}>📋</div>
+          <div>{initializing || !fid ? t("shop.loading") : t("shop.noChildHint")}</div>
+        </div>
+        <div className="ocean-wave" aria-hidden="true" />
       </div>
     );
   }
@@ -126,95 +111,108 @@ export default function OrdersPage() {
   const kid = kids.find(k => k.id === cid);
 
   return (
-    <div className="page-padded">
-      <h2 style={{ fontSize: 22, fontWeight: 700, marginBottom: 16 }}>{t("shop.ordersTitle")}</h2>
-
-      {/* Child Selector */}
-      <div style={{ display: "flex", gap: 8, overflowX: "auto", marginBottom: 16, paddingBottom: 2 }}>
-        {kids.map(c => (
-          <button key={c.id} onClick={() => selectChild(c.id)}
-            style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 14px", borderRadius: 14, border: c.id === cid ? "2px solid var(--active)" : "2px solid transparent", background: c.id === cid ? "var(--active-bg)" : "rgba(118,118,128,0.06)", fontFamily: "inherit" }}>
-            <span style={{ fontSize: 22 }}>{c.avatar || "🧒"}</span>
-            <span style={{ fontSize: 11, fontWeight: 500 }}>{c.name}</span>
-          </button>
-        ))}
+    <div className="home-v2">
+      <div className="ocean-bg" aria-hidden="true">
+        <div className="ocean-bubbles" aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, i) => (<div key={i} className="ocean-bubble" />))}
+        </div>
       </div>
 
-      {/* Child Score Summary */}
-      {kid && (
-        <div className="apple-card" style={{ padding: 14, marginBottom: 16, display: "flex", alignItems: "center", gap: 14 }}>
-          <span style={{ fontSize: 40 }}>{kid.avatar || "🧒"}</span>
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{kid.name}</div>
-            <div style={{ display: "flex", gap: 16, marginTop: 4 }}>
-              <span style={{ fontSize: 13, color: "var(--muted)" }}>⭐ 总分 <strong style={{ color: "var(--ink)" }}>{(kid as any).totalScore ?? "?"}</strong></span>
-              <span style={{ fontSize: 13, color: "var(--muted)" }}>💎 可用 <strong style={{ color: "var(--ink)" }}>{(kid as any).availableScore ?? "?"}</strong></span>
+      <nav className="home-nav-v2"><span className="home-nav-title">📦 {t("shop.ordersTitle")}</span></nav>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Child Selector */}
+        {kids.length > 0 && (
+          <div className="shop-child-scroll-v2">
+            {kids.map(c => (
+              <button key={c.id} onClick={() => selectChild(c.id)}
+                className={"shop-child-chip-v2" + (c.id === cid ? " active" : "")}>
+                <span className="shop-child-chip-avatar-v2">{c.avatar || "🧒"}</span>
+                <span>{c.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Child Summary */}
+        {kid && (
+          <div className="shop-child-bar-v2">
+            <div className="shop-child-row-v2">
+              <span className="shop-child-avatar-v2">{kid.avatar || "🧒"}</span>
+              <span className="shop-child-name-v2">{kid.name}</span>
+              <span className="shop-child-points-v2">⭐{kid.totalScore ?? "?"}</span>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {loading && <div style={{ textAlign: "center", padding: 32, color: "var(--muted)" }}>{t("shop.loading")}</div>}
+        {loading && <div style={{ textAlign: "center", padding: 32, color: "rgba(255,255,255,0.3)" }}>{t("shop.loading")}</div>}
 
-      {!loading && orders.length === 0 && (
-        <div className="empty-state" style={{ padding: 48, textAlign: "center", color: "var(--muted)" }}>
-          <div style={{ fontSize: 48, marginBottom: 8 }}>📭</div>
-          <div style={{ fontSize: 15 }}>{t("shop.noOrders")}</div>
-          <div style={{ fontSize: 13, marginTop: 4 }}>{t("shop.noOrdersHint")}</div>
-        </div>
-      )}
+        {!loading && orders.length === 0 && (
+          <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)" }}>
+            <div style={{ fontSize: 48, marginBottom: 8 }}>📭</div>
+            <div style={{ fontSize: 15 }}>{t("shop.noOrders")}</div>
+            <div style={{ fontSize: 13, marginTop: 4 }}>{t("shop.noOrdersHint")}</div>
+          </div>
+        )}
 
-      {orders.slice(0, displayCount).map(order => {
-        const stColor = STATUS_COLORS[order.status] || { color: "#999", bg: "#f0f0f0" };
-        return (
-          <div key={order.id} className="apple-card" style={{ padding: 14, marginBottom: 10 }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(118,118,128,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, flexShrink: 0 }}>
-                {order.itemImageUrl ? <img src={order.itemImageUrl} alt="" style={{ width: "100%", height: "100%", borderRadius: 12, objectFit: "cover" }} /> : "🎁"}
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: 15, fontWeight: 600 }}>{order.itemName}</span>
-                  <span style={{ fontSize: 11, padding: "3px 8px", borderRadius: 10, background: stColor.bg, color: stColor.color, fontWeight: 600 }}>{getStatusLabel(order.status)}</span>
-                </div>
-                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>
-                  {t("shop.points")}: <strong>{order.cost}</strong>
-                </div>
-                <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>
-                  {formatTime(order.purchasedAt)}
-                </div>
-                {order.status === "PENDING" && (
-                  <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-                    <button className="apple-btn" style={{ flex: 1, padding: "8px 0", fontSize: 13 }} onClick={() => handleConfirm(order)}>{t("shop.confirmConsume")}</button>
-                    <button className="apple-btn danger" style={{ flex: 1, padding: "8px 0", fontSize: 13 }} onClick={() => openCancelConfirm(order)}>{t("shop.cancelOrderBtn")}</button>
+        {/* Order Cards */}
+        <div style={{ padding: "0 16px" }}>
+          {orders.slice(0, displayCount).map(order => {
+            const stColor = STATUS_COLORS[order.status] || { color: "rgba(255,255,255,0.4)", bg: "rgba(255,255,255,0.06)" };
+            return (
+              <div key={order.id} className="points-section-card-v2" style={{ marginBottom: 10, padding: 14 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(255,255,255,0.06)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>
+                    🎁
                   </div>
-                )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)" }}>{order.itemName}</span>
+                      <span style={{ fontSize: 10, padding: "2px 8px", borderRadius: 10, background: stColor.bg, color: stColor.color, fontWeight: 600 }}>{order.status}</span>
+                    </div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>⭐ {order.cost}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 1 }}>{formatTime(order.purchasedAt)}</div>
+                    {order.status === "PENDING" && (
+                      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+                        <button className="shop-form-btn-v2" style={{ flex: 1, padding: "8px 0", fontSize: 12 }} onClick={() => handleConfirm(order)}>
+                          {t("shop.confirmConsume")}
+                        </button>
+                        <button className="shop-form-btn-v2 danger" style={{ flex: 1, padding: "8px 0", fontSize: 12 }} onClick={() => setCancelTarget(order)}>
+                          {t("shop.cancelOrderBtn")}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        );
-      })}
-      {orders.length > displayCount && (
-        <button className="apple-btn secondary" style={{ width: "100%", marginTop: 8 }} onClick={() => setDisplayCount(prev => prev + 10)}>
-          {t("shop.loadMore")}
-        </button>
-      )}
+            );
+          })}
+        </div>
 
-      {/* Cancel Confirm Sheet */}
+        {orders.length > displayCount && (
+          <button className="shop-load-more-v2" onClick={() => setDisplayCount(prev => prev + 10)}>
+            {t("shop.loadMore")}
+          </button>
+        )}
+      </div>
+
+      {/* Cancel Sheet */}
       {cancelTarget && (
-        <div className="sheet-overlay" onClick={() => setCancelTarget(null)} onTouchMove={e => e.stopPropagation()}>
+        <div className="sheet-overlay shop-sheet-v2" onClick={() => setCancelTarget(null)}>
           <div className="sheet-mask" />
-          <div className="sheet-body" onClick={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()}>
+          <div className="sheet-body" onClick={e => e.stopPropagation()}>
             <div style={{ padding: "16px 20px 24px", textAlign: "center" }}>
-              <p style={{ fontSize: 15, marginBottom: 16 }}>{t("shop.cancelOrderConfirm")}</p>
+              <p style={{ fontSize: 15, marginBottom: 16, color: "rgba(255,255,255,0.7)" }}>{t("shop.cancelOrderConfirm")}</p>
               <div style={{ display: "flex", gap: 10 }}>
-                <button className="apple-btn secondary" style={{ flex: 1 }} onClick={() => setCancelTarget(null)}>{t("shop.cancel")}</button>
-                <button className="apple-btn danger" style={{ flex: 1 }} onClick={handleCancel}>{t("shop.cancelOrderBtn")}</button>
+                <button className="shop-form-btn-v2 secondary" style={{ flex: 1 }} onClick={() => setCancelTarget(null)}>{t("shop.cancel")}</button>
+                <button className="shop-form-btn-v2 danger" style={{ flex: 1 }} onClick={handleCancel}>{t("shop.cancelOrderBtn")}</button>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <div className="ocean-wave" aria-hidden="true" />
     </div>
   );
 }

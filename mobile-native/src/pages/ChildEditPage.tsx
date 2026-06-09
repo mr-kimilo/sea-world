@@ -8,48 +8,29 @@ const MONTHS = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","
 
 function YearMonthPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const now = new Date();
-  const [y, m, d] = value ? value.split("-").map(Number) : [now.getFullYear(), now.getMonth() + 1, 1];
+  const [y, m] = value ? value.split("-").map(Number) : [now.getFullYear(), now.getMonth() + 1];
   const curYear = y || now.getFullYear();
   const curMonth = m || now.getMonth() + 1;
-
-  const apply = (year: number, month: number, day: number) => {
-    const mm = String(month).padStart(2, "0");
-    const dd = String(day).padStart(2, "0");
-    onChange(`${year}-${mm}-${dd}`);
+  const apply = (year: number, month: number) => {
+    onChange(`${year}-${String(month).padStart(2,"0")}-01`);
   };
-
   return (
     <div>
-      {/* Year quick-jump */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <span style={{ fontSize: 13, color: "var(--muted)", minWidth: 20 }}>{t("childEdit.year")}</span>
-        <button onClick={() => apply(curYear - 10, curMonth, 1)}
-          style={{ border: "none", background: "rgba(118,118,128,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit" }}>«</button>
-        <button onClick={() => apply(curYear - 1, curMonth, 1)}
-          style={{ border: "none", background: "rgba(118,118,128,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit" }}>‹</button>
-        <span style={{ fontSize: 20, fontWeight: 700, minWidth: 56, textAlign: "center" }}>{curYear}</span>
-        <button onClick={() => apply(curYear + 1, curMonth, 1)}
-          style={{ border: "none", background: "rgba(118,118,128,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit" }}>›</button>
-        <button onClick={() => apply(curYear + 10, curMonth, 1)}
-          style={{ border: "none", background: "rgba(118,118,128,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit" }}>»</button>
+        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>{t("childEdit.year")}</span>
+        <button onClick={() => apply(curYear - 1, curMonth)}
+          style={{ border: "none", background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit", color: "#fff" }}>‹</button>
+        <span style={{ fontSize: 18, fontWeight: 700, minWidth: 52, textAlign: "center", color: "#fff" }}>{curYear}</span>
+        <button onClick={() => apply(curYear + 1, curMonth)}
+          style={{ border: "none", background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "6px 10px", fontSize: 13, fontFamily: "inherit", color: "#fff" }}>›</button>
       </div>
-      {/* Month row */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <span style={{ fontSize: 13, color: "var(--muted)", minWidth: 20 }}>{t("childEdit.month")}</span>
-        <div style={{ display: "flex", gap: 4, flex: 1, overflowX: "auto" }}>
-          {MONTHS.map((label, i) => (
-            <button key={i} onClick={() => apply(curYear, i + 1, 1)}
-              style={{ flexShrink: 0, padding: "8px 10px", borderRadius: 8, border: curMonth === i + 1 ? "1.5px solid var(--active)" : "1px solid var(--line)", background: curMonth === i + 1 ? "var(--active-bg)" : "#fff", fontSize: 12, fontFamily: "inherit", color: curMonth === i + 1 ? "var(--active)" : "#555", fontWeight: curMonth === i + 1 ? 600 : 400 }}>{label}</button>
-          ))}
-        </div>
-      </div>
-      {/* Day: direct input */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 13, color: "var(--muted)", minWidth: 20 }}>{t("childEdit.day")}</span>
-        <input type="number" min={1} max={31} value={d || ""} placeholder="1"
-          onChange={e => { const nd = parseInt(e.target.value) || 1; apply(curYear, curMonth, Math.min(31, Math.max(1, nd))); }}
-          className="apple-input" style={{ width: 80, textAlign: "center" }} />
-        {value && <span style={{ fontSize: 13, color: "var(--muted)" }}>{value}</span>}
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+        {MONTHS.map((label, i) => (
+          <button key={i} onClick={() => apply(curYear, i + 1)}
+            style={{ flexShrink: 0, padding: "8px 10px", borderRadius: 8, border: curMonth === i + 1 ? "1px solid rgba(0,180,216,0.5)" : "0.5px solid rgba(255,255,255,0.1)", background: curMonth === i + 1 ? "rgba(0,119,182,0.3)" : "rgba(255,255,255,0.06)", fontSize: 12, fontFamily: "inherit", color: "#fff" }}>
+            {label}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -82,11 +63,9 @@ export default function ChildEditPage() {
     try {
       const updatedData = { name: name.trim(), avatar, birthDate: birthDate || undefined } as any;
       await familyApi.updateChild(fid, kidId, updatedData);
-      // Update store directly for immediate refresh on back-navigation
       const updated = kids.map(c => c.id === kidId ? { ...c, name: name.trim(), avatar } : c);
       setChildren(fid, updated);
       selectChild(kidId);
-      // Small delay to let React flush store update before navigation
       setTimeout(() => window.history.back(), 50);
     } catch {} finally { setSaving(false); }
   };
@@ -105,57 +84,60 @@ export default function ChildEditPage() {
   };
 
   return (
-    <div className="page-padded">
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-        <a href="#/child" style={{ fontSize: 18, textDecoration: "none", color: "var(--active)" }}>
-          ‹ {t("childEdit.back")}
-        </a>
-        <span style={{ fontSize: 18, fontWeight: 700 }}>
-          {kid ? t("childEdit.title") : t("childEdit.addTitle")}
-        </span>
+    <div className="home-v2">
+      <div className="ocean-bg" aria-hidden="true">
+        <div className="ocean-bubbles" aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, i) => (<div key={i} className="ocean-bubble" />))}
+        </div>
       </div>
 
-      {/* Avatar Picker */}
-      <div className="apple-card">
-        <div className="section-title">{t("childEdit.avatar")}</div>
-        <div style={{ textAlign: "center", marginBottom: 12 }}>
-          <span style={{ fontSize: 64, display: "inline-block" }}>{avatar}</span>
+      <nav className="home-nav-v2">
+        <span className="home-nav-title">{kid ? "✏️ " + t("childEdit.title") : "👶 " + t("childEdit.addTitle")}</span>
+      </nav>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {/* Avatar */}
+        <div style={{ textAlign: "center", marginBottom: 16 }}>
+          <div style={{ fontSize: 72, display: "inline-block", background: "rgba(255,255,255,0.08)", borderRadius: "50%", width: 100, height: 100, lineHeight: "100px", marginBottom: 8 }}>{avatar}</div>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{t("childEdit.avatar")}</div>
         </div>
-        <div className="avatar-grid">
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center", marginBottom: 16 }}>
           {AVATARS.map(a => (
-            <button key={a} className={"avatar-option" + (avatar === a ? " on" : "")} onClick={() => setAvatar(a)}>
+            <button key={a} onClick={() => setAvatar(a)}
+              style={{ width: 48, height: 48, borderRadius: 14, fontSize: 24, border: avatar === a ? "2px solid rgba(0,180,216,0.6)" : "1px solid rgba(255,255,255,0.1)", background: avatar === a ? "rgba(0,119,182,0.3)" : "rgba(255,255,255,0.06)", fontFamily: "inherit" }}>
               {a}
             </button>
           ))}
         </div>
-      </div>
 
-      {/* Name */}
-      <div className="apple-card">
-        <div className="section-title">{t("childEdit.name")}</div>
-        <input className="apple-input" placeholder={t("childEdit.namePlaceholder")} value={name} onChange={e => setName(e.target.value)} />
-      </div>
-
-      {/* Birth Date */}
-      {kid && (
-        <div className="apple-card">
-          <div className="section-title">{t("childEdit.birthDate")}</div>
-          <YearMonthPicker value={birthDate} onChange={setBirthDate} />
+        {/* Name */}
+        <div className="child-card-v2" style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>{t("childEdit.name")}</div>
+          <input className="points-input-v2" placeholder={t("childEdit.namePlaceholder")} value={name} onChange={e => setName(e.target.value)} />
         </div>
-      )}
 
-      {/* Save */}
-      <button className="apple-btn" style={{ width: "100%", marginTop: 8 }} disabled={saving || !name.trim()} onClick={handleSave}>
-        {saving ? t("childEdit.saving") : kid ? t("childEdit.save") : t("childEdit.addBtn")}
-      </button>
+        {/* Birth Date */}
+        {kid && (
+          <div className="child-card-v2" style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>{t("childEdit.birthDate")}</div>
+            <YearMonthPicker value={birthDate} onChange={setBirthDate} />
+          </div>
+        )}
 
-      {/* Delete */}
-      {kid && (
-        <button className="apple-btn danger" style={{ width: "100%", marginTop: 12 }} disabled={deleting} onClick={handleDelete}>
-          {deleting ? t("childEdit.deleting") : t("childEdit.delete")}
+        {/* Save */}
+        <button className="login-submit-v2" style={{ marginBottom: 10 }} disabled={saving || !name.trim()} onClick={handleSave}>
+          {saving ? "..." : `🌊 ${kid ? t("childEdit.save") : t("childEdit.addBtn")}`}
         </button>
-      )}
+
+        {/* Delete */}
+        {kid && (
+          <button style={{ width: "100%", padding: 14, border: "none", borderRadius: 16, background: "rgba(229,62,62,0.15)", color: "#FC8181", fontSize: 15, fontWeight: 600, fontFamily: "inherit" }} disabled={deleting} onClick={handleDelete}>
+            🗑️ {deleting ? t("childEdit.deleting") : t("childEdit.delete")}
+          </button>
+        )}
+      </div>
+
+      <div className="ocean-wave" aria-hidden="true" />
     </div>
   );
 }

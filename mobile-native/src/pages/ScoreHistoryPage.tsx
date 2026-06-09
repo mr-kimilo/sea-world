@@ -5,21 +5,24 @@ import { t } from "../i18n";
 
 type ScoreRecord = { id: string; category: string; score: number; reason: string; createdAt: string };
 const CATS = [
-  { key: "intelligence", emoji: "\uD83E\uDDE0", label: t("points.categoryLabels.intelligence") },
-  { key: "physical", emoji: "\uD83D\uDCAA", label: t("points.categoryLabels.physical") },
-  { key: "moral", emoji: "\u2764\uFE0F", label: t("points.categoryLabels.moral") },
-  { key: "hygiene", emoji: "\uD83E\uDEA7", label: t("points.categoryLabels.hygiene") },
-  { key: "handcraft", emoji: "\uD83D\uDEE0\uFE0F", label: t("points.categoryLabels.handcraft") },
+  { key: "intelligence", emoji: "🧠", label: t("points.categoryLabels.intelligence") },
+  { key: "physical", emoji: "💪", label: t("points.categoryLabels.physical") },
+  { key: "moral", emoji: "❤️", label: t("points.categoryLabels.moral") },
+  { key: "hygiene", emoji: "🫧", label: t("points.categoryLabels.hygiene") },
+  { key: "handcraft", emoji: "🛠️", label: t("points.categoryLabels.handcraft") },
 ];
-const COLORS: Record<string, string> = { intelligence: "#007aff", physical: "#34c759", moral: "#ff9500", hygiene: "#5ac8fa", handcraft: "#af52de" };
+const COLORS: Record<string, string> = { intelligence: "#0077B6", physical: "#2D6A4F", moral: "#FF8C00", hygiene: "#00B4D8", handcraft: "#7C3AED" };
 
-function FilterSheet({ show, onClose, cats, selected, onSelect }: { show: boolean; onClose: () => void; cats: { key: string; emoji: string; label: string }[]; selected: string; onSelect: (k: string) => void }) {
+function FilterSheet({ show, onClose, cats, selected, onSelect }: {
+  show: boolean; onClose: () => void;
+  cats: typeof CATS; selected: string; onSelect: (k: string) => void;
+}) {
   if (!show) return null;
   return (
-    <div className="sheet-overlay" onClick={onClose}>
+    <div className="sheet-overlay shop-sheet-v2" onClick={onClose}>
       <div className="sheet-mask" />
       <div className="sheet-body" onClick={e => e.stopPropagation()}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)", textAlign: "center", padding: "8px 0 4px" }}>{t("history.selectDim")}</div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.4)", textAlign: "center", padding: "8px 0 4px" }}>{t("history.selectDim")}</div>
         <button className={"sheet-item" + (selected === "all" ? " selected" : "")} onClick={() => { onSelect("all"); onClose(); }}>
           <span style={{ fontSize: 20 }}>📋</span> {t("history.all")}
           {selected === "all" && <span className="sheet-check">✓</span>}
@@ -80,82 +83,109 @@ export default function ScoreHistoryPage() {
   };
 
   return (
-    <div className="page-padded">
+    <div className="points-v2">
+      <div className="ocean-bg" aria-hidden="true">
+        <div className="ocean-bubbles" aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, i) => (<div key={i} className="ocean-bubble" />))}
+        </div>
+      </div>
+
+      {/* Child Switcher */}
       {kids.length > 0 && (
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", marginBottom: 16, paddingBottom: 2 }}>
+        <div className="shop-child-scroll-v2" style={{ paddingTop: 12 }}>
           {kids.map(c => (
             <button key={c.id} onClick={() => selectChild(c.id)}
-              style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 14px", borderRadius: 14, border: c.id === cid ? "2px solid var(--active)" : "2px solid transparent", background: c.id === cid ? "var(--active-bg)" : "rgba(118,118,128,0.06)", fontFamily: "inherit" }}>
-              <span style={{ fontSize: 22 }}>{c.avatar || "🧒"}</span>
-              <span style={{ fontSize: 11, fontWeight: 500 }}>{c.name}</span>
+              className={"shop-child-chip-v2" + (c.id === cid ? " active" : "")}>
+              <span className="shop-child-chip-avatar-v2">{c.avatar || "🧒"}</span>
+              <span>{c.name}</span>
             </button>
           ))}
         </div>
       )}
 
-      <div className="segmented">
-        <button className={tab === "history" ? "on" : ""} onClick={() => setTab("history")}>{t("history.title")}</button>
-        <button className={tab === "dimensions" ? "on" : ""} onClick={() => setTab("dimensions")}>{t("history.dimensions")}</button>
+      {/* Segmented Tabs */}
+      <div style={{ padding: "0 16px", marginBottom: 14 }}>
+        <div style={{ display: "flex", background: "rgba(255,255,255,0.08)", borderRadius: 9, padding: 2 }}>
+          <button onClick={() => setTab("history")}
+            style={{ flex: 1, padding: "6px 0", border: "none", borderRadius: 7, background: tab === "history" ? "rgba(255,255,255,0.15)" : "transparent", fontSize: 13, fontWeight: 500, fontFamily: "inherit", color: "#fff" }}>
+            📋 {t("history.title")}
+          </button>
+          <button onClick={() => setTab("dimensions")}
+            style={{ flex: 1, padding: "6px 0", border: "none", borderRadius: 7, background: tab === "dimensions" ? "rgba(255,255,255,0.15)" : "transparent", fontSize: 13, fontWeight: 500, fontFamily: "inherit", color: "#fff" }}>
+            🏷️ {t("history.dimensions")}
+          </button>
+        </div>
       </div>
 
       {tab === "history" ? (
-        <>
-          <div className="apple-card" style={{ padding: "12px 16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ padding: "0 16px" }}>
+          {/* Filter + Summary */}
+          <div className="points-section-card-v2" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px" }}>
             <button onClick={() => setShowFilter(true)}
-              style={{ display: "flex", alignItems: "center", gap: 6, border: "none", background: "none", fontSize: 15, fontFamily: "inherit", color: "var(--ink)", padding: 0 }}>
-              📋 {curLabel} <span style={{ color: "var(--muted)", fontSize: 13 }}>›</span>
+              style={{ display: "flex", alignItems: "center", gap: 6, border: "none", background: "none", fontSize: 14, fontFamily: "inherit", color: "rgba(255,255,255,0.7)", padding: 0 }}>
+              📋 {curLabel} <span style={{ fontSize: 12, opacity: 0.5 }}>›</span>
             </button>
-            <span style={{ fontSize: 13, color: "var(--muted)" }}>
-              {filtered.length} {t("history.items")} · <span style={{ color: totalPoints >= 0 ? "#34c759" : "#ff3b30", fontWeight: 600 }}>{totalPoints >= 0 ? "+" : ""}{totalPoints}</span>
+            <span style={{ fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
+              {filtered.length} {t("history.items")} · <span style={{ color: totalPoints >= 0 ? "#2D6A4F" : "#E53E3E", fontWeight: 600 }}>{totalPoints >= 0 ? "+" : ""}{totalPoints}</span>
             </span>
           </div>
 
-          {filtered.length === 0 && (
-            <div style={{ textAlign: "center", padding: 48, color: "var(--muted)" }}>
+          {/* Records */}
+          {filtered.length === 0 ? (
+            <div style={{ textAlign: "center", padding: 48, color: "rgba(255,255,255,0.3)" }}>
               <div style={{ fontSize: 48, marginBottom: 12 }}>📭</div>
               <div style={{ fontSize: 15 }}>{t("history.noRecords")}</div>
               <div style={{ fontSize: 13, marginTop: 4 }}>{t("history.goRecord")}</div>
             </div>
-          )}
-          {filtered.map(r => (
-            <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 0", borderBottom: "0.5px solid var(--line)" }}>
-              <span style={{ width: 8, height: 8, borderRadius: 4, background: COLORS[r.category] || "#ccc", flexShrink: 0 }} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 15 }}>{r.reason}</div>
-                <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>{formatTime(r.createdAt)}</div>
-              </div>
-              <span style={{ fontWeight: 600, fontSize: 16, color: r.score > 0 ? "#34c759" : "#ff3b30", flexShrink: 0 }}>{r.score > 0 ? "+" : ""}{r.score}</span>
+          ) : (
+            <div className="points-records-v2">
+              {filtered.map(r => (
+                <div key={r.id} className="points-record-item-v2">
+                  <div className={`points-record-dot-v2 ${r.score >= 0 ? "positive" : "negative"}`} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 14, color: "rgba(255,255,255,0.8)" }}>{r.reason}</div>
+                    <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginTop: 2 }}>{formatTime(r.createdAt)}</div>
+                  </div>
+                  <span className={`points-record-score-v2 ${r.score >= 0 ? "positive" : "negative"}`}>
+                    {r.score >= 0 ? "+" : ""}{r.score}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
-        </>
+          )}
+        </div>
       ) : (
-        <>
-          <div className="apple-card">
-            <div className="section-title">{t("history.newDim")}</div>
+        <div style={{ padding: "0 16px" }}>
+          {/* Add Dimension */}
+          <div className="points-entry-card-v2">
+            <div className="points-entry-title-v2">➕ {t("history.newDim")}</div>
             <div style={{ display: "flex", gap: 8 }}>
-              <input className="apple-input" placeholder={t("history.dimName")} value={newCatName} onChange={e => setNewCatName(e.target.value)} style={{ flex: 1 }} />
-              <input className="apple-input" placeholder={t("history.dimIcon")} value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width: 56, textAlign: "center" }} />
-              <button className="apple-btn" style={{ padding: "10px 16px", fontSize: 14 }} onClick={handleAdd}>{t("history.add")}</button>
+              <input className="points-input-v2" placeholder={t("history.dimName")} value={newCatName} onChange={e => setNewCatName(e.target.value)} style={{ flex: 1, marginBottom: 0 }} />
+              <input className="points-input-v2" placeholder="⭐" value={newCatIcon} onChange={e => setNewCatIcon(e.target.value)} style={{ width: 56, textAlign: "center", marginBottom: 0 }} />
+              <button className="shop-form-btn-v2" style={{ padding: "10px 16px", fontSize: 14, flexShrink: 0 }} onClick={handleAdd}>{t("history.add")}</button>
             </div>
           </div>
 
-          {cats.length === 0 && (
-            <div style={{ textAlign: "center", padding: 32, color: "var(--muted)" }}>
+          {/* Dimension List */}
+          {cats.length === 0 ? (
+            <div style={{ textAlign: "center", padding: 32, color: "rgba(255,255,255,0.3)" }}>
               <div style={{ fontSize: 36, marginBottom: 8 }}>🏷️</div>
               <div style={{ fontSize: 14 }}>{t("history.noCustomDim")}</div>
             </div>
+          ) : (
+            cats.map(c => (
+              <div key={c.id} className="points-section-card-v2" style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px" }}>
+                <span style={{ fontSize: 28, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,0.06)", borderRadius: 12 }}>{c.icon}</span>
+                <span style={{ flex: 1, fontSize: 15, fontWeight: 500, color: "rgba(255,255,255,0.8)" }}>{c.name}</span>
+                <button className="shop-form-btn-v2 danger" style={{ padding: "6px 14px", fontSize: 13 }} onClick={() => handleDel(c.id)}>🗑️</button>
+              </div>
+            ))
           )}
-          {cats.map(c => (
-            <div key={c.id} className="apple-card" style={{ padding: 14, display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ fontSize: 28, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(118,118,128,0.08)", borderRadius: 12 }}>{c.icon}</span>
-              <span style={{ flex: 1, fontSize: 16, fontWeight: 500 }}>{c.name}</span>
-              <button className="apple-btn danger" style={{ padding: "6px 14px", fontSize: 13 }} onClick={() => handleDel(c.id)}>删除</button>
-            </div>
-          ))}
-        </>
+        </div>
       )}
 
       <FilterSheet show={showFilter} onClose={() => setShowFilter(false)} cats={CATS} selected={filterCat} onSelect={setFilterCat} />
+      <div className="ocean-wave" aria-hidden="true" />
     </div>
   );
 }
