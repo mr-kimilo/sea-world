@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: "HyperOne",
   webDir: "dist",
   server: {
-    url: "http://192.168.31.168:5178", //open in local
+    //url: "http://192.168.31.168:5178", //open in local
     cleartext: true,
   },
   android: {

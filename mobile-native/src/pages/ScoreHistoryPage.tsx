@@ -11,7 +11,6 @@ const CATS = [
   { key: "hygiene", emoji: "🫧", label: t("points.categoryLabels.hygiene") },
   { key: "handcraft", emoji: "🛠️", label: t("points.categoryLabels.handcraft") },
 ];
-const COLORS: Record<string, string> = { intelligence: "#0077B6", physical: "#2D6A4F", moral: "#FF8C00", hygiene: "#00B4D8", handcraft: "#7C3AED" };
 
 function FilterSheet({ show, onClose, cats, selected, onSelect }: {
   show: boolean; onClose: () => void;

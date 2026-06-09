@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore, useFamilyStore } from "../store";
 import { familyApi, type ChildInfo, type FamilyInfo } from "../api";
 import { t } from "../i18n";
@@ -279,90 +279,6 @@ function Landing() {
 
       {/* Wave Decoration */}
       <div className="ocean-wave" aria-hidden="true" />
-    </div>
-  );
-}
-
-// ── Child Switcher Component ──
-function ChildSwitcher({
-  kids,
-  cid,
-  selectChild,
-}: {
-  kids: ChildInfo[];
-  cid: string | null;
-  selectChild: (id: string) => void;
-}) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const checkScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    checkScroll();
-    const el = scrollRef.current;
-    if (el) {
-      el.addEventListener("scroll", checkScroll);
-      return () => el.removeEventListener("scroll", checkScroll);
-    }
-  }, [kids, checkScroll]);
-
-  return (
-    <div style={{ position: "relative", marginBottom: 12 }}>
-      <div
-        ref={scrollRef}
-        style={{
-          display: "flex",
-          gap: 8,
-          overflowX: "auto",
-          scrollBehavior: "smooth",
-          padding: "4px 0",
-          WebkitOverflowScrolling: "touch",
-        }}
-      >
-        {kids.map((c: ChildInfo) => (
-          <button
-            key={c.id}
-            onClick={() => selectChild(c.id)}
-            style={{
-              flexShrink: 0,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
-              padding: "10px 18px",
-              borderRadius: 16,
-              border:
-                c.id === cid
-                  ? "1.5px solid rgba(255,255,255,0.5)"
-                  : "1px solid rgba(255,255,255,0.1)",
-              background:
-                c.id === cid
-                  ? "rgba(255,255,255,0.15)"
-                  : "rgba(255,255,255,0.05)",
-              color: "#fff",
-              fontFamily: "inherit",
-              fontSize: 13,
-              backdropFilter: "blur(4px)",
-              WebkitTapHighlightColor: "transparent",
-              transition: "background 0.15s, border 0.15s",
-              cursor: "pointer",
-            }}
-          >
-            <span style={{ fontSize: 24 }}>{c.avatar || AVATARS[0]}</span>
-            <span style={{ fontWeight: 600, fontSize: 12 }}>{c.name}</span>
-            <span style={{ fontSize: 11, opacity: 0.6 }}>
-              ⭐{c.totalScore ?? "?"}
-            </span>
-          </button>
-        ))}
-      </div>
     </div>
   );
 }

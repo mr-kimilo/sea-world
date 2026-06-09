@@ -10,7 +10,6 @@ export default function MobileSidebar({ open, onClose }: Props) {
   const loggedIn = !!token;
   const location = useLocation();
   const [pointsOpen, setPointsOpen] = useState(true);
-  const [moreOpen, setMoreOpen] = useState(false);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -77,9 +76,6 @@ export default function MobileSidebar({ open, onClose }: Props) {
             >
               <span className="sidebar-nav-icon-v2">{item.icon}</span>
               <span className="sidebar-nav-label-v2">{item.label}</span>
-              {item.to === "/child" && (
-                <span className="sidebar-nav-badge-v2">3</span>
-              )}
               <span className="sidebar-nav-arrow-v2">›</span>
             </NavLink>
           ))}

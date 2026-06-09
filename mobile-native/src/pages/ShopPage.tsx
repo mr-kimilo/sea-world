@@ -4,7 +4,6 @@ import { useFamilyStore } from "../store";
 import { t } from "../i18n";
 
 type Product = { id: string; name: string; description?: string; imageUrl?: string; price: number; rarity: string; isActive: boolean; allowedChildIds?: string[] };
-const AVATARS = ["🧒", "👦", "👧", "🐱", "🐶", "🦊", "🐸", "🐼"];
 
 const SHOP_ICONS = ["🎁", "🧸", "🎮", "📚", "🍭", "🎨", "⚽", "🎵", "🧩", "🌈", "🦄", "🚀"];
 
@@ -65,19 +64,6 @@ export default function ShopPage() {
 
   const openNew = () => {
     setEditItem(null); setFormName(""); setFormDesc(""); setFormPriceStr("10"); setFormImage(""); setFormAllowed([]); setShowEdit(true);
-  };
-  const openEdit = async (item: Product) => {
-    try {
-      const r = await productApi.detail(item.id);
-      const d = r.data as any;
-      setEditItem(item); setFormName(d.name || ""); setFormDesc(d.description || "");
-      setFormPriceStr(String(d.price || 10)); setFormImage(d.imageUrl || "");
-      setFormAllowed(d.allowedChildIds || []);
-    } catch {
-      setEditItem(item); setFormName(item.name); setFormDesc(item.description || "");
-      setFormPriceStr(String(item.price)); setFormImage(item.imageUrl || ""); setFormAllowed([]);
-    }
-    setShowEdit(true);
   };
   const handleSave = async () => {
     if (!formName.trim()) return;
