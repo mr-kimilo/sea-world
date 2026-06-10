@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { authApi } from "../api";
 import { useAuthStore } from "../store";
 import { t } from "../i18n";
+import "./LoginPage.css";
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { authApi } from "../api";
 import { useAuthStore } from "../store";
 import { t } from "../i18n";
+import "./LoginPage.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -36,7 +37,6 @@ export default function LoginPage() {
 
   return (
     <div className="login-v2">
-      {/* Ocean Background — reuse the same ocean-bg class from home */}
       <div className="ocean-bg" aria-hidden="true">
         <div className="ocean-bubbles" aria-hidden="true">
           {Array.from({ length: 10 }).map((_, i) => (
@@ -45,83 +45,76 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Logo */}
-      <div className="login-logo-v2">
-        <span className="login-fish-v2">🐠</span>
-        <h1 className="login-title-v2">{t("home.appName")}</h1>
-        <p className="login-subtitle-v2">{t("app.slogan")}</p>
-      </div>
-
-      {/* Form */}
-      <form className="login-form-v2" onSubmit={handleLogin}>
-        <div className="login-input-group-v2">
-          <div className="login-input-wrap-v2">
-            <span className="login-input-icon-v2">📧</span>
-            <input
-              className="login-input-v2"
-              type="email"
-              placeholder={t("auth.placeholderEmail")}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              autoFocus
-            />
-          </div>
-          <div className="login-input-wrap-v2">
-            <span className="login-input-icon-v2">🔒</span>
-            <input
-              className="login-input-v2"
-              type={showPwd ? "text" : "password"}
-              placeholder={t("auth.placeholderPwd")}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-            />
-            <button
-              type="button"
-              className="login-pwd-toggle-v2"
-              onClick={() => setShowPwd(!showPwd)}
-              aria-label={showPwd ? "隐藏密码" : "显示密码"}
-            >
-              {showPwd ? "🙈" : "👁"}
-            </button>
-          </div>
+      <div className="login-card-v2">
+        {/* Logo */}
+        <div className="login-logo-v2">
+          <span className="login-fish-v2">🐠</span>
+          <h1 className="login-title-v2">{t("home.appName")}</h1>
+          <p className="login-subtitle-v2">{t("app.slogan")}</p>
         </div>
 
-        <button type="submit" className="login-submit-v2" disabled={loading}>
-          {loading && <span className="spinner" />}
-          {loading ? t("auth.loggingIn") : `🌊 ${t("auth.loginBtn")}`}
-        </button>
-      </form>
+        {/* Form */}
+        <form className="login-form-v2" onSubmit={handleLogin}>
+          <div className="login-input-group-v2">
+            <div className="login-input-wrap-v2">
+              <span className="login-input-icon-v2">📧</span>
+              <input
+                className="login-input-v2"
+                type="email"
+                placeholder={t("auth.placeholderEmail")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                autoFocus
+              />
+            </div>
+            <div className="login-input-wrap-v2">
+              <span className="login-input-icon-v2">🔒</span>
+              <input
+                className="login-input-v2"
+                type={showPwd ? "text" : "password"}
+                placeholder={t("auth.placeholderPwd")}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className="login-pwd-toggle-v2"
+                onClick={() => setShowPwd(!showPwd)}
+                aria-label={showPwd ? "隐藏密码" : "显示密码"}
+              >
+                {showPwd ? "🙈" : "👁"}
+              </button>
+            </div>
+          </div>
 
-      {/* Error */}
-      {error && <div className="login-error-v2">{error}</div>}
+          <button type="submit" className="login-submit-v2" disabled={loading}>
+            {loading && <span className="spinner" />}
+            {loading ? t("auth.loggingIn") : `🌊 ${t("auth.loginBtn")}`}
+          </button>
+        </form>
 
-      {/* Links */}
-      <div className="login-links-v2">
-        <Link to="/register" className="login-link-v2">
-          🚀 {t("auth.noAccount")}
-        </Link>
-        <Link to="/forgot-password" className="login-link-v2">
-          🌊 {t("auth.forgotPwd")}
-        </Link>
+        {error && <div className="login-error-v2">{error}</div>}
+
+        <div className="login-links-v2">
+          <Link to="/register" className="login-link-v2">🚀 {t("auth.noAccount")}</Link>
+          <Link to="/forgot-password" className="login-link-v2">🌊 {t("auth.forgotPwd")}</Link>
+        </div>
+
+        <div className="login-divider-v2">
+          <span className="login-divider-line-v2" />
+          <span>── 海洋相遇 ──</span>
+          <span className="login-divider-line-v2" />
+        </div>
+
+        <div className="login-social-v2">
+          <button className="login-social-btn-v2" aria-label="微信登录" style={{ color: "#07C160" }}>💬</button>
+          <button className="login-social-btn-v2" aria-label="QQ登录" style={{ color: "#12B7F5" }}>🐧</button>
+          <button className="login-social-btn-v2" aria-label="手机登录" style={{ color: "#FF6B6B" }}>📱</button>
+        </div>
       </div>
 
-      {/* Divider */}
-      <div className="login-divider-v2">
-        <span className="login-divider-line-v2" />
-        <span>── 海洋相遇 ──</span>
-        <span className="login-divider-line-v2" />
-      </div>
-
-      {/* Social Login */}
-      <div className="login-social-v2">
-        <button className="login-social-btn-v2" aria-label="微信登录" style={{ color: "#07C160" }}>💬</button>
-        <button className="login-social-btn-v2" aria-label="QQ登录" style={{ color: "#12B7F5" }}>🐧</button>
-        <button className="login-social-btn-v2" aria-label="手机登录" style={{ color: "#FF6B6B" }}>📱</button>
-      </div>
-
-      {/* Wave */}
       <div className="ocean-wave" aria-hidden="true" />
     </div>
   );

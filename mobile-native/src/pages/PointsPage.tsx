@@ -2,6 +2,7 @@
 import { useAuthStore, useFamilyStore } from "../store";
 import { scoreApi, familyApi, type ChildInfo } from "../api";
 import { t, ta } from "../i18n";
+import "./PointsPage.css";
 
 type ScoreRecord = { id: string; category: string; score: number; reason: string; createdAt?: string };
 const CATEGORIES = [

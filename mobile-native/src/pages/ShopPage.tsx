@@ -2,6 +2,7 @@
 import { shopApi, productApi, familyApi } from "../api";
 import { useFamilyStore } from "../store";
 import { t } from "../i18n";
+import "./ShopPage.css";
 
 type Product = { id: string; name: string; description?: string; imageUrl?: string; price: number; rarity: string; isActive: boolean; allowedChildIds?: string[] };
 

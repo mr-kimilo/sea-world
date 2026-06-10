@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { authApi } from "../api";
 import { t } from "../i18n";
+import "./LoginPage.css";
 
 export default function ForgotPasswordPage() {
   const [step, setStep] = useState<"email" | "code">("email");

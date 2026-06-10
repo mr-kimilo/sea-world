@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuthStore, useFamilyStore } from "../store";
 import { familyApi, type ChildInfo, type FamilyInfo } from "../api";
 import { t } from "../i18n";
+import "./HomePage.css";
 
 const AVATARS = ["🧒", "👦", "👧", "🐱", "🐶", "🦊", "🐸", "🐼"];
 
