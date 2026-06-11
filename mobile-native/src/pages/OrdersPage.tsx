@@ -11,7 +11,7 @@ const STATUS_COLORS: Record<string, { color: string; bg: string }> = {
 };
 
 export default function OrdersPage() {
-  const { selectedFamilyId, selectedChildId, selectChild, families, setFamilies, children, setChildren } = useFamilyStore();
+  const { selectedFamilyId, selectedChildId, selectChild, setFamilies, children, setChildren } = useFamilyStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [displayCount, setDisplayCount] = useState(10);
   const [loading, setLoading] = useState(false);
@@ -23,29 +23,40 @@ export default function OrdersPage() {
   const kids = fid ? children[fid] || [] : [];
 
   useEffect(() => {
-    if (fid || initializing) return;
     setInitializing(true);
+    // Case 1: fid and children already loaded → done
+    if (fid && kids.length > 0) { setInitializing(false); return; }
+    // Case 2: fid exists but children not loaded → load children
+    if (fid && kids.length === 0) {
+      familyApi.children(fid)
+        .then(res => {
+          const kidsData: any[] = res.data ?? [];
+          setChildren(fid, kidsData);
+          if (kidsData.length > 0 && !useFamilyStore.getState().selectedChildId) selectChild(kidsData[0].id);
+        })
+        .catch(() => {})
+        .finally(() => setInitializing(false));
+      return;
+    }
+    // Case 3: no fid → load families first, then children
     familyApi.mine()
       .then(res => {
-        const families: any[] = res.data ?? [];
-        setFamilies(families);
-        if (families.length === 0) return;
-        const firstFid = families[0].id;
+        const loadedFamilies: any[] = res.data ?? [];
+        setFamilies(loadedFamilies);
+        if (loadedFamilies.length === 0) return null;
+        const firstFid = loadedFamilies[0].id;
         const activeFid = useFamilyStore.getState().selectedFamilyId || firstFid;
-        if (activeFid !== firstFid && !families.some((f: any) => f.id === activeFid)) {
-          useFamilyStore.getState().selectFamily(firstFid);
+        const validFid = loadedFamilies.some((f: any) => f.id === activeFid) ? activeFid : firstFid;
+        if (validFid !== useFamilyStore.getState().selectedFamilyId) {
+          useFamilyStore.getState().selectFamily(validFid);
         }
-        return familyApi.children(activeFid || firstFid);
+        return familyApi.children(validFid).then(r => ({ fid: validFid, res: r }));
       })
-      .then(res => {
-        if (!res) return;
-        const kidsData: any[] = res.data ?? [];
-        const currentFid = useFamilyStore.getState().selectedFamilyId || families[0]?.id;
-        if (currentFid) {
-          setChildren(currentFid, kidsData);
-          const store = useFamilyStore.getState();
-          if (kidsData.length > 0 && !store.selectedChildId) selectChild(kidsData[0].id);
-        }
+      .then(result => {
+        if (!result) return;
+        const kidsData: any[] = result.res.data ?? [];
+        setChildren(result.fid, kidsData);
+        if (kidsData.length > 0 && !useFamilyStore.getState().selectedChildId) selectChild(kidsData[0].id);
       })
       .catch(() => {})
       .finally(() => setInitializing(false));

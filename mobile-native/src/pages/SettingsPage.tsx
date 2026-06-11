@@ -58,11 +58,18 @@ export default function SettingsPage() {
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", marginTop: 2 }}>{t("app.slogan")}</div>
         </div>
 
-        {/* Logout */}
-        <button onClick={handleLogout}
-          style={{ width: "100%", padding: "14px", border: "none", borderRadius: 16, background: "rgba(229,62,62,0.15)", color: "#FC8181", fontSize: 15, fontWeight: 600, fontFamily: "inherit", marginTop: 8 }}>
-          🚪 {t("settings.logout")}
-        </button>
+        {/* Logout / Login */}
+        {user ? (
+          <button onClick={handleLogout}
+            style={{ width: "100%", padding: "14px", border: "none", borderRadius: 16, background: "rgba(229,62,62,0.15)", color: "#FC8181", fontSize: 15, fontWeight: 600, fontFamily: "inherit", marginTop: 8 }}>
+            🚪 {t("settings.logout")}
+          </button>
+        ) : (
+          <a href="#/login"
+            style={{ display: "block", width: "100%", padding: "14px 0", border: "none", borderRadius: 16, background: "linear-gradient(135deg, #0077B6, #00B4D8)", color: "#fff", fontSize: 15, fontWeight: 600, fontFamily: "inherit", marginTop: 8, textAlign: "center", textDecoration: "none" }}>
+            🚀 {t("home.start")}
+          </a>
+        )}
       </div>
 
       <div className="ocean-wave" aria-hidden="true" />

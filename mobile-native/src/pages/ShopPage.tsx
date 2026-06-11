@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from "react";
-import { shopApi, productApi, familyApi } from "../api";
+import { shopApi, productApi, familyApi, type ChildInfo, type FamilyInfo } from "../api";
 import { useFamilyStore } from "../store";
 import { t } from "../i18n";
 import "./ShopPage.css";
@@ -9,7 +9,7 @@ type Product = { id: string; name: string; description?: string; imageUrl?: stri
 const SHOP_ICONS = ["🎁", "🧸", "🎮", "📚", "🍭", "🎨", "⚽", "🎵", "🧩", "🌈", "🦄", "🚀"];
 
 export default function ShopPage() {
-  const { selectedFamilyId, children, selectedChildId } = useFamilyStore();
+  const { selectedFamilyId, children, selectedChildId, setFamilies, setChildren, selectChild } = useFamilyStore();
   const [items, setItems] = useState<Product[]>([]);
   const [displayCount, setDisplayCount] = useState(10);
   const [selCid, setSelCid] = useState(selectedChildId || "");
@@ -28,6 +28,45 @@ export default function ShopPage() {
   const fid = selectedFamilyId;
   const kids = fid ? children[fid] || [] : [];
   const sheetOpen = showEdit || showDeleteConfirm || buyTarget || buySuccess;
+
+  // Load families & children data when page mounts
+  useEffect(() => {
+    // Case 1: fid exists and children already loaded → done
+    if (fid && kids.length > 0) return;
+    // Case 2: fid exists but children not loaded yet → load children
+    if (fid && kids.length === 0) {
+      familyApi.children(fid)
+        .then((res) => {
+          setChildren(fid, (res.data ?? []) as ChildInfo[]);
+          const kidsData = res.data ?? [];
+          if (kidsData.length > 0 && !useFamilyStore.getState().selectedChildId) {
+            selectChild(kidsData[0].id);
+          }
+        })
+        .catch(() => {});
+      return;
+    }
+    // Case 3: no fid → load families first, then children
+    familyApi.mine()
+      .then((res) => {
+        const loadedFamilies = (res.data ?? []) as FamilyInfo[];
+        setFamilies(loadedFamilies);
+        if (loadedFamilies.length > 0) {
+          const activeFid = useFamilyStore.getState().selectedFamilyId || loadedFamilies[0].id;
+          return familyApi.children(activeFid).then((r) => ({ fid: activeFid, res: r }));
+        }
+        return null;
+      })
+      .then((result) => {
+        if (!result) return;
+        setChildren(result.fid, (result.res.data ?? []) as ChildInfo[]);
+        const kidsData = result.res.data ?? [];
+        if (kidsData.length > 0 && !useFamilyStore.getState().selectedChildId) {
+          selectChild(kidsData[0].id);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = sheetOpen ? "hidden" : "";
