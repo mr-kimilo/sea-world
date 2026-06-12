@@ -31,7 +31,26 @@ public enum ResponseMessages {
     PRODUCT_UPDATED("Product updated successfully"),
     PRODUCT_DELETED("Product deleted successfully"),
     ORDER_CONFIRMED("Order confirmed successfully"),
-    ORDER_CANCELLED("Order cancelled successfully");
+    ORDER_CANCELLED("Order cancelled successfully"),
+
+    // Task
+    TASK_CREATED("任务创建成功"),
+    TASK_UPDATED("任务更新成功"),
+    TASK_DELETED("任务删除成功"),
+    TASK_COMPLETED("任务完成"),
+    TASK_CANCELLED("任务已取消"),
+
+    // Trophy
+    TROPHIES_RETRIEVED("获取奖杯列表成功"),
+
+    // Family Join
+    JOIN_REQUEST_SENT("加入申请已发送，等待审批"),
+    JOIN_REQUEST_APPROVED("已同意加入申请"),
+    JOIN_REQUEST_REJECTED("已拒绝加入申请"),
+    MEMBER_REMOVED("成员已移除"),
+
+    // OAuth
+    OAUTH_LOGIN_SUCCESS("第三方登录成功");
 
     private final String message;
 

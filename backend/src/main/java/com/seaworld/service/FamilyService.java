@@ -1,18 +1,17 @@
 package com.seaworld.service;
 
-import com.seaworld.dto.ChildRequest;
-import com.seaworld.dto.ChildResponse;
-import com.seaworld.dto.CreateFamilyRequest;
-import com.seaworld.dto.FamilyResponse;
+import com.seaworld.dto.*;
 import com.seaworld.entity.Child;
 import com.seaworld.entity.Family;
 import com.seaworld.entity.FamilyMember;
 import com.seaworld.entity.User;
+import com.seaworld.exception.BusinessException;
 import com.seaworld.exception.ForbiddenException;
 import com.seaworld.exception.ResourceNotFoundException;
 import com.seaworld.repository.ChildRepository;
 import com.seaworld.repository.FamilyMemberRepository;
 import com.seaworld.repository.FamilyRepository;
+import com.seaworld.repository.UserRepository;
 import com.seaworld.util.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ public class FamilyService {
     private final FamilyRepository familyRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final ChildRepository childRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public FamilyResponse createFamily(User requester, CreateFamilyRequest request) {
@@ -109,6 +109,100 @@ public class FamilyService {
         family = familyRepository.save(family);
         
         return FamilyResponse.from(family);
+    }
+
+    // ─── Multi-Parent: Search / Join / Approve ───
+
+    public FamilyResponse searchByShareCode(User requester, String shareCode) {
+        Family family = familyRepository.findByShareCode(shareCode)
+                .orElseThrow(() -> new BusinessException(ErrorMessages.INVALID_SHARE_CODE.getMessage()));
+        return FamilyResponse.from(family);
+    }
+
+    @Transactional
+    public void requestJoin(User requester, String shareCode) {
+        Family family = familyRepository.findByShareCode(shareCode)
+                .orElseThrow(() -> new BusinessException(ErrorMessages.INVALID_SHARE_CODE.getMessage()));
+
+        // Check if already a member
+        if (familyMemberRepository.existsByFamilyIdAndUserId(family.getId(), requester.getId())) {
+            throw new BusinessException(ErrorMessages.FAMILY_MEMBER_ALREADY_EXISTS.getMessage());
+        }
+
+        // Check if already has pending request
+        if (familyMemberRepository.existsByFamilyIdAndUserIdAndStatus(family.getId(), requester.getId(), "PENDING")) {
+            throw new BusinessException(ErrorMessages.FAMILY_JOIN_REQUEST_EXISTS.getMessage());
+        }
+
+        FamilyMember pending = FamilyMember.builder()
+                .familyId(family.getId())
+                .userId(requester.getId())
+                .role("member")
+                .status("PENDING")
+                .build();
+        familyMemberRepository.save(pending);
+    }
+
+    @Transactional
+    public void approveJoin(User requester, UUID familyId, UUID userId) {
+        requireFamilyMember(requester.getId(), familyId);
+
+        // Only owner can approve
+        FamilyMember requesterMember = familyMemberRepository.findByFamilyIdAndUserId(familyId, requester.getId())
+                .orElseThrow(() -> new ForbiddenException(ErrorMessages.NOT_FAMILY_MEMBER.getMessage()));
+        if (!"owner".equals(requesterMember.getRole())) {
+            throw new ForbiddenException(ErrorMessages.UNAUTHORIZED_OPERATION.getMessage());
+        }
+
+        if (requester.getId().equals(userId)) {
+            throw new BusinessException(ErrorMessages.CANNOT_APPROVE_OWN_REQUEST.getMessage());
+        }
+
+        FamilyMember pending = familyMemberRepository.findByFamilyIdAndUserIdAndStatus(familyId, userId, "PENDING")
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PENDING_REQUEST_NOT_FOUND.getMessage()));
+
+        pending.setStatus("ACTIVE");
+        familyMemberRepository.save(pending);
+    }
+
+    @Transactional
+    public void rejectJoin(User requester, UUID familyId, UUID userId) {
+        requireFamilyMember(requester.getId(), familyId);
+
+        FamilyMember requesterMember = familyMemberRepository.findByFamilyIdAndUserId(familyId, requester.getId())
+                .orElseThrow(() -> new ForbiddenException(ErrorMessages.NOT_FAMILY_MEMBER.getMessage()));
+        if (!"owner".equals(requesterMember.getRole())) {
+            throw new ForbiddenException(ErrorMessages.UNAUTHORIZED_OPERATION.getMessage());
+        }
+
+        FamilyMember pending = familyMemberRepository.findByFamilyIdAndUserIdAndStatus(familyId, userId, "PENDING")
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PENDING_REQUEST_NOT_FOUND.getMessage()));
+
+        familyMemberRepository.delete(pending);
+    }
+
+    public List<FamilyMemberResponse> getMembers(User requester, UUID familyId) {
+        requireFamilyMember(requester.getId(), familyId);
+        return familyMemberRepository.findByFamilyId(familyId).stream()
+                .map(m -> {
+                    String email = userRepository.findById(m.getUserId())
+                            .map(User::getEmail)
+                            .orElse("unknown");
+                    return FamilyMemberResponse.from(m, email);
+                })
+                .toList();
+    }
+
+    public List<FamilyMemberResponse> getPendingRequests(User requester, UUID familyId) {
+        requireFamilyMember(requester.getId(), familyId);
+        return familyMemberRepository.findByFamilyIdAndStatus(familyId, "PENDING").stream()
+                .map(m -> {
+                    String email = userRepository.findById(m.getUserId())
+                            .map(User::getEmail)
+                            .orElse("unknown");
+                    return FamilyMemberResponse.from(m, email);
+                })
+                .toList();
     }
 
     // ---- helpers ----

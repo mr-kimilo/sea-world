@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<ApiResponse<Void>> handleServiceException(ServiceException e) {
+        return ResponseEntity.status(e.getStatus())
+                .body(ApiResponse.error(e.getMessage()));
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException e) {
         return ResponseEntity.status(e.getStatus())

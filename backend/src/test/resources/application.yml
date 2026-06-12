@@ -1,0 +1,71 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  flyway:
+    enabled: false
+
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+
+app:
+  jwt:
+    secret: test-secret-key-that-must-be-at-least-32-characters-long-for-jwt
+    access-token-expiration: 900000
+    refresh-token-expiration: 604800000
+
+  security:
+    max-daily-registrations: 100
+    max-register-per-ip-per-hour: 10
+    email-verification-expiry-hours: 24
+
+  score:
+    max-daily-score: 1000
+
+  cors:
+    allowed-origins: "*"
+
+  email:
+    from: test@test.com
+    frontend-base-url: http://localhost:5173
+    verification:
+      subject: Test
+      body-template: "Test: %s"
+      verify-path: /verify-email
+
+  oauth:
+    qq:
+      client-id: test-qq-id
+      client-secret: test-qq-secret
+    douyin:
+      client-id: test-douyin-id
+      client-secret: test-douyin-secret
+
+management:
+  health:
+    mail:
+      enabled: false
+
+logging:
+  level:
+    com.seaworld: DEBUG
+    org.springframework.security: DEBUG

@@ -50,6 +50,11 @@ public class User {
     @JsonIgnore
     private LocalDateTime emailVerifyExpire;
 
+    private String provider;
+
+    @Column(name = "provider_id")
+    private String providerId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

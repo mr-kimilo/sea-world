@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final com.seaworld.service.OAuth2Service oAuth2Service;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService,
+                          com.seaworld.service.OAuth2Service oAuth2Service) {
         this.authService = authService;
+        this.oAuth2Service = oAuth2Service;
     }
 
     @PostMapping("/register")
@@ -63,5 +66,11 @@ public class AuthController {
     public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         authService.resetPassword(request.getEmail(), request.getCode(), request.getNewPassword());
         return ResponseEntity.ok(ApiResponse.ok("密码重置成功"));
+    }
+
+    @PostMapping("/oauth/login")
+    public ResponseEntity<ApiResponse<AuthResponse>> oauthLogin(@Valid @RequestBody OAuthLoginRequest request) {
+        AuthResponse response = oAuth2Service.login(request);
+        return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.OAUTH_LOGIN_SUCCESS.getMessage(), response));
     }
 }

@@ -32,6 +32,10 @@ public class FamilyMember {
     @Builder.Default
     private String role = "owner";
 
+    @Column(nullable = false)
+    @Builder.Default
+    private String status = "ACTIVE";
+
     @CreationTimestamp
     @Column(name = "joined_at", nullable = false, updatable = false)
     private LocalDateTime joinedAt;

@@ -18,4 +18,10 @@ public interface FamilyMemberRepository extends JpaRepository<FamilyMember, UUID
     Optional<FamilyMember> findByFamilyIdAndUserId(UUID familyId, UUID userId);
 
     boolean existsByFamilyIdAndUserId(UUID familyId, UUID userId);
+
+    Optional<FamilyMember> findByFamilyIdAndUserIdAndStatus(UUID familyId, UUID userId, String status);
+
+    boolean existsByFamilyIdAndUserIdAndStatus(UUID familyId, UUID userId, String status);
+
+    List<FamilyMember> findByFamilyIdAndStatus(UUID familyId, String status);
 }

@@ -86,4 +86,61 @@ public class FamilyController {
         FamilyResponse response = familyService.updateFamily(currentUser, familyId, request);
         return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.FAMILY_UPDATED.getMessage(), response));
     }
+
+    // ─── Multi-Parent: Search / Join / Approve ───
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<FamilyResponse>> searchByShareCode(
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam String code) {
+        FamilyResponse response = familyService.searchByShareCode(currentUser, code);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/join")
+    @PreAuthorize("hasAnyRole('PARENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> requestJoin(
+            @AuthenticationPrincipal User currentUser,
+            @Valid @RequestBody JoinFamilyRequest request) {
+        familyService.requestJoin(currentUser, request.getShareCode());
+        return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.JOIN_REQUEST_SENT.getMessage()));
+    }
+
+    @PostMapping("/{familyId}/members/{userId}/approve")
+    @PreAuthorize("hasAnyRole('PARENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> approveJoin(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable UUID familyId,
+            @PathVariable UUID userId) {
+        familyService.approveJoin(currentUser, familyId, userId);
+        return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.JOIN_REQUEST_APPROVED.getMessage()));
+    }
+
+    @PostMapping("/{familyId}/members/{userId}/reject")
+    @PreAuthorize("hasAnyRole('PARENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> rejectJoin(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable UUID familyId,
+            @PathVariable UUID userId) {
+        familyService.rejectJoin(currentUser, familyId, userId);
+        return ResponseEntity.ok(ApiResponse.ok(ResponseMessages.JOIN_REQUEST_REJECTED.getMessage()));
+    }
+
+    @GetMapping("/{familyId}/members")
+    @PreAuthorize("hasAnyRole('PARENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<FamilyMemberResponse>>> getMembers(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable UUID familyId) {
+        List<FamilyMemberResponse> members = familyService.getMembers(currentUser, familyId);
+        return ResponseEntity.ok(ApiResponse.ok(members));
+    }
+
+    @GetMapping("/{familyId}/pending-requests")
+    @PreAuthorize("hasAnyRole('PARENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<FamilyMemberResponse>>> getPendingRequests(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable UUID familyId) {
+        List<FamilyMemberResponse> pending = familyService.getPendingRequests(currentUser, familyId);
+        return ResponseEntity.ok(ApiResponse.ok(pending));
+    }
 }

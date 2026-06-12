@@ -19,6 +19,26 @@ public enum ErrorMessages {
     NOT_FAMILY_MEMBER("You are not a member of this family"),
     CHILD_NOT_FOUND("Child not found"),
     CHILD_NOT_IN_FAMILY("Child does not belong to this family"),
+    FAMILY_JOIN_REQUEST_EXISTS("已经有待审批的加入请求"),
+    FAMILY_MEMBER_ALREADY_EXISTS("您已经是该家庭成员"),
+    INVALID_SHARE_CODE("无效的家庭分享码"),
+    PENDING_REQUEST_NOT_FOUND("未找到待审批的请求"),
+    CANNOT_APPROVE_OWN_REQUEST("不能审批自己的加入请求"),
+
+    // Task
+    TASK_NOT_FOUND("任务不存在"),
+    TASK_ALREADY_COMPLETED("任务已完成"),
+    TASK_ALREADY_CANCELLED("任务已取消"),
+    TASK_NOT_BELONG_TO_CHILD("任务不属于该孩子"),
+
+    // Trophy
+    TROPHY_NOT_FOUND("奖杯不存在"),
+
+    // OAuth
+    UNSUPPORTED_OAUTH_PROVIDER("不支持的第三方登录方式"),
+    OAUTH_AUTHENTICATION_FAILED("第三方登录认证失败"),
+    OAUTH_CODE_EXCHANGE_FAILED("授权码交换失败"),
+    OAUTH_USER_INFO_FAILED("获取用户信息失败"),
 
     // Shop
     ITEM_NOT_FOUND("Shop item not found"),

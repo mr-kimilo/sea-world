@@ -27,6 +27,11 @@ public class Family {
     @Column(name = "created_by", nullable = false)
     private UUID createdBy;
 
+    @Column(name = "share_code", unique = true)
+    private String shareCode;
+
+    private String description;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
