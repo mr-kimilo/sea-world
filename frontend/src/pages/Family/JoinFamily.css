@@ -1,0 +1,18 @@
+.join-family-page { padding: 24px; max-width: 500px; margin: 0 auto; }
+.join-family-header { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.join-family-page h2 { font-size: 20px; color: #333; margin: 0 0 16px; }
+.join-hint { font-size: 14px; color: #666; margin-bottom: 12px; }
+.join-search-input { display: flex; gap: 8px; }
+.join-search-input input {
+  flex: 1; padding: 10px 12px; border: 1px solid #d9d9d9; border-radius: 6px;
+  font-size: 18px; text-align: center; letter-spacing: 4px; text-transform: uppercase;
+  outline: none; transition: border-color 0.15s;
+}
+.join-search-input input:focus { border-color: #0077b6; box-shadow: 0 0 0 2px rgba(0,119,182,0.1); }
+.found-family-card { display: flex; align-items: center; gap: 12px; padding: 16px; background: #fafafa; border-radius: 8px; margin-bottom: 16px; }
+.found-family-icon { font-size: 32px; }
+.found-family-info { display: flex; flex-direction: column; gap: 4px; }
+.found-family-name { font-size: 16px; font-weight: 600; color: #333; }
+.found-family-code { font-size: 13px; color: #666; }
+.join-confirm-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+.form-success { background: #f6ffed; border: 1px solid #b7eb8f; color: #52c41a; padding: 8px 12px; border-radius: 6px; font-size: 13px; }

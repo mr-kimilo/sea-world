@@ -2,6 +2,8 @@ import type { NavRouteIconName } from './NavRouteIcons';
 
 export const MAIN_NAV_ROUTES = [
   { path: '/', labelKey: 'nav.home' as const, icon: 'house' as const },
+  { path: '/tasks', labelKey: 'nav.tasks' as const, icon: 'clipboard' as const },
+  { path: '/trophies', labelKey: 'nav.trophies' as const, icon: 'trophy' as const },
   { path: '/shop', labelKey: 'nav.shop' as const, icon: 'bag' as const },
 ] satisfies ReadonlyArray<{
   path: string;
@@ -11,7 +13,10 @@ export const MAIN_NAV_ROUTES = [
 
 export const SIDEBAR_ROUTES = [
   { path: '/', labelKey: 'nav.home' as const, icon: 'house' as const },
+  { path: '/tasks', labelKey: 'nav.tasks' as const, icon: 'clipboard' as const },
+  { path: '/trophies', labelKey: 'nav.trophies' as const, icon: 'trophy' as const },
   { path: '/shop', labelKey: 'nav.shop' as const, icon: 'bag' as const },
+  { path: '/family', labelKey: 'nav.family' as const, icon: 'people' as const },
   { path: '/profile', labelKey: 'nav.profile' as const, icon: 'person' as const },
   { path: '/shop-admin', labelKey: 'nav.shopAdmin' as const, icon: 'storefront' as const },
   { path: '/orders', labelKey: 'nav.orders' as const, icon: 'receipt' as const },

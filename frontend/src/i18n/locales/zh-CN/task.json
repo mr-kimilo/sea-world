@@ -1,0 +1,36 @@
+{
+  "title": "任务中心",
+  "templates": "推荐任务模板",
+  "myTasks": "我的任务",
+  "create": "创建任务",
+  "edit": "编辑任务",
+  "pending": "待完成",
+  "completed": "已完成",
+  "cancelled": "已取消",
+  "empty": "暂无任务，点击上方按钮创建一个吧",
+  "trophies": "奖杯墙",
+  "top3": "Top 3 奖杯",
+  "allTrophies": "全部奖杯",
+  "noTrophies": "还没有获得奖杯，完成任务后自动获得",
+  "deleteConfirm": "确定要删除该任务吗？",
+  "completeConfirm": "恭喜完成任务！确定已完成吗？",
+  "form": {
+    "name": "任务名称",
+    "namePlaceholder": "输入任务名称",
+    "description": "任务描述",
+    "descriptionPlaceholder": "输入任务描述（可选）",
+    "points": "积分",
+    "child": "选择孩子",
+    "icon": "选择图标",
+    "trophyName": "奖杯名称",
+    "trophyNamePlaceholder": "完成后显示的奖杯名称（可选）"
+  },
+  "errors": {
+    "loadFailed": "加载任务失败",
+    "saveFailed": "保存任务失败",
+    "deleteFailed": "删除任务失败",
+    "completeFailed": "完成任务失败",
+    "cancelFailed": "取消任务失败",
+    "nameRequired": "请输入任务名称"
+  }
+}

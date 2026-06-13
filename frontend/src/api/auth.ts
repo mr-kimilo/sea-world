@@ -16,4 +16,8 @@ export const authApi = {
 
   resendVerification: (email: string) =>
     api.post<ApiResponse<void>>(`/auth/resend-verification?email=${encodeURIComponent(email)}`),
+
+  // 第三方登录
+  oauthLogin: (provider: string, code: string, redirectUri?: string) =>
+    api.post<ApiResponse<AuthResponse>>('/auth/oauth/login', { provider, code, redirectUri }),
 };

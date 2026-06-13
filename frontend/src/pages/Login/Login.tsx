@@ -11,6 +11,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import './Login.css';
 import './Login.mobile.css';
+import './OAuth.css';
 
 export default function Login() {
   const { t } = useTranslation(['auth', 'common']);
@@ -95,6 +96,24 @@ export default function Login() {
             {loading ? t('auth:login.loading') : t('auth:login.submit')}
           </Button>
         </form>
+
+        {/* OAuth Login Buttons */}
+        <div className="oauth-section">
+          <div className="oauth-divider">
+            <span>{t('common:or')}</span>
+          </div>
+          <div className="oauth-buttons">
+            <button className="oauth-btn oauth-qq" disabled>
+              <span className="oauth-icon">🐧</span>
+              <span>QQ {t('auth:login.submit')}</span>
+            </button>
+            <button className="oauth-btn oauth-douyin" disabled>
+              <span className="oauth-icon">🎵</span>
+              <span>抖音 {t('auth:login.submit')}</span>
+            </button>
+          </div>
+          <p className="oauth-hint">{t('auth:oauthComingSoon')}</p>
+        </div>
 
         <div className="auth-footer">
           <span>{t('auth:login.noAccount')}</span>

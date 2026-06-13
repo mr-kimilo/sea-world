@@ -1,0 +1,34 @@
+.trophy-section { margin: 8px 16px 16px; }
+.trophy-section-title { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 8px; }
+.top3-list { display: flex; flex-direction: column; gap: 8px; }
+.top3-item {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+  border-radius: 12px; padding: 12px 14px;
+}
+.top3-item.rank-1 { background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05)); border: 1px solid rgba(255,215,0,0.3); }
+.top3-item.rank-2 { background: linear-gradient(135deg, rgba(192,192,192,0.2), rgba(192,192,192,0.05)); border: 1px solid rgba(192,192,192,0.3); }
+.top3-item.rank-3 { background: linear-gradient(135deg, rgba(205,127,50,0.2), rgba(205,127,50,0.05)); border: 1px solid rgba(205,127,50,0.3); }
+.top3-medal { font-size: 24px; }
+.top3-icon { font-size: 28px; }
+.top3-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.top3-name { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.9); }
+.top3-points { font-size: 13px; color: #ffd700; }
+.top3-date { font-size: 11px; color: rgba(255,255,255,0.4); }
+.trophy-tabs { display: flex; gap: 8px; margin: 12px 16px; }
+.trophy-tab {
+  flex: 1; padding: 8px; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.6); font-size: 13px; text-align: center;
+}
+.trophy-tab.active { background: rgba(255,215,0,0.15); color: #ffd700; border-color: rgba(255,215,0,0.3); }
+.trophy-list { margin: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+.trophy-item {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 12px;
+}
+.trophy-item-icon { font-size: 24px; }
+.trophy-item-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.trophy-item-name { font-size: 14px; color: rgba(255,255,255,0.85); }
+.trophy-item-points { font-size: 12px; color: #ffd700; }
+.trophy-item-date { font-size: 11px; color: rgba(255,255,255,0.35); }

@@ -138,4 +138,64 @@ export const productApi = {
   remove: (id: string) => api.delete(`/admin/products/${id}`),
 };
 
+// ——— Task API (MVP2) ———
+export type TaskInfo = {
+  id: string; childId: string; familyId: string; createdBy: string;
+  name: string; description: string | null; points: number; icon: string;
+  trophyName: string | null; status: string; completedAt: string | null;
+  createdAt: string; updatedAt: string;
+};
+export type TrophyInfo = {
+  id: string; childId: string; taskId: string | null;
+  name: string; points: number; icon: string; earnedAt: string;
+};
+
+export const taskApi = {
+  getTemplates: (grade?: string) =>
+    api.get("/task-templates", { params: grade ? { grade } : {} }),
+  getFamilyTasks: (familyId: string) =>
+    api.get(`/families/${familyId}/tasks`),
+  getChildTasks: (childId: string) =>
+    api.get(`/children/${childId}/tasks`),
+  create: (familyId: string, data: { name: string; description?: string; points: number; icon?: string; trophyName?: string; childId?: string }) =>
+    api.post(`/families/${familyId}/tasks`, data),
+  update: (taskId: string, data: { name: string; description?: string; points: number; icon?: string; trophyName?: string; childId?: string }) =>
+    api.put(`/tasks/${taskId}`, data),
+  delete: (taskId: string) =>
+    api.delete(`/tasks/${taskId}`),
+  complete: (taskId: string) =>
+    api.post(`/tasks/${taskId}/complete`),
+  cancel: (taskId: string) =>
+    api.post(`/tasks/${taskId}/cancel`),
+};
+
+// ——— Trophy API (MVP2) ———
+export const trophyApi = {
+  list: (childId: string) =>
+    api.get(`/children/${childId}/trophies`),
+  top3: (childId: string) =>
+    api.get(`/children/${childId}/trophies/top3`),
+};
+
+// ——— Family Join API (MVP2) ———
+export type FamilyMemberInfo = {
+  id: string; familyId: string; userId: string; userEmail: string;
+  role: string; status: string; joinedAt: string;
+};
+
+export const familyJoinApi = {
+  searchByCode: (code: string) =>
+    api.get("/families/search", { params: { code } }),
+  requestJoin: (shareCode: string) =>
+    api.post("/families/join", { shareCode }),
+  approveJoin: (familyId: string, userId: string) =>
+    api.post(`/families/${familyId}/members/${userId}/approve`),
+  rejectJoin: (familyId: string, userId: string) =>
+    api.post(`/families/${familyId}/members/${userId}/reject`),
+  getMembers: (familyId: string) =>
+    api.get(`/families/${familyId}/members`),
+  getPendingRequests: (familyId: string) =>
+    api.get(`/families/${familyId}/pending-requests`),
+};
+
 export default api;

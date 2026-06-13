@@ -10,6 +10,7 @@ import zhCN_score from './locales/zh-CN/score.json';
 import zhCN_child from './locales/zh-CN/child.json';
 import zhCN_shop from './locales/zh-CN/shop.json';
 import zhCN_profile from './locales/zh-CN/profile.json';
+import zhCN_task from './locales/zh-CN/task.json';
 
 import enUS_common from './locales/en-US/common.json';
 import enUS_auth from './locales/en-US/auth.json';
@@ -19,6 +20,7 @@ import enUS_score from './locales/en-US/score.json';
 import enUS_child from './locales/en-US/child.json';
 import enUS_shop from './locales/en-US/shop.json';
 import enUS_profile from './locales/en-US/profile.json';
+import enUS_task from './locales/en-US/task.json';
 
 i18n
   .use(LanguageDetector) // 自动检测用户语言
@@ -34,6 +36,7 @@ i18n
         child: zhCN_child,
         shop: zhCN_shop,
         profile: zhCN_profile,
+        task: zhCN_task,
       },
       'en-US': {
         common: enUS_common,
@@ -44,6 +47,7 @@ i18n
         child: enUS_child,
         shop: enUS_shop,
         profile: enUS_profile,
+        task: enUS_task,
       },
     },
     fallbackLng: 'zh-CN', // 默认语言

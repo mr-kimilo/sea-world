@@ -1,0 +1,18 @@
+.join-family-modal { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.join-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.join-modal-header h3 { margin: 0; font-size: 16px; color: rgba(255,255,255,0.9); }
+.modal-close { background: none; border: none; font-size: 18px; color: rgba(255,255,255,0.5); cursor: pointer; }
+.join-hint { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+.join-search { display: flex; gap: 8px; }
+.join-search input {
+  flex: 1; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px; background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.9); font-size: 16px; text-align: center;
+  letter-spacing: 3px; text-transform: uppercase;
+}
+.found-family { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.found-family-name { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.9); }
+.found-family-code { font-size: 12px; color: rgba(255,255,255,0.4); }
+.join-actions { display: flex; gap: 8px; }
+.form-error { color: #ff6b6b; font-size: 13px; margin-top: 8px; }
+.form-success { color: #4caf50; font-size: 13px; margin-top: 8px; }

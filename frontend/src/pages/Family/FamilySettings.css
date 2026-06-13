@@ -1,0 +1,21 @@
+.family-settings-page { padding: 24px; max-width: 700px; margin: 0 auto; }
+.family-settings-page h2 { font-size: 22px; color: #0077b6; margin: 0 0 16px; }
+.family-empty { text-align: center; padding: 32px; color: #999; }
+.family-selector { margin-bottom: 16px; }
+.family-selector label { font-size: 13px; font-weight: 500; color: #555; display: block; margin-bottom: 4px; }
+.family-selector select { padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 14px; width: 100%; }
+.family-info-card { background: #fafafa; border: 1px solid #f0f0f0; border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.family-info-header { margin-bottom: 12px; }
+.family-name-display { display: flex; align-items: center; gap: 8px; }
+.family-name-display h3 { margin: 0; font-size: 18px; color: #333; }
+.btn-text { padding: 2px 6px; border: none; background: none; font-size: 14px; cursor: pointer; }
+.family-name-edit { display: flex; align-items: center; gap: 6px; }
+.family-name-edit input { padding: 6px 8px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.family-actions { margin-top: 16px; }
+.share-code-section { margin-bottom: 8px; }
+.share-code-section label { font-size: 13px; font-weight: 500; color: #555; display: block; margin-bottom: 4px; }
+.share-code-display { display: flex; align-items: center; gap: 8px; }
+.share-code-value { font-size: 20px; font-weight: 700; color: #faad14; letter-spacing: 3px; background: #fffbe6; padding: 4px 12px; border-radius: 4px; }
+.copy-hint { font-size: 12px; color: #52c41a; margin-left: 4px; }
+.family-section { margin-bottom: 20px; }

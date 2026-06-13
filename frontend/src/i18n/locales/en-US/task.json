@@ -1,0 +1,36 @@
+{
+  "title": "Tasks",
+  "templates": "Recommended Templates",
+  "myTasks": "My Tasks",
+  "create": "Create Task",
+  "edit": "Edit Task",
+  "pending": "Pending",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "empty": "No tasks yet. Create one now!",
+  "trophies": "Trophies",
+  "top3": "Top 3 Trophies",
+  "allTrophies": "All Trophies",
+  "noTrophies": "No trophies yet. Complete tasks to earn them!",
+  "deleteConfirm": "Are you sure you want to delete this task?",
+  "completeConfirm": "Congratulations! Mark this task as completed?",
+  "form": {
+    "name": "Task Name",
+    "namePlaceholder": "Enter task name",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description (optional)",
+    "points": "Points",
+    "child": "Select Child",
+    "icon": "Choose Icon",
+    "trophyName": "Trophy Name",
+    "trophyNamePlaceholder": "Trophy name on completion (optional)"
+  },
+  "errors": {
+    "loadFailed": "Failed to load tasks",
+    "saveFailed": "Failed to save task",
+    "deleteFailed": "Failed to delete task",
+    "completeFailed": "Failed to complete task",
+    "cancelFailed": "Failed to cancel task",
+    "nameRequired": "Please enter a task name"
+  }
+}

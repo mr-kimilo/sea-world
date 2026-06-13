@@ -4,7 +4,10 @@ export type NavRouteIconName =
   | 'person'
   | 'storefront'
   | 'receipt'
-  | 'sparkles';
+  | 'sparkles'
+  | 'clipboard'
+  | 'trophy'
+  | 'people';
 
 export function NavRouteIcon({
   name,
@@ -50,6 +53,36 @@ export function NavRouteIcon({
         <path
           fill="currentColor"
           d="M7.2 3.6h9.6c.66 0 1.2.54 1.2 1.2v16.8c0 .28-.2.52-.48.58a.6.6 0 0 1-.56-.17L15.8 20.9l-1.18 1.18a.6.6 0 0 1-.85 0L12.6 20.9l-1.17 1.18a.6.6 0 0 1-.85 0L9.4 20.9l-1.16 1.16a.6.6 0 0 1-.56.17.6.6 0 0 1-.48-.58V4.8c0-.66.54-1.2 1.2-1.2Zm2.1 5.1h7.2v1.5H9.3V8.7Zm0 3.3h7.2v1.5H9.3V12Zm0 3.3h5.1v1.5H9.3v-1.5Z"
+        />
+      </svg>
+    );
+  }
+  if (name === 'clipboard') {
+    return (
+      <svg className={cn} viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M10 3c-.6 0-1 .4-1 1H7c-.6 0-1 .5-1 1v14c0 .6.4 1 1 1h10c.6 0 1-.4 1-1V5c0-.6-.4-1-1-1h-2c0-.6-.4-1-1-1h-4Zm0 2h4v1h-4V5Zm1 3h2v1h-2V8Zm0 3h2v1h-2v-1Zm0 3h2v1h-2v-1Z"
+        />
+      </svg>
+    );
+  }
+  if (name === 'trophy') {
+    return (
+      <svg className={cn} viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M7 3h10v2h2c1 0 2 1 2 2v1c0 1.5-1 2-2 2h-1c-.5 2-2 3.5-4 4v2h2v2H8v-2h2v-2c-2-.5-3.5-2-4-4H5c-1 0-2-.5-2-2V7c0-1 1-2 2-2h2V3Z"
+        />
+      </svg>
+    );
+  }
+  if (name === 'people') {
+    return (
+      <svg className={cn} viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          fill="currentColor"
+          d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm6 2a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Zm-6 2c-3 0-5 1.5-5 4v1h10v-1c0-2.5-2-4-5-4Zm6 0c-.5 0-1 0-1.5.2 1 .7 1.5 1.8 1.5 3.8v1h5v-1c0-2.5-2-4-5-4Z"
         />
       </svg>
     );

@@ -9,6 +9,8 @@ export interface CreateFamilyRequest {
 export interface FamilyResponse {
   id: string;
   name: string;
+  createdBy: string;
+  shareCode: string | null;
   description: string | null;
   createdAt: string;
 }
@@ -30,6 +32,16 @@ export interface ChildResponse {
   totalScore: number;
   availableScore: number;
   createdAt: string;
+}
+
+export interface FamilyMemberResponse {
+  id: string;
+  familyId: string;
+  userId: string;
+  userEmail: string;
+  role: string;
+  status: string;
+  joinedAt: string;
 }
 
 export const familyApi = {
@@ -60,4 +72,30 @@ export const familyApi = {
   // 更新家庭信息
   updateFamily: (familyId: string, data: { name: string }) =>
     api.put<ApiResponse<FamilyResponse>>(`/families/${familyId}`, data),
+
+  // ─── Multi-Parent: Search / Join / Approve ───
+
+  /** 通过分享码搜索家庭 */
+  searchByShareCode: (code: string) =>
+    api.get<ApiResponse<FamilyResponse>>('/families/search', { params: { code } }),
+
+  /** 申请加入家庭 */
+  requestJoin: (shareCode: string) =>
+    api.post<ApiResponse<void>>('/families/join', { shareCode }),
+
+  /** 同意加入申请 */
+  approveJoin: (familyId: string, userId: string) =>
+    api.post<ApiResponse<void>>(`/families/${familyId}/members/${userId}/approve`),
+
+  /** 拒绝加入申请 */
+  rejectJoin: (familyId: string, userId: string) =>
+    api.post<ApiResponse<void>>(`/families/${familyId}/members/${userId}/reject`),
+
+  /** 获取家庭成员列表 */
+  getMembers: (familyId: string) =>
+    api.get<ApiResponse<FamilyMemberResponse[]>>(`/families/${familyId}/members`),
+
+  /** 获取待审批的加入请求 */
+  getPendingRequests: (familyId: string) =>
+    api.get<ApiResponse<FamilyMemberResponse[]>>(`/families/${familyId}/pending-requests`),
 };

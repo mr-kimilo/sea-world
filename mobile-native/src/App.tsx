@@ -14,6 +14,9 @@ import OrdersPage from "./pages/OrdersPage";
 import ErrorPage from "./pages/ErrorPage";
 import Layout from "./components/Layout";
 import ErrorBoundary from "./components/ErrorBoundary";
+import TrophyPage from "./pages/Trophy/TrophyPage";
+import FamilyPage from "./pages/Family/FamilyPage";
+import JoinFamilyPage from "./pages/Family/JoinFamilyPage";
 import { useAuthStore } from "./store";
 import "./App.css";
 
@@ -49,6 +52,9 @@ export default function App() {
           <Route path="/child/edit" element={<ChildEditPage />} />
           <Route path="/history" element={<ScoreHistoryPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/trophy" element={<TrophyPage />} />
+          <Route path="/family" element={<FamilyPage />} />
+          <Route path="/family/join" element={<JoinFamilyPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

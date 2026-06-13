@@ -110,6 +110,14 @@ export default function Home() {
         {/* 快捷导航 (mobile removed — bottom tabbar already exists) */}
         {!isMobile && (
           <div className="nav-grid">
+            <div className="nav-card" onClick={() => navigate('/tasks')}>
+              <span className="nav-icon">📋</span>
+              <span className="nav-label">{t('home:nav.tasks')}</span>
+            </div>
+            <div className="nav-card" onClick={() => navigate('/trophies')}>
+              <span className="nav-icon">🏆</span>
+              <span className="nav-label">{t('home:nav.trophies')}</span>
+            </div>
             <div className="nav-card" onClick={() => navigate('/shop')}>
               <span className="nav-icon">🏪</span>
               <span className="nav-label">{t('home:nav.shop')}</span>

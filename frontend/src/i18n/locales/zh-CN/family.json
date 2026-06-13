@@ -20,11 +20,39 @@
     "loadFailed": "加载家庭信息失败",
     "addFailed": "添加孩子失败",
     "updateFailed": "更新孩子信息失败",
-    "deleteFailed": "删除孩子失败"
+    "deleteFailed": "删除孩子失败",
+    "invalidCode": "无效的分享码",
+    "joinFailed": "加入家庭失败",
+    "approveFailed": "审批失败",
+    "rejectFailed": "拒绝失败"
   },
+  "requestJoin": "申请加入",
   "success": {
     "added": "孩子添加成功",
     "updated": "孩子信息已更新",
     "deleted": "孩子已删除"
+  },
+  "noFamily": "还没有家庭",
+  "joinFamily": "加入家庭",
+  "joinOtherFamily": "加入其他家庭",
+  "joinHint": "输入家庭邀请码搜索",
+  "joinRequestSent": "加入申请已发送，等待审批",
+  "shareCode": "邀请码",
+  "shareCodePlaceholder": "请输入邀请码",
+  "codeCopied": "已复制！",
+  "switchFamily": "切换家庭",
+  "manageMembers": "成员管理",
+  "pendingRequests": "待审批请求",
+  "activeMembers": "家庭成员",
+  "noMembers": "暂无成员",
+  "approve": "同意",
+  "reject": "拒绝",
+  "role": {
+    "owner": "创建者",
+    "member": "成员"
+  },
+  "status": {
+    "active": "已加入",
+    "pending": "待审批"
   }
 }

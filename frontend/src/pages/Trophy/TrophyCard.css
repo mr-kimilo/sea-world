@@ -1,0 +1,16 @@
+.trophy-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: 10px; background: #fff;
+  border: 1px solid #f0f0f0; position: relative;
+  transition: box-shadow 0.15s;
+}
+.trophy-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.trophy-rank-1 { background: linear-gradient(135deg, #fffbe6, #fff); border-color: #ffe58f; }
+.trophy-rank-2 { background: linear-gradient(135deg, #f5f5f5, #fff); border-color: #d9d9d9; }
+.trophy-rank-3 { background: linear-gradient(135deg, #fff7e6, #fff); border-color: #ffd591; }
+.trophy-rank-badge { position: absolute; top: -6px; left: -6px; font-size: 20px; }
+.trophy-card-icon { font-size: 28px; }
+.trophy-card-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.trophy-card-name { font-size: 15px; font-weight: 500; color: #333; }
+.trophy-card-points { font-size: 13px; color: #faad14; font-weight: 600; }
+.trophy-card-date { font-size: 12px; color: #999; }

@@ -18,6 +18,10 @@ import Profile from './pages/Profile/Profile';
 import Orders from './pages/Orders/Orders';
 import ShopAdmin from './pages/ShopAdmin/ShopAdmin';
 import ScoreMaintenance from './pages/ScoreMaintenance/ScoreMaintenance';
+// MVP2: Task, Trophy, Family
+import TaskList from './pages/Task/TaskList';
+import TrophyList from './pages/Trophy/TrophyList';
+import FamilySettings from './pages/Family/FamilySettings';
 import PwaInstallBanner from './components/PwaInstallBanner';
 import './styles/mobile-globals.css';
 // Portal
@@ -163,6 +167,37 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <ScoreMaintenance />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        {/* MVP2: Tasks */}
+        <Route
+          path="/tasks"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <TaskList />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trophies"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <TrophyList />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/family"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <FamilySettings />
               </ProtectedLayout>
             </ProtectedRoute>
           }

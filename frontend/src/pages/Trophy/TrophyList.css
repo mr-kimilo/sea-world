@@ -1,0 +1,17 @@
+.trophy-page { padding: 24px; max-width: 700px; margin: 0 auto; }
+.trophy-header { margin-bottom: 20px; }
+.trophy-header h2 { font-size: 22px; color: #0077b6; margin: 0; }
+.top3-section { margin-bottom: 20px; }
+.top3-section h3 { font-size: 15px; font-weight: 600; color: #555; margin: 0 0 8px; }
+.top3-list { display: flex; flex-direction: column; gap: 8px; }
+.trophy-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.trophy-tab {
+  flex: 1; padding: 8px 16px; border: 1px solid #d9d9d9; border-radius: 6px;
+  background: #fff; color: #555; font-size: 13px; cursor: pointer; text-align: center;
+  transition: all 0.15s;
+}
+.trophy-tab.active { background: #e8f4fd; border-color: #0077b6; color: #0077b6; font-weight: 500; }
+.trophy-loading { text-align: center; padding: 32px; color: #999; }
+.trophy-error { background: #fff0f0; border: 1px solid #ffccc7; color: #cf1322; padding: 8px 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
+.trophy-empty { text-align: center; padding: 48px 24px; color: #999; font-size: 14px; }
+.trophy-list { display: flex; flex-direction: column; gap: 8px; }

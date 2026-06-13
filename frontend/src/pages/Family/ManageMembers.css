@@ -1,0 +1,28 @@
+.manage-members-page h2 { font-size: 20px; color: #333; margin: 0 0 16px; }
+.pending-section { margin-bottom: 20px; }
+.pending-section h3 { font-size: 15px; font-weight: 600; color: #fa8c16; margin: 0 0 8px; }
+.pending-card {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; border: 1px solid #fff7e6; border-radius: 8px; background: #fffbe6; margin-bottom: 6px;
+}
+.pending-info { display: flex; flex-direction: column; gap: 2px; }
+.pending-email { font-size: 14px; color: #333; }
+.pending-status { font-size: 11px; color: #fa8c16; }
+.pending-actions { display: flex; gap: 6px; }
+.btn-approve, .btn-reject { padding: 4px 10px; border: none; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.btn-approve { background: #f6ffed; color: #52c41a; }
+.btn-reject { background: #fff2f0; color: #ff4d4f; }
+.members-section { margin-bottom: 20px; }
+.members-section h3 { font-size: 15px; font-weight: 600; color: #333; margin: 0 0 8px; }
+.loading-text, .empty-text { text-align: center; padding: 24px; color: #999; font-size: 14px; }
+.member-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border: 1px solid #f0f0f0; border-radius: 8px; margin-bottom: 6px;
+}
+.member-avatar { font-size: 20px; }
+.member-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.member-email { font-size: 14px; color: #333; }
+.member-role { font-size: 11px; color: #888; }
+.role-owner { color: #faad14; }
+.role-member { color: #1890ff; }
+.member-status { font-size: 11px; padding: 2px 8px; border-radius: 4px; }

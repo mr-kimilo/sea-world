@@ -8,8 +8,9 @@
     "admin": "Admin"
   },
   "nav": {
-    "home": "Home",
-    "history": "Score History",
+    "home": "Home",    "tasks": "Tasks",
+    "trophies": "Trophies",
+    "family": "Family",    "history": "Score History",
     "shop": "Shop",
     "collection": "My Collection",
     "profile": "Profile",

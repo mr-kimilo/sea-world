@@ -20,11 +20,37 @@
     "loadFailed": "Failed to load family information",
     "addFailed": "Failed to add child",
     "updateFailed": "Failed to update child information",
-    "deleteFailed": "Failed to delete child"
+    "deleteFailed": "Failed to delete child",
+    "invalidCode": "Invalid share code",
+    "joinFailed": "Failed to join family",
+    "approveFailed": "Failed to approve",
+    "rejectFailed": "Failed to reject"
   },
+  "requestJoin": "Request to Join",
   "success": {
     "added": "Child added successfully",
     "updated": "Child information updated",
-    "deleted": "Child deleted"
-  }
+    "deleted": "Child deleted"  },
+  "noFamily": "No family yet",
+  "joinFamily": "Join Family",
+  "joinOtherFamily": "Join Other Family",
+  "joinHint": "Search by family invite code",
+  "joinRequestSent": "Join request sent, awaiting approval",
+  "shareCode": "Invite Code",
+  "shareCodePlaceholder": "Enter invite code",
+  "codeCopied": "Copied!",
+  "switchFamily": "Switch Family",
+  "manageMembers": "Manage Members",
+  "pendingRequests": "Pending Requests",
+  "activeMembers": "Family Members",
+  "noMembers": "No members",
+  "approve": "Approve",
+  "reject": "Reject",
+  "role": {
+    "owner": "Owner",
+    "member": "Member"
+  },
+  "status": {
+    "active": "Active",
+    "pending": "Pending"  }
 }

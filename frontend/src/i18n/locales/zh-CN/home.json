@@ -9,6 +9,9 @@
   },
   "nav": {
     "home": "首页",
+    "tasks": "任务",
+    "trophies": "奖杯",
+    "family": "家庭",
     "history": "积分历史",
     "shop": "商城",
     "collection": "我的收藏",

@@ -1,0 +1,30 @@
+.family-info-card {
+  background: rgba(255,255,255,0.08); backdrop-filter: blur(8px);
+  border-radius: 12px; padding: 16px; margin-bottom: 16px;
+}
+.family-info-card h3 { margin: 0 0 10px; font-size: 18px; color: rgba(255,255,255,0.9); }
+.share-code-row { display: flex; align-items: center; gap: 8px; }
+.share-code-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+.share-code { font-size: 18px; font-weight: 700; color: #ffd700; letter-spacing: 2px; }
+.copy-btn { padding: 4px 8px; font-size: 16px; background: rgba(255,255,255,0.1); border: none; border-radius: 6px; cursor: pointer; }
+.family-section { margin-bottom: 16px; }
+.family-section h4 { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.8); margin: 0 0 8px; }
+.pending-card {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
+  color: rgba(255,255,255,0.8); font-size: 13px;
+}
+.pending-actions { display: flex; gap: 6px; }
+.btn-approve, .btn-reject { padding: 4px 10px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+.btn-approve { background: rgba(76,175,80,0.2); color: #4caf50; }
+.btn-reject { background: rgba(244,67,54,0.2); color: #f44336; }
+.member-card {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
+}
+.member-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.member-email { font-size: 13px; color: rgba(255,255,255,0.8); }
+.member-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+.member-status { font-size: 11px; padding: 2px 8px; border-radius: 4px; }
+.status-active { background: rgba(76,175,80,0.15); color: #4caf50; }
+.status-pending { background: rgba(255,152,0,0.15); color: #ff9800; }
