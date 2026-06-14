@@ -23,8 +23,22 @@
     "child": "选择孩子",
     "icon": "选择图标",
     "trophyName": "奖杯名称",
-    "trophyNamePlaceholder": "完成后显示的奖杯名称（可选）"
+    "trophyNamePlaceholder": "完成后显示的奖杯名称（可选）",
+    "dimension": "任务维度"
   },
+  "dimensions": {
+    "intelligence": "智力学习",
+    "physical": "体能运动",
+    "moral": "品德习惯",
+    "hygiene": "卫生生活",
+    "handcraft": "手工整理"
+  },
+  "showMore": "查看更多",
+  "showLess": "收起",
+  "selectTemplate": "选择任务模板",
+  "templateHint": "选择一个模板快速创建任务，或点击「自定义创建」从空白开始",
+  "customCreate": "自定义创建",
+  "noTemplates": "暂无可用模板",
   "errors": {
     "loadFailed": "加载任务失败",
     "saveFailed": "保存任务失败",

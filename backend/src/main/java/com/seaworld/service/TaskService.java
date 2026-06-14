@@ -94,6 +94,7 @@ public class TaskService {
                 .points(request.getPoints())
                 .icon(request.getIcon() != null ? request.getIcon() : "📋")
                 .trophyName(request.getTrophyName())
+                .dimension(request.getDimension())
                 .status("PENDING")
                 .build();
         task = childTaskRepository.save(task);
@@ -111,6 +112,7 @@ public class TaskService {
         task.setPoints(request.getPoints());
         task.setIcon(request.getIcon() != null ? request.getIcon() : "📋");
         task.setTrophyName(request.getTrophyName());
+        task.setDimension(request.getDimension());
         if (request.getChildId() != null) {
             task.setChildId(UUID.fromString(request.getChildId()));
         }
@@ -146,9 +148,10 @@ public class TaskService {
         task.setCompletedAt(LocalDateTime.now());
         childTaskRepository.save(task);
 
-        // Add points to child's available score
+        // Add points to child's total score and available score
         Child child = childRepository.findById(task.getChildId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CHILD_NOT_FOUND.getMessage()));
+        child.setTotalScore(child.getTotalScore() + task.getPoints());
         child.setAvailableScore(child.getAvailableScore() + task.getPoints());
         childRepository.save(child);
 

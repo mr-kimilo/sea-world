@@ -9,6 +9,7 @@ export interface TaskTemplateResponse {
   points: number;
   icon: string;
   trophyName: string | null;
+  dimension: string | null;
   sortOrder: number;
   createdAt: string;
 }
@@ -19,6 +20,7 @@ export interface ChildTaskRequest {
   points: number;
   icon?: string;
   trophyName?: string;
+  dimension?: string;
   childId?: string;
 }
 
@@ -32,6 +34,7 @@ export interface ChildTaskResponse {
   points: number;
   icon: string;
   trophyName: string | null;
+  dimension: string | null;
   status: 'PENDING' | 'COMPLETED' | 'CANCELLED';
   completedAt: string | null;
   createdAt: string;

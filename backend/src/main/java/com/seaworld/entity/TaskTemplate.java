@@ -38,6 +38,9 @@ public class TaskTemplate {
     @Column(name = "trophy_name")
     private String trophyName;
 
+    @Column(name = "dimension")
+    private String dimension;
+
     @Column(name = "sort_order", nullable = false)
     @Builder.Default
     private Integer sortOrder = 0;

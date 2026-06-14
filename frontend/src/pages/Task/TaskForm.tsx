@@ -1,27 +1,38 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFamilyStore } from '../../store/familyStore';
-import { taskApi, type ChildTaskRequest, type ChildTaskResponse } from '../../api/task';
+import { taskApi, type ChildTaskRequest, type ChildTaskResponse, type TaskTemplateResponse } from '../../api/task';
 import './TaskForm.css';
+
+const DIMENSION_OPTIONS = [
+  { value: 'intelligence', label: 'dimensions.intelligence', icon: '🧠' },
+  { value: 'physical', label: 'dimensions.physical', icon: '💪' },
+  { value: 'moral', label: 'dimensions.moral', icon: '🌟' },
+  { value: 'hygiene', label: 'dimensions.hygiene', icon: '🧼' },
+  { value: 'handcraft', label: 'dimensions.handcraft', icon: '✂️' },
+];
 
 interface Props {
   mode: 'create' | 'edit';
   familyId: string;
   task: ChildTaskResponse | null;
+  template?: TaskTemplateResponse | null;
   onSaved: () => void;
   onClose: () => void;
 }
 
-export default function TaskForm({ mode, familyId, task, onSaved, onClose }: Props) {
+export default function TaskForm({ mode, familyId, task, template, onSaved, onClose }: Props) {
   const { t } = useTranslation(['task', 'common']);
   const { children, selectedChild } = useFamilyStore();
 
+  // 如果有模板，以模板值为默认值；否则以任务值为默认值
   const [form, setForm] = useState<ChildTaskRequest>({
-    name: task?.name ?? '',
-    description: task?.description ?? '',
-    points: task?.points ?? 5,
-    icon: task?.icon ?? '📋',
-    trophyName: task?.trophyName ?? '',
+    name: template?.name ?? task?.name ?? '',
+    description: template?.description ?? task?.description ?? '',
+    points: template?.points ?? task?.points ?? 5,
+    icon: template?.icon ?? task?.icon ?? '📋',
+    trophyName: template?.trophyName ?? task?.trophyName ?? '',
+    dimension: template?.dimension ?? task?.dimension ?? '',
     childId: task?.childId ?? selectedChild?.id ?? children[0]?.id ?? '',
   });
   const [saving, setSaving] = useState(false);
@@ -124,13 +135,34 @@ export default function TaskForm({ mode, familyId, task, onSaved, onClose }: Pro
           </div>
 
           <div className="form-group">
+            <label>{t('task:form.dimension')}</label>
+            <div className="dimension-picker">
+              {DIMENSION_OPTIONS.map((dim) => (
+                <button
+                  key={dim.value}
+                  type="button"
+                  className={`dimension-option ${form.dimension === dim.value ? 'selected' : ''}`}
+                  onClick={() => setForm({ ...form, dimension: dim.value })}
+                >
+                  <span className="dimension-option-icon">{dim.icon}</span>
+                  <span className="dimension-option-label">{t(`task:${dim.label}`)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-group">
             <label>{t('task:form.trophyName')}</label>
             <input
               type="text"
               value={form.trophyName ?? ''}
               onChange={(e) => setForm({ ...form, trophyName: e.target.value })}
               placeholder={t('task:form.trophyNamePlaceholder')}
+              maxLength={20}
             />
+            <span className="form-hint">
+              {(form.trophyName || '').length}/20
+            </span>
           </div>
 
           <div className="form-actions">

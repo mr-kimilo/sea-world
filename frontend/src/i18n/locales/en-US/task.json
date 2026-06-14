@@ -23,8 +23,22 @@
     "child": "Select Child",
     "icon": "Choose Icon",
     "trophyName": "Trophy Name",
-    "trophyNamePlaceholder": "Trophy name on completion (optional)"
+    "trophyNamePlaceholder": "Trophy name on completion (optional)",
+    "dimension": "Dimension"
   },
+  "dimensions": {
+    "intelligence": "Intelligence & Study",
+    "physical": "Physical & Sports",
+    "moral": "Moral & Habits",
+    "hygiene": "Hygiene & Daily",
+    "handcraft": "Handcraft & Organizing"
+  },
+  "showMore": "Show More",
+  "showLess": "Collapse",
+  "selectTemplate": "Select Template",
+  "templateHint": "Pick a template to quickly create a task, or click 'Custom' to start from scratch",
+  "customCreate": "Custom Task",
+  "noTemplates": "No templates available",
   "errors": {
     "loadFailed": "Failed to load tasks",
     "saveFailed": "Failed to save task",

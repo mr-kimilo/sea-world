@@ -45,6 +45,9 @@ public class ChildTask {
     @Column(name = "trophy_name")
     private String trophyName;
 
+    @Column(name = "dimension")
+    private String dimension;
+
     @Column(nullable = false)
     @Builder.Default
     private String status = "PENDING";

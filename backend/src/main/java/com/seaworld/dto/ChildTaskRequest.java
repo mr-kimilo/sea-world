@@ -18,5 +18,7 @@ public class ChildTaskRequest {
 
     private String trophyName;
 
+    private String dimension;
+
     private String childId;
 }

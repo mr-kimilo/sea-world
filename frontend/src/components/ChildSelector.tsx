@@ -119,7 +119,7 @@ export default function ChildSelector({ layout = 'grid' }: ChildSelectorProps) {
                 style={{ backgroundColor: getAvatarById(child.avatarUrl).color }}
               >
                 <span className="child-avatar-emoji">
-                  {getAvatarById(child.avatarUrl).emoji}
+                  {getAvatarById(child.avatarUrl, child.nickname || child.name).emoji}
                 </span>
               </div>
               <div className="child-info">

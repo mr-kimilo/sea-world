@@ -17,4 +17,19 @@
 }
 .icon-option:hover { border-color: #0077b6; }
 .icon-option.selected { background: #e8f4fd; border-color: #0077b6; }
+
+/* ─── Dimension Picker ─── */
+.dimension-picker { display: flex; flex-wrap: wrap; gap: 6px; }
+.dimension-option {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 12px; border: 1px solid #e8e8e8; border-radius: 8px;
+  background: #fafafa; font-size: 13px; cursor: pointer; transition: all 0.15s;
+}
+.dimension-option:hover { border-color: #0077b6; background: #e8f4fd; }
+.dimension-option.selected { background: #e8f4fd; border-color: #0077b6; font-weight: 500; }
+.dimension-option-icon { font-size: 16px; }
+.dimension-option-label { color: #333; }
+
+.form-hint { font-size: 11px; color: #999; text-align: right; }
+
 .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }

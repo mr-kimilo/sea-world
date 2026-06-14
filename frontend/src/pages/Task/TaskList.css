@@ -1,21 +1,63 @@
-.task-page { padding: 24px; max-width: 800px; margin: 0 auto; }
+.task-page {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent;
+}
 .task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .task-header h2 { font-size: 22px; color: #0077b6; margin: 0; }
 .task-header-actions { display: flex; gap: 8px; }
 .task-error { background: #fff0f0; border: 1px solid #ffccc7; color: #cf1322; padding: 8px 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; }
 .task-section { margin-bottom: 24px; }
 .task-section h3 { font-size: 16px; font-weight: 600; color: #333; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 2px solid #e8f4fd; }
-.template-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.task-child-name { font-weight: 400; font-size: 14px; color: #0077b6; }
+
+/* ─── Dimension Groups (used in template picker modal) ─── */
+.dimension-groups { display: flex; flex-direction: column; gap: 8px; }
+.dimension-group { border: 1px solid #e8e8e8; border-radius: 10px; overflow: hidden; }
+.dimension-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; cursor: pointer; user-select: none;
+  background: #f8f9fa; transition: background 0.15s;
+}
+.dimension-header:hover { background: #e8f4fd; }
+.dimension-icon { font-size: 18px; }
+.dimension-label { flex: 1; font-size: 14px; font-weight: 600; color: #333; }
+.dimension-count {
+  font-size: 12px; color: #999; background: #e8e8e8;
+  padding: 2px 8px; border-radius: 10px; min-width: 20px; text-align: center;
+}
+.dimension-arrow {
+  font-size: 10px; color: #999; transition: transform 0.2s;
+}
+.dimension-arrow.expanded { transform: rotate(90deg); }
+
+/* ─── Template Grid (in picker modal) ─── */
+.template-grid { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 14px; }
+.template-grid--picker { justify-content: center; }
 .template-card {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: 12px 16px; border: 1px solid #e8e8e8; border-radius: 10px;
+  padding: 10px 14px; border: 1px solid #e8e8e8; border-radius: 10px;
   background: #fafafa; cursor: pointer; transition: all 0.15s;
-  min-width: 90px;
+  width: 90px; flex: none;
 }
 .template-card:hover { background: #e8f4fd; border-color: #0077b6; }
-.template-icon { font-size: 28px; }
-.template-name { font-size: 13px; font-weight: 500; color: #333; text-align: center; }
-.template-points { font-size: 12px; color: #faad14; font-weight: 600; }
+.template-icon { font-size: 26px; }
+.template-name { font-size: 12px; font-weight: 500; color: #333; text-align: center; line-height: 1.3; word-break: break-all; }
+.template-points { font-size: 11px; color: #faad14; font-weight: 600; }
+
+/* ─── Template Picker Modal ─── */
+.template-picker-modal { max-width: 520px; width: 90%; }
+.template-picker-hint {
+  font-size: 13px; color: #888; margin-bottom: 14px; text-align: center;
+}
+.template-picker-groups { max-height: 55vh; overflow-y: auto; }
+.template-picker-empty { text-align: center; padding: 32px; color: #999; }
+.template-picker-footer {
+  display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
 .task-loading, .task-empty { text-align: center; padding: 32px; color: #999; font-size: 14px; }
 .task-list { display: flex; flex-direction: column; gap: 8px; }
 .task-card {
@@ -31,7 +73,11 @@
 .task-info { display: flex; flex-direction: column; gap: 2px; }
 .task-name { font-size: 15px; font-weight: 500; color: #333; }
 .task-desc { font-size: 12px; color: #888; }
-.task-child { font-size: 11px; color: #aaa; }
+.task-child { font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.task-dimension-tag {
+  font-size: 10px; padding: 1px 6px; border-radius: 4px;
+  background: #e8f4fd; color: #0077b6;
+}
 .task-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .task-points { font-size: 15px; font-weight: 700; color: #faad14; }
 .task-status { font-size: 11px; padding: 2px 8px; border-radius: 4px; }
@@ -46,18 +92,21 @@
 .btn-secondary { padding: 8px 16px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; color: #333; font-size: 13px; cursor: pointer; }
 .btn-secondary:hover { border-color: #0077b6; color: #0077b6; }
 
-/* Trophy Modal */
+/* ─── Trophy Modal ─── */
 .trophy-modal { max-width: 500px; }
 .trophy-list { display: flex; flex-direction: column; gap: 8px; }
 .trophy-empty { text-align: center; padding: 32px; color: #999; font-size: 14px; }
 .trophy-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; background: #fafafa; }
 .trophy-icon { font-size: 24px; }
-.trophy-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.trophy-name { font-size: 14px; font-weight: 500; color: #333; }
+.trophy-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.trophy-name { font-size: 14px; font-weight: 500; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .trophy-points { font-size: 12px; color: #faad14; font-weight: 600; }
-.trophy-date { font-size: 11px; color: #999; }
+.trophy-date { font-size: 11px; color: #999; white-space: nowrap; }
+.trophy-pagination { text-align: center; padding: 8px 0; }
+.trophy-show-more { font-size: 13px; }
+.trophy-footer { text-align: center; font-size: 12px; color: #999; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
 
-/* Modal overlay */
+/* ─── Modal overlay ─── */
 .modal-overlay {
   position: fixed; inset: 0; z-index: 999;
   background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center;

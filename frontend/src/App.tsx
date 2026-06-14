@@ -4,7 +4,9 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { useOfflineSync } from './hooks/useOfflineSync';
 import { useDeviceType } from './hooks/useDeviceType';
 import MobileTabBar from './components/MobileTabBar';
+import MobileSidebar from './components/MobileSidebar';
 import WebSidebar from './components/WebSidebar';
+import { useUiStore } from './store/uiStore';
 import LanguageSwitcher from './components/LanguageSwitcher';
 import OceanBackground from './components/OceanBackground';
 import './styles/web-app-layout.css';
@@ -39,6 +41,8 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const { isMobile } = useDeviceType();
   const location = useLocation();
   const webMainRef = React.useRef<HTMLDivElement | null>(null);
+  const mobileSidebarOpen = useUiStore((s) => s.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore((s) => s.setMobileSidebarOpen);
 
   React.useLayoutEffect(() => {
     // Web: reset scroll position on route changes
@@ -57,6 +61,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
     return (
       <div className="app-authed-root">
         <OceanBackground fixed />
+        <MobileSidebar open={mobileSidebarOpen} onClose={() => setMobileSidebarOpen(false)} />
         <div className="app-authed-stack">
           {/* Fixed top-right language switcher */}
           <div className="global-lang-switcher">

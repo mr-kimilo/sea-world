@@ -12,6 +12,7 @@ public record TaskTemplateResponse(
         int points,
         String icon,
         String trophyName,
+        String dimension,
         int sortOrder,
         LocalDateTime createdAt
 ) {
@@ -24,6 +25,7 @@ public record TaskTemplateResponse(
                 t.getPoints(),
                 t.getIcon(),
                 t.getTrophyName(),
+                t.getDimension(),
                 t.getSortOrder(),
                 t.getCreatedAt()
         );
