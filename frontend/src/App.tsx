@@ -12,6 +12,7 @@ import OceanBackground from './components/OceanBackground';
 import './styles/web-app-layout.css';
 import './styles/ocean-authed-shell.css';
 import Login from './pages/Login/Login';
+import OAuthCallback from './pages/Login/OAuthCallback';
 import Register from './pages/Register/Register';
 import Home from './pages/Home/Home';
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
@@ -114,6 +115,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/oauth/callback" element={<OAuthCallback />} />
 
         {/* Protected routes — /home 而不是 / 避免冲突 */}
         <Route

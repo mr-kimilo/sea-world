@@ -4,10 +4,12 @@ import com.seaworld.dto.AuthResponse;
 import com.seaworld.dto.OAuthLoginRequest;
 import com.seaworld.entity.Family;
 import com.seaworld.entity.FamilyMember;
+import com.seaworld.entity.RefreshToken;
 import com.seaworld.entity.User;
 import com.seaworld.exception.BusinessException;
 import com.seaworld.repository.FamilyMemberRepository;
 import com.seaworld.repository.FamilyRepository;
+import com.seaworld.repository.RefreshTokenRepository;
 import com.seaworld.repository.UserRepository;
 import com.seaworld.security.JwtTokenProvider;
 import com.seaworld.util.ErrorMessages;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +31,7 @@ public class OAuth2Service {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final FamilyMemberRepository familyMemberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final RestTemplate restTemplate;
 
@@ -45,10 +50,12 @@ public class OAuth2Service {
     public OAuth2Service(UserRepository userRepository,
                          FamilyRepository familyRepository,
                          FamilyMemberRepository familyMemberRepository,
+                         RefreshTokenRepository refreshTokenRepository,
                          JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.familyRepository = familyRepository;
         this.familyMemberRepository = familyMemberRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.restTemplate = new RestTemplate();
     }
@@ -74,13 +81,28 @@ public class OAuth2Service {
         User user = existingUser.orElseGet(() -> createOAuthUser(provider, providerId, email, nickname, avatarUrl));
 
         // Generate JWT
-        String accessToken = jwtTokenProvider.generateAccessToken(user);
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user);
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), user.getEmail(), user.getRole());
+        String refreshTokenStr = jwtTokenProvider.generateRefreshToken(user.getId());
+
+        // Save refresh token
+        RefreshToken refreshToken = RefreshToken.builder()
+                .userId(user.getId())
+                .token(refreshTokenStr)
+                .expiresAt(LocalDateTime.now().plus(Duration.ofMillis(jwtTokenProvider.getRefreshTokenExpiration())))
+                .build();
+        refreshTokenRepository.save(refreshToken);
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .user(new AuthResponse.UserInfo(user.getId().toString(), user.getEmail(), user.getNickname(), user.getRole()))
+                .refreshToken(refreshTokenStr)
+                .tokenType("Bearer")
+                .user(AuthResponse.UserInfo.builder()
+                        .id(user.getId().toString())
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .role(user.getRole())
+                        .emailVerified(user.getEmailVerified())
+                        .build())
                 .build();
     }
 

@@ -23,6 +23,44 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const OAUTH_CONFIG: Record<string, { authorizeUrl: string; appIdKey: string }> = {
+    qq: {
+      authorizeUrl: 'https://graph.qq.com/oauth2.0/authorize',
+      appIdKey: 'VITE_QQ_APP_ID',
+    },
+    douyin: {
+      authorizeUrl: 'https://open.douyin.com/platform/oauth/connect',
+      appIdKey: 'VITE_DOUYIN_CLIENT_KEY',
+    },
+  };
+
+  const handleOAuthLogin = (provider: string) => {
+    const config = OAUTH_CONFIG[provider];
+    if (!config) return;
+
+    const appId = import.meta.env[config.appIdKey] as string | undefined;
+    if (!appId) {
+      setError(t('auth:oauthNotConfigured', `${provider} 登录尚未配置`));
+      return;
+    }
+
+    // Generate random state for CSRF protection
+    const state = Math.random().toString(36).substring(2, 15);
+    // sessionStorage.setItem('oauth_state', state);
+
+    const redirectUri = `${window.location.origin}/oauth/callback?provider=${provider}`;
+
+    let url: string;
+    if (provider === 'qq') {
+      url = `${config.authorizeUrl}?response_type=code&client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+    } else {
+      // Douyin
+      url = `${config.authorizeUrl}?client_key=${appId}&response_type=code&scope=user_info&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+    }
+
+    window.location.href = url;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -103,16 +141,23 @@ export default function Login() {
             <span>{t('common:or')}</span>
           </div>
           <div className="oauth-buttons">
-            <button className="oauth-btn oauth-qq" disabled>
+            <button
+              type="button"
+              className="oauth-btn oauth-qq"
+              onClick={() => handleOAuthLogin('qq')}
+            >
               <span className="oauth-icon">🐧</span>
               <span>QQ {t('auth:login.submit')}</span>
             </button>
-            <button className="oauth-btn oauth-douyin" disabled>
+            <button
+              type="button"
+              className="oauth-btn oauth-douyin"
+              onClick={() => handleOAuthLogin('douyin')}
+            >
               <span className="oauth-icon">🎵</span>
               <span>抖音 {t('auth:login.submit')}</span>
             </button>
           </div>
-          <p className="oauth-hint">{t('auth:oauthComingSoon')}</p>
         </div>
 
         <div className="auth-footer">

@@ -6,9 +6,9 @@
 .oauth-btn {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 10px 16px; border: 1px solid #d9d9d9; border-radius: 8px;
-  background: #fff; font-size: 14px; cursor: not-allowed; opacity: 0.7;
+  background: #fff; font-size: 14px; cursor: pointer;
   transition: all 0.15s;
 }
-.oauth-btn:not(:disabled):hover { border-color: #0077b6; }
+.oauth-btn:hover { border-color: #0077b6; background: #f0f7ff; }
+.oauth-btn:active { transform: scale(0.97); }
 .oauth-icon { font-size: 20px; }
-.oauth-hint { text-align: center; font-size: 11px; color: #bbb; margin-top: 8px; }

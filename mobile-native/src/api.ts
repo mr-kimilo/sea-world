@@ -51,6 +51,10 @@ export const authApi = {
 
   resetPassword: (email: string, code: string, newPassword: string) =>
     api.post("/auth/reset-password", { email, code, newPassword }),
+
+  // 第三方登录 (QQ / 抖音)
+  oauthLogin: (provider: string, code: string, redirectUri?: string) =>
+    api.post("/auth/oauth/login", { provider, code, redirectUri }),
 };
 
 // ——— Family API ———

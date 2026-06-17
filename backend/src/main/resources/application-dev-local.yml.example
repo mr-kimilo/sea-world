@@ -31,6 +31,15 @@ app:
     # 开发环境可以使用简单密钥，或生成一个固定的密钥
     secret: dev_jwt_secret_for_local_testing_only_not_for_production_use
   
+  # OAuth 第三方登录配置 (QQ / 抖音)
+  # oauth:
+  #   qq:
+  #     client-id: your_qq_app_id
+  #     client-secret: your_qq_app_secret
+  #   douyin:
+  #     client-id: your_douyin_client_key
+  #     client-secret: your_douyin_client_secret
+
   # 如果前端运行在不同端口，在此覆盖
   # frontend-url: http://localhost:5173
   # cors:
