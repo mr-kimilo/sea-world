@@ -58,7 +58,7 @@ export const authApi = {
 };
 
 // ——— Family API ———
-export type FamilyInfo = { id: string; name: string; createdAt: string };
+export type FamilyInfo = { id: string; name: string; createdBy?: string; shareCode?: string; description?: string; createdAt: string };
 export type ChildInfo = { id: string; name: string; avatar?: string; avatarUrl?: string; familyId: string; totalScore?: number; availableScore?: number };
 
 // 兼容 web 端的 avatar ID（如 "rabbit"、"cat"）→ emoji 映射

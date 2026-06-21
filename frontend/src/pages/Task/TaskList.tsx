@@ -46,6 +46,8 @@ export default function TaskList() {
   const [trophies, setTrophies] = useState<any[]>([]);
   const [expandedDimensions, setExpandedDimensions] = useState<Set<string>>(new Set());
   const [trophyPage, setTrophyPage] = useState(0);
+  const [taskDisplayCount, setTaskDisplayCount] = useState(10);
+  const TASK_PAGE_SIZE = 10;
 
   const fid = currentFamily?.id;
 
@@ -99,6 +101,7 @@ export default function TaskList() {
   }, [fid, selectedChild?.id, t]);
 
   useEffect(() => {
+    setTaskDisplayCount(TASK_PAGE_SIZE);
     loadTasks();
   }, [loadTasks]);
 
@@ -284,7 +287,7 @@ export default function TaskList() {
           <div className="task-empty">{t('task:empty')}</div>
         ) : (
           <div className="task-list">
-            {tasks.map((task) => (
+            {tasks.slice(0, taskDisplayCount).map((task) => (
               <div key={task.id} className={`task-card task-${task.status.toLowerCase()}`}>
                 <div className="task-card-left">
                   <span className="task-icon">{task.icon || '📋'}</span>
@@ -325,6 +328,16 @@ export default function TaskList() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {taskDisplayCount < tasks.length && (
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <button
+              className="btn-secondary"
+              onClick={() => setTaskDisplayCount((prev) => prev + TASK_PAGE_SIZE)}
+            >
+              {t('common:loadMore') || '查看更多'}
+            </button>
           </div>
         )}
       </div>

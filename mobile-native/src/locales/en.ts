@@ -1,6 +1,7 @@
 import type zh from "./zh";
 
 const en: typeof zh = {
+  common: { cancel: "Cancel", save: "Save", saving: "Saving…", search: "Search", searching: "Searching…", back: "Back", joining: "Joining…" },
   app: { name: "HyperOne", slogan: "Unified Family Portal — Points · Finance Education" },
   home: {
     points: "Points",
@@ -232,6 +233,7 @@ const en: typeof zh = {
     deleteFailed: "Failed to delete",
     completeFailed: "Failed to complete",
     cancelFailed: "Failed to cancel",
+    loadMore: "Load More",
   },
   trophies: {
     title: "Trophies",

@@ -1,4 +1,5 @@
 export default {
+  common: { cancel: "取消", save: "保存", saving: "保存中…", search: "搜索", searching: "搜索中…", back: "返回", joining: "加入中…" },
   app: { name: "HyperOne", slogan: "统一家庭数字入口 — 积分管理 · 金钱教育" },
   home: {
     points: "积分管理",
@@ -230,6 +231,7 @@ export default {
     deleteFailed: "删除失败",
     completeFailed: "完成任务失败",
     cancelFailed: "取消任务失败",
+    loadMore: "查看更多",
   },
   trophies: {
     title: "奖杯墙",

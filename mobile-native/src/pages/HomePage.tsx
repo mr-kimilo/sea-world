@@ -125,7 +125,7 @@ function Dashboard() {
     { icon: "📊", label: t("home.pointsDetail"), href: "#/points" },
     { icon: "📅", label: t("home.checkIn"), href: "#/history" },
     { icon: "📋", label: t("home.tasks"), href: "#/tasks" },
-    { icon: "🏆", label: t("home.achievements"), href: "#/child" },
+    { icon: "🏆", label: t("home.achievements"), href: "#/trophy" },
   ];
 
   return (

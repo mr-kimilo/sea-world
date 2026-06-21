@@ -29,19 +29,29 @@ export default function TasksPage() {
   const kids = fid ? (children[fid] || []) : [];
   const currentChild = kids.find((k: ChildInfo) => k.id === cid) || kids[0];
 
+  // Pagination: show 10 per page
+  const [displayCount, setDisplayCount] = useState(10);
+  const PAGE_SIZE = 10;
+
   const loadData = useCallback(async () => {
     if (!fid) return;
     try {
-      const [tasksRes, templatesRes] = await Promise.all([
-        taskApi.getFamilyTasks(fid),
-        taskApi.getTemplates(),
-      ]);
-      setTasks(tasksRes.data ?? []);
+      const templatesRes = await taskApi.getTemplates();
       setTemplates(templatesRes.data ?? []);
+
+      // Filter tasks by child when a child is selected
+      if (cid) {
+        const tasksRes = await taskApi.getChildTasks(cid);
+        setTasks(tasksRes.data ?? []);
+      } else {
+        const tasksRes = await taskApi.getFamilyTasks(fid);
+        setTasks(tasksRes.data ?? []);
+      }
+      setDisplayCount(PAGE_SIZE);
     } catch {
       setError(t("tasks.loadFailed"));
     }
-  }, [fid]);
+  }, [fid, cid]);
 
   // Init: load families & children
   useEffect(() => {
@@ -85,10 +95,13 @@ export default function TasksPage() {
       .finally(() => setInitializing(false));
   }, []);
 
-  // Load tasks when fid changes
+  // Load tasks when fid or cid changes
   useEffect(() => {
-    if (fid) loadData();
-  }, [fid, loadData]);
+    if (fid) {
+      setDisplayCount(PAGE_SIZE);
+      loadData();
+    }
+  }, [fid, cid, loadData]);
 
   const openCreateForm = (template?: any) => {
     setEditingTask(null);
@@ -225,7 +238,7 @@ export default function TasksPage() {
               {t("tasks.empty")}
             </div>
           ) : (
-            tasks.map((task) => (
+            tasks.slice(0, displayCount).map((task) => (
               <div key={task.id} className={`task-item task-item-${task.status.toLowerCase()}`}>
                 <div className="task-item-left">
                   <span className="task-item-icon">{task.icon || "📋"}</span>
@@ -240,7 +253,7 @@ export default function TasksPage() {
                   {task.status === "PENDING" && (
                     <div className="task-item-actions">
                       <button className="task-action-btn complete" onClick={() => handleComplete(task.id)}>👍</button>
-                      <button className="task-action-btn" onClick={() => openEditForm(task.id)}>✏️</button>
+                      <button className="task-action-btn" onClick={() => openEditForm(task)}>✏️</button>
                       <button className="task-action-btn" onClick={() => handleCancel(task.id)}>⏸️</button>
                       <button className="task-action-btn delete" onClick={() => handleDelete(task.id)}>🗑️</button>
                     </div>
@@ -248,6 +261,18 @@ export default function TasksPage() {
                 </div>
               </div>
             ))
+          )}
+
+          {/* Load More button */}
+          {displayCount < tasks.length && (
+            <div style={{ textAlign: "center", padding: "16px 0 8px" }}>
+              <button
+                className="load-more-btn"
+                onClick={() => setDisplayCount((prev) => prev + PAGE_SIZE)}
+              >
+                {t("tasks.loadMore") || "查看更多"}
+              </button>
+            </div>
           )}
         </div>
       </div>
