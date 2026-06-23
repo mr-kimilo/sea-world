@@ -59,3 +59,15 @@
   margin-top: 20px;
   font-size: 15px;
 }
+
+/* ── OAuth buttons mobile ── */
+[data-device="mobile"] .oauth-buttons {
+  flex-direction: row;
+  gap: 10px;
+}
+[data-device="mobile"] .oauth-btn {
+  padding: 12px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  min-height: 44px;
+}

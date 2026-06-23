@@ -199,3 +199,13 @@
   transform: scale(0.9);
   background: rgba(255,255,255,0.12);
 }
+
+/* ── QQ Social Button (QQ互联规范) ── */
+.login-social-btn-qq {
+  color: #12B7F5 !important;
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(18,183,245,0.3) !important;
+}
+.login-social-btn-qq:active {
+  background: rgba(18,183,245,0.2) !important;
+}

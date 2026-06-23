@@ -11,4 +11,24 @@
 }
 .oauth-btn:hover { border-color: #0077b6; background: #f0f7ff; }
 .oauth-btn:active { transform: scale(0.97); }
-.oauth-icon { font-size: 20px; }
+.oauth-icon { font-size: 20px; display: inline-flex; align-items: center; }
+.oauth-icon img { display: block; border-radius: 2px; }
+
+/* ── QQ Login Button (QQ互联规范) ── */
+.oauth-qq {
+  color: #fff;
+  background: #12B7F5;
+  border-color: #12B7F5;
+  font-weight: 500;
+}
+.oauth-qq:hover {
+  background: #10A5DE;
+  border-color: #10A5DE;
+}
+.oauth-qq .oauth-icon-qq {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}

@@ -5,17 +5,7 @@ import { useAuthStore } from "../store";
 import { t } from "../i18n";
 import "./LoginPage.css";
 
-// OAuth 第三方登录配置
-const OAUTH_CONFIG: Record<string, { authorizeUrl: string; appIdKey: string }> = {
-  qq: {
-    authorizeUrl: "https://graph.qq.com/oauth2.0/authorize",
-    appIdKey: "VITE_QQ_APP_ID",
-  },
-  douyin: {
-    authorizeUrl: "https://open.douyin.com/platform/oauth/connect",
-    appIdKey: "VITE_DOUYIN_CLIENT_KEY",
-  },
-};
+// QQ 登录配置
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -26,28 +16,19 @@ export default function LoginPage() {
   const setAuth = useAuthStore((s) => s.setAuth);
   const navigate = useNavigate();
 
-  const handleOAuthLogin = (provider: string) => {
-    const config = OAUTH_CONFIG[provider];
-    if (!config) return;
-
-    const appId = import.meta.env[config.appIdKey] as string | undefined;
+  const handleQQLogin = () => {
+    const appId = import.meta.env["VITE_QQ_APP_ID"] as string | undefined;
     if (!appId) {
-      setError(`${provider} 登录尚未配置`);
+      setError("QQ 登录尚未配置");
       return;
     }
 
     const state = Math.random().toString(36).substring(2, 15);
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     const redirectUri = isMobile
-      ? `hyperone://oauth/callback?provider=${provider}`
-      : `${window.location.origin}/oauth/callback?provider=${provider}`;
-
-    let url: string;
-    if (provider === "qq") {
-      url = `${config.authorizeUrl}?response_type=code&client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
-    } else {
-      url = `${config.authorizeUrl}?client_key=${appId}&response_type=code&scope=user_info&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
-    }
+      ? "hyperone://oauth/callback?provider=qq"
+      : `${window.location.origin}/oauth/callback?provider=qq`;
+    const url = `https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
 
     window.location.href = url;
   };
@@ -149,20 +130,11 @@ export default function LoginPage() {
 
         <div className="login-social-v2">
           <button
-            className="login-social-btn-v2"
+            className="login-social-btn-v2 login-social-btn-qq"
             aria-label="QQ登录"
-            style={{ color: "#12B7F5" }}
-            onClick={() => handleOAuthLogin("qq")}
+            onClick={handleQQLogin}
           >
-            🐧
-          </button>
-          <button
-            className="login-social-btn-v2"
-            aria-label="抖音登录"
-            style={{ color: "#333" }}
-            onClick={() => handleOAuthLogin("douyin")}
-          >
-            🎵
+            <img src="https://static-res.qq.com/static-res/imqq/qq-logo.png" alt="QQ" width="22" height="22" />
           </button>
         </div>
       </div>
